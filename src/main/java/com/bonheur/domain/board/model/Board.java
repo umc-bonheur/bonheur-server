@@ -12,6 +12,6 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 public class Board extends BaseEntity {
 
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String contents;
 }
