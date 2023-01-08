@@ -1,5 +1,8 @@
 
 package com.bonheur.domain.member.repository;
 
-public interface MemberRepository {
+import com.bonheur.domain.member.model.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MemberRepository extends JpaRepository<Member,Long>,MemberRepositoryCustom {
 }
