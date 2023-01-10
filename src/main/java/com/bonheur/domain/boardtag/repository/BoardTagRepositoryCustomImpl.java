@@ -4,6 +4,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BoardTagRepositoryCustomImpl {
+public class BoardTagRepositoryCustomImpl implements BoardTagRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 }
