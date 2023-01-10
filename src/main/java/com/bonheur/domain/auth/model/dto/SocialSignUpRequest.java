@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SignUpRequest {
+public class SocialSignUpRequest {
     private String token;
 
     private String nickname;
