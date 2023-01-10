@@ -20,3 +20,16 @@ spring:
 spring:
   profiles:
     active: dev
+
+# AWS S3
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: bonheur-file
+  credentials:
+    access-key: AKIARK4SXN6D6EUOYOOM
+    secret-key: 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
+    stack:
+      auto: false
