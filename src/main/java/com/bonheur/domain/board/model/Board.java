@@ -20,7 +20,7 @@ public class Board extends BaseEntity {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
