@@ -16,10 +16,10 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 public class BoardTag extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "board_id")
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "tag_id")
     private Tag tag;
 }

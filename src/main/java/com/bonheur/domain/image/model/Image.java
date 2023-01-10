@@ -19,6 +19,6 @@ public class Image extends BaseEntity {
     private Long order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "board_id")
     private Board board;
 }
