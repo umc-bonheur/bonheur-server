@@ -2,7 +2,6 @@ package com.bonheur.domain.auth.service;
 
 import com.bonheur.config.provider.AuthProvider;
 import com.bonheur.domain.auth.model.dto.SocialSignUpRequest;
-import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final MemberRepository memberRepository;
     private final AuthProviderFinder authProviderFinder;
     private final MemberService memberService;
     @Override
