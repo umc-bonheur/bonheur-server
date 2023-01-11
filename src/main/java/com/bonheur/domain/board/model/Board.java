@@ -36,7 +36,10 @@ public class Board extends BaseEntity {
         this.member = member;
     }
 
-    public void update(String contents){
-        this.contents = contents;
+    public void addImages(Image image){
+        this.images.add(image);
+        if(image.getBoard() != this){
+            image.saveImage(this);
+        }
     }
 }

@@ -15,21 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateBoardRequest {
     private String contents;
-    private Member member;
+    private Long member_id;
     private List<Image> images = new ArrayList<>();
     private List<BoardTag> boardTags = new ArrayList<>();
 
     @Builder
-    public CreateBoardRequest(String contents, Member member){
+    public CreateBoardRequest(String contents, Long member_id){
         this.contents = contents;
-        this.member = member;
-    }
-
-    //dto -> entity
-    public Board toEntity() {
-        return Board.builder()
-                .contents(contents)
-                .member(member)
-                .build();
+        this.member_id = member_id;
     }
 }
