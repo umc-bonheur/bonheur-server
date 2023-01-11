@@ -4,6 +4,7 @@ import com.bonheur.domain.boardtag.model.BoardTag;
 import com.bonheur.domain.common.BaseEntity;
 import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.member.model.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,14 @@ public class Board extends BaseEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
+
+    @Builder
+    public Board(String contents, Member member){
+        this.contents = contents;
+        this.member = member;
+    }
+
+    public void update(String contents){
+        this.contents = contents;
+    }
 }
