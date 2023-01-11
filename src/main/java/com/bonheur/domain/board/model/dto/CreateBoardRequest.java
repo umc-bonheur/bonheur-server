@@ -15,13 +15,22 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateBoardRequest {
     private String contents;
-    private Long member_id;
+    private Long member_id; //jwtService 추가시 제거
     private List<Image> images = new ArrayList<>();
     private List<BoardTag> boardTags = new ArrayList<>();
 
     @Builder
-    public CreateBoardRequest(String contents, Long member_id){
+    public CreateBoardRequest(String contents, Long member_id, List<Image> images, List<BoardTag> boardTags){
         this.contents = contents;
-        this.member_id = member_id;
+        this.member_id = member_id; //jwtService 추가시 제거
+        this.images = images;
+        this.boardTags = boardTags;
+    }
+
+    public Board toEntity(Member member){
+        return Board.builder()
+                .contents(contents)
+                .member(member)
+                .build();
     }
 }
