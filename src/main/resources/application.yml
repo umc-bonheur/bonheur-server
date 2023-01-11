@@ -16,10 +16,6 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
         show_sql: true
----
-spring:
-  profiles:
-    active: dev
 
 # AWS S3
 cloud:
@@ -33,3 +29,8 @@ cloud:
     secret-key: GuMZzM+JBcmi0LlsHD4XpIyUBQdvpBNATrGT2CH5
     stack:
       auto: false
+
+---
+spring:
+  profiles:
+    active: dev
