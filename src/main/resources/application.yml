@@ -2,6 +2,8 @@ spring:
   config:
     activate:
       on-profile: local
+    import:
+      classpath:/application-aws.yml
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:tcp://localhost/~/bonheur
@@ -16,21 +18,6 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
         show_sql: true
-
-# AWS S3
-cloud:
-  aws:
-    region:
-      static: ap-northeast-2
-    s3:
-      bucket: bonheur-file
-    stack:
-      auto: false
-    credentials:
-      access-key: AKIARK4SXN6D6EUOYOOM
-      secret-key: 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
-
-
 ---
 spring:
   profiles:
