@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 /**
- * 파일 업로드 테스트용 컨트롤러
+ * FileUploadUtil 테스트용 컨트롤러
  */
 @RequiredArgsConstructor
 @RestController
