@@ -24,7 +24,7 @@ public class FileController {
      */
     @PostMapping("/test/file/upload")
     public String uploadFile(@RequestParam("category") String category, @RequestParam("file") MultipartFile multipartFile) throws IOException {
-        return fileUploadUtil.saveUploadFile(category, multipartFile);
+        return fileUploadUtil.uploadFile(category, multipartFile);
     }
 
     /**

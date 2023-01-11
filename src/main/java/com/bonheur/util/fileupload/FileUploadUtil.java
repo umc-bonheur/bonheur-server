@@ -30,7 +30,7 @@ public class FileUploadUtil {
      * @param multipartFile 넘겨받은 파일
      * @return 업로드된 파일의 접근 URL
      */
-    public String saveUploadFile(String category, MultipartFile multipartFile) throws IOException {
+    public String uploadFile(String category, MultipartFile multipartFile) throws IOException {
         if (multipartFile == null || multipartFile.isEmpty()) {
             return "파일을 선택해주세요.";
         }
