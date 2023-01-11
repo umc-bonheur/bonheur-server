@@ -2,6 +2,7 @@ package com.bonheur.domain.board.service;
 
 import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.dto.CreateBoardRequest;
+import com.bonheur.domain.board.model.dto.CreateBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import com.bonheur.domain.image.model.Image;
@@ -18,26 +19,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
-    private final ImageRepository imageRepository;
-
     private final MemberRepository memberRepository;
+
+    //게시글 생성
     @Transactional
-    public Long create(CreateBoardRequest createBoardReq, List<Image> images, List<BoardTag> tags){
+    @Override
+    public CreateBoardResponse create(CreateBoardRequest createBoardReq, List<Image> images, List<BoardTag> tags){
         // 파일 처리를 위한 Board 객체 생성
         Long id = createBoardReq.getMember_id();
+        Member member = memberRepository.findMemberById(id);
 
         Board board = new Board(
                 createBoardReq.getContents(),
-                memberRepository.getReferenceById(id)
+                member
         );
 
-        List<Image> imageList = images;
+        Long boardId = boardRepository.save(board).getId();
 
-        if(!imageList.isEmpty()){
-            for(Image image : imageList){
-                board.addImages(imageRepository.save(image));
-            }
+        if(!images.isEmpty()){
+
         }
-        return boardRepository.save(board).getId();
+
+        if(!tags.isEmpty()){
+
+        }
+
+        CreateBoardResponse createBoardResponse = new CreateBoardResponse().builder()
+                .boardId(id)
+                .build();
+
+
+        return createBoardResponse;
     }
 }
