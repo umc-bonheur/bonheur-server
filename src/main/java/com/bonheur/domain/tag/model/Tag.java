@@ -2,6 +2,7 @@ package com.bonheur.domain.tag.model;
 
 import com.bonheur.domain.boardtag.model.BoardTag;
 import com.bonheur.domain.common.BaseEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,9 @@ public class Tag extends BaseEntity {
 
     @OneToMany(mappedBy = "tag")
     private List<BoardTag> boardTags = new ArrayList<>();
+
+    @Builder
+    public Tag(String name){
+        this.name = name;
+    }
 }
