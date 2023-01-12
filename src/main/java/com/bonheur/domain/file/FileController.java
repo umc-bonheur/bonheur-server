@@ -1,5 +1,6 @@
-package com.bonheur.util.fileupload;
+package com.bonheur.domain.file;
 
+import com.bonheur.util.fileupload.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
