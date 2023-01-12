@@ -1,10 +1,11 @@
-package com.bonheur.util.fileupload;
+package com.bonheur.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.bonheur.domain.file.dto.FileUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,11 +31,8 @@ public class FileUploadUtil {
      * @param multipartFile 넘겨받은 파일
      * @return 업로드된 파일의 접근 URL
      */
-    public String uploadFile(String category, MultipartFile multipartFile) throws IOException {
-        if (multipartFile == null || multipartFile.isEmpty()) {
-            return "파일을 선택해주세요.";
-        }
-
+    public FileUploadResponse uploadFile(String category, MultipartFile multipartFile) throws IOException {
+     
         // 파일명
         String fileName = createFileName(category, multipartFile.getOriginalFilename());
 
@@ -44,8 +42,11 @@ public class FileUploadUtil {
         // S3에 업로드
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+        
+        // res dto 생성
+        FileUploadResponse response = new FileUploadResponse(amazonS3Client.getUrl(bucket, fileName).toString(), fileName);
 
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return response;
     }
 
     /**
