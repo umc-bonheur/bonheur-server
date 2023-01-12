@@ -35,11 +35,4 @@ public class Board extends BaseEntity {
         this.contents = contents;
         this.member = member;
     }
-
-    public void addImages(Image image){
-        this.images.add(image);
-        if(image.getBoard() != this){
-            image.saveImage(this);
-        }
-    }
 }
