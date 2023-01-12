@@ -1,5 +1,7 @@
-package com.bonheur.util.fileupload;
+package com.bonheur.domain.file;
 
+import com.bonheur.domain.file.dto.FileUploadResponse;
+import com.bonheur.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +25,7 @@ public class FileController {
      * @return 생성된 파일 URL
      */
     @PostMapping("/test/file/upload")
-    public String uploadFile(@RequestParam("category") String category, @RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public FileUploadResponse uploadFile(@RequestParam("category") String category, @RequestParam("file") MultipartFile multipartFile) throws IOException {
         return fileUploadUtil.uploadFile(category, multipartFile);
     }
 
