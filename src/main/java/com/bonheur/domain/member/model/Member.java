@@ -22,7 +22,8 @@ public class Member extends BaseEntity {
     @Column(length = 30)
     private String nickname;
 
-    private String profileImage;
+    @Embedded
+    private MemberProfile profile;
 
 
     @OneToMany(mappedBy = "member")
