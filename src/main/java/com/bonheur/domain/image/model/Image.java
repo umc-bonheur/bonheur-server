@@ -24,10 +24,11 @@ public class Image extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public void saveImage(Board board){
+    @Builder
+    public Image(String url, Long order, Board board){
+        this.url = url;
+        this.order = order;
         this.board = board;
-         if(!board.getImages().contains(this)){
-             board.getImages().add(this);
-         }
-    }   //게시글에 이미지 저장.
+    }
+
 }
