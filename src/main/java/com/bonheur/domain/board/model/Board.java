@@ -4,8 +4,6 @@ import com.bonheur.domain.boardtag.model.BoardTag;
 import com.bonheur.domain.common.BaseEntity;
 import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.member.model.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
