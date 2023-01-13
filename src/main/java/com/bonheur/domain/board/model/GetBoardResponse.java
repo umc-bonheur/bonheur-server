@@ -14,7 +14,6 @@ public class GetBoardResponse {
     private List<String> boardTags;
     private String image; // 대표 이미지 url
 
-    // 생성자 오버로딩
     public static GetBoardResponse of(Board board, List<String> boardTags, String image) {
         return new GetBoardResponse(board.getContents(), boardTags, image);
     }
