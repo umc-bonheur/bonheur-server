@@ -1,10 +1,8 @@
 package com.bonheur.domain.board.service;
 
-import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.GetBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
-import com.bonheur.domain.member.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

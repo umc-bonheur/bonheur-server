@@ -1,6 +1,5 @@
 package com.bonheur.domain.board.service;
 
-import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.GetBoardResponse;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import org.springframework.data.domain.Pageable;
