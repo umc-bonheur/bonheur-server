@@ -1,3 +1,28 @@
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+
+external:
+  client:
+    kakao:
+      profile:
+        base-url: https://kapi.kakao.com
+        url: /v2/user/me
+    google:
+      profile:
+        base-url: https://www.googleapis.com
+        url: /oauth2/v2/userinfo
+    apple:
+      profile:
+        base-url: https://appleid.apple.com
+        url: /auth/keys
+    naver:
+      profile:
+        base-url: https://openapi.naver.com
+        url: /v1/nid/me
+
+---
 spring:
   config:
     activate:
@@ -16,6 +41,21 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
         show_sql: true
+
+apple:
+  client_id: dummy-apple-client_id
+  issuer: dummy-apple-issue
+
+cloud:
+  aws:
+    s3:
+      bucket: ${secret.aws.s3.bucket}
+    stack:
+      auto: false
+    credentials:
+      access-key: ${secret.aws.credentials.access}
+      secret-key: ${secret.aws.credentials.secret}
+
 ---
 spring:
   profiles:

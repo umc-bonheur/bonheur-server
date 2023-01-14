@@ -1,4 +1,4 @@
-package com.bonheur.domain.common.exception;
+package com.bonheur.domain.common.exception.dto;
 
 import com.bonheur.domain.common.http.HttpStatusCode;
 import lombok.Getter;
