@@ -18,6 +18,9 @@ public class Image extends BaseEntity {
     private String url;
 
     @Column(nullable = false)
+    private String path;
+
+    @Column(nullable = false)
     private Long order;
 
     @ManyToOne(fetch = FetchType.LAZY)
