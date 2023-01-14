@@ -18,10 +18,6 @@ public class SocialSignUpRequest {
     private MemberSocialType socialType;
 
     public CreateMemberRequest toCreateMemberRequest(String socialId) {
-        return CreateMemberRequest.builder()
-                .socialId(socialId)
-                .socialType(socialType)
-                .nickname(nickname)
-                .build();
+        return CreateMemberRequest.of(socialId, socialType, nickname);
     }
 }
