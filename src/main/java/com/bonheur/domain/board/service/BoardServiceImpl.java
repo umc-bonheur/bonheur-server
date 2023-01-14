@@ -6,6 +6,7 @@ import com.bonheur.domain.boardtag.model.BoardTag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class BoardServiceImpl implements BoardService {
     // # 게시글 전체 조회
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
+    @Transactional(readOnly = true)
     public List<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable) {
 
         // to do : memberId에 따라
@@ -29,6 +31,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // # Tag Name을 String List로 받아오기
+    @Transactional(readOnly = true)
     public List<String> getBoardTagsName(List<BoardTag> boardTags) {
         List<String> tagsName = new ArrayList<>();
 
