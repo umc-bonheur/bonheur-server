@@ -6,22 +6,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class CreateBoardRequest {
     private String contents;
-    private Long member_id; //jwtService 추가시 제거
-
+    private Long member_id;
+    private List<String> tags;
     @Builder
-    public CreateBoardRequest(String contents, Long member_id){
+    private CreateBoardRequest(String contents, Long member_id, List<String> tags){
         this.contents = contents;
-        this.member_id = member_id; //jwtService 추가시 제거
+        this.member_id = member_id;
+        this.tags = tags;
     }
 
     public Board toEntity(Member member){
-        return Board.builder()
-                .contents(contents)
-                .member(member)
-                .build();
+        return Board.newBoard(contents, member);
     }
 }
