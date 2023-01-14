@@ -12,4 +12,5 @@ import java.util.List;
 public interface BoardService {
     public List<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable);
     public List<String> getBoardTagsName(List<BoardTag> boardTags);
+    public String deleteBoard(Long memberId, Long boardId);
 }

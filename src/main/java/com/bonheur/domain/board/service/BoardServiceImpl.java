@@ -1,5 +1,6 @@
 package com.bonheur.domain.board.service;
 
+import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.GetBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
@@ -41,5 +42,20 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return tagsName;
+    }
+
+    // # 게시글 삭제 (boardTag, Image의 cascadeType을 all로 설정해뒀기 때문에 게시글 삭제 시, boardTags와 images 삭제
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public String deleteBoard(Long memberId, Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 글입니다."));
+        Long writer =  board.getMember().getId();
+        if (writer != memberId) {
+            return "error";
+        } else {
+            boardRepository.deleteById(board.getId());
+            return "success";
+        }
     }
 }
