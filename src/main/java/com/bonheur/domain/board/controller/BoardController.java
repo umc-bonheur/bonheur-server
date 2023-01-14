@@ -3,10 +3,13 @@ package com.bonheur.domain.board.controller;
 import com.bonheur.domain.board.model.GetBoardResponse;
 import com.bonheur.domain.board.service.BoardService;
 import com.bonheur.domain.common.dto.ApiResponse;
+import com.bonheur.domain.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,5 +26,14 @@ public class BoardController {
         List<GetBoardResponse> getBoardResponses = boardService.getAllBoards(memberId, pageable);
 
         return ApiResponse.success(getBoardResponses);
+    }
+
+    // # 게시글 삭제
+    // 회원 인증 어노테이션 추가 필요
+    @DeleteMapping("/api/boards/{boardId}")
+    public ApiResponse deleteBoard(Long memberId, @PathVariable Long boardId) {
+        String response = boardService.deleteBoard(memberId, boardId);
+        if (response == "success") return ApiResponse.success(response);
+        else return ApiResponse.error(ErrorCode.E400_INVALID_AUTH_TOKEN);
     }
 }
