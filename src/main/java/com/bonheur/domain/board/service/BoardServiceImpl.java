@@ -1,7 +1,8 @@
 package com.bonheur.domain.board.service;
 
 import com.bonheur.domain.board.model.Board;
-import com.bonheur.domain.board.model.GetBoardResponse;
+import com.bonheur.domain.board.model.dto.DeleteBoardResponse;
+import com.bonheur.domain.board.model.dto.GetBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import lombok.RequiredArgsConstructor;
@@ -48,14 +49,18 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public String deleteBoard(Long memberId, Long boardId) {
+    public DeleteBoardResponse deleteBoard(Long memberId, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 글입니다."));
         Long writer =  board.getMember().getId();
         if (writer != memberId) {
-            return "error";
+            return DeleteBoardResponse.builder()
+                    .result("fail")
+                    .build();
         } else {
             boardRepository.deleteById(board.getId());
-            return "success";
+            return DeleteBoardResponse.builder()
+                    .result("success")
+                    .build();
         }
     }
 }
