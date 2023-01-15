@@ -15,13 +15,13 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class AuthController {
     private final HttpSession httpSession;
 
     private final AuthService authService;
 
-    @PostMapping("/v1/social-signup")
+    @PostMapping("/auth/social-signup")
     public ApiResponse<SocialSignUpResponse> signUp(
             @Valid @RequestBody SocialSignUpRequest request
     ) {
