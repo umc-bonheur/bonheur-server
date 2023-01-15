@@ -1,6 +1,6 @@
 package com.bonheur.domain.common.dto;
 
-import com.bonheur.domain.common.exception.ErrorCode;
+import com.bonheur.domain.common.exception.dto.ErrorCode;
 import lombok.*;
 
 @ToString

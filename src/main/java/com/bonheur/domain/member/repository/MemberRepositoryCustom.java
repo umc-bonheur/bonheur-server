@@ -1,5 +1,7 @@
 package com.bonheur.domain.member.repository;
 
-public interface MemberRepositoryCustom {
+import com.bonheur.domain.member.model.MemberSocialType;
 
+public interface MemberRepositoryCustom {
+    boolean existMemberBySocialInfo(String socialId, MemberSocialType socialType);
 }
