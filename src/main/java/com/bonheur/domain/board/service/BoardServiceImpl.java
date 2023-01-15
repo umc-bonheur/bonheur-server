@@ -33,9 +33,12 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public CreateBoardResponse createBoard(CreateBoardRequest request, List<MultipartFile> images) throws IOException {
         Long id = request.getMember_id();   //member id
+
         Optional<Member> member = memberRepository.findById(id);
 
-        Board board = boardRepository.save(request.toEntity(member.get()));
+        Board requestBoard = request.toEntity(member.get());
+
+        Board board = boardRepository.save(requestBoard);
         if (request.getTags() != null){
             List<Tag> tags = tagService.createTags(request.getTags());
             boardTagService.createBoardTags(board, tags);

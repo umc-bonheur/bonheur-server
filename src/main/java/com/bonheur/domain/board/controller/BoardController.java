@@ -18,11 +18,11 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
 
-    @PostMapping("/api/board")
+    @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images", required=false) List<MultipartFile> images,
-            @RequestPart CreateBoardRequest request) throws IOException {
+            @RequestPart CreateBoardRequest createBoardRequest) throws IOException {
 
-        return ApiResponse.success(boardService.createBoard(request, images));
+        return ApiResponse.success(boardService.createBoard(createBoardRequest, images));
     }
 }
