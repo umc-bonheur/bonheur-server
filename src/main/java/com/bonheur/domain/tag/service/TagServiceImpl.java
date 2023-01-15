@@ -14,15 +14,14 @@ import java.util.List;
 public class TagServiceImpl implements TagService{
     private final TagRepository tagRepository;
 
-    @Transactional
     @Override
-    public List<Tag> createTag(List<String> tags){
+    @Transactional
+    public List<Tag> createTags(List<String> tags){
         List<Tag> tagList = null;
         for(String tag : tags) {
             Optional<Tag> oldTag = tagRepository.findTagByName(tag);
-            if (tagRepository.findTagByName(tag).isEmpty()){
-                Tag tag1 = new Tag().builder()
-                        .name(tag).build();
+            if (oldTag.isEmpty()){
+                Tag tag1 = Tag.newTag(tag);
                 tagRepository.save(tag1);
                 tagList.add(tag1);
             }

@@ -5,5 +5,5 @@ import com.bonheur.domain.tag.model.Tag;
 import java.util.List;
 
 public interface TagService {
-    List<Tag> createTag(List<String> tags);
+    List<Tag> createTags(List<String> tags);
 }
