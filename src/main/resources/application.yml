@@ -21,7 +21,17 @@ external:
       profile:
         base-url: https://openapi.naver.com
         url: /v1/nid/me
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: '/v1/api-docs.html'
+    try-it-out-enabled: false
+  version: 'v1'
 ---
 spring:
   config:
