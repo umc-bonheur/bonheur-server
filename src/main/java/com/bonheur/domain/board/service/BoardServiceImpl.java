@@ -48,12 +48,12 @@ public class BoardServiceImpl implements BoardService {
     // # 게시글 삭제 (boardTag, Image의 cascadeType을 all로 설정해뒀기 때문에 게시글 삭제 시, boardTags와 images 삭제
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public DeleteBoardResponse deleteBoard(Long memberId, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 글입니다."));
         Long writer = board.getMember().getId();
-        if (writer.equals(memberId)) {
-            boardRepository.deleteById(board.getId());
+        if (writer == memberId) {
+            boardRepository.delete(board);
             return DeleteBoardResponse.builder()
                     .result("success")
                     .build();
