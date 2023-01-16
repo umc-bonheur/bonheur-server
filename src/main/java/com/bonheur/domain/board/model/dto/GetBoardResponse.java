@@ -1,4 +1,4 @@
-package com.bonheur.domain.board.model;
+package com.bonheur.domain.board.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class GetBoardResponse {
     private List<String> boardTags;
     private String image; // 대표 이미지 url
 
-    public static GetBoardResponse of(Board board, List<String> boardTags, String image) {
-        return new GetBoardResponse(board.getContents(), boardTags, image);
+    public static GetBoardResponse of(String contents, List<String> boardTags, String image) {
+        return new GetBoardResponse(contents, boardTags, image);
     }
 }

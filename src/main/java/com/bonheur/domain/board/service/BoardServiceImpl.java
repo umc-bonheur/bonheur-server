@@ -28,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
         // to do : memberId에 따라
         return boardRepository.findAll(pageable).stream()
                 .filter(board -> board.getMember().getId().equals(memberId))
-                .map(board -> GetBoardResponse.of(board, getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl()))
+                .map(board -> GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl()))
                 .collect(Collectors.toList());
     }
 
@@ -51,15 +51,15 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public DeleteBoardResponse deleteBoard(Long memberId, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 글입니다."));
-        Long writer =  board.getMember().getId();
-        if (writer != memberId) {
-            return DeleteBoardResponse.builder()
-                    .result("fail")
-                    .build();
-        } else {
+        Long writer = board.getMember().getId();
+        if (writer.equals(memberId)) {
             boardRepository.deleteById(board.getId());
             return DeleteBoardResponse.builder()
                     .result("success")
+                    .build();
+        } else {
+            return DeleteBoardResponse.builder()
+                    .result("fail")
                     .build();
         }
     }
