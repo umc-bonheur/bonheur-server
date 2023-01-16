@@ -37,8 +37,6 @@ public class BoardServiceImpl implements BoardService {
 
         if(member.isPresent()) {
             Board requestBoard = request.toEntity(member.get());
-            System.out.println("getContents : "+requestBoard.getContents());
-            System.out.println("getNickname : "+requestBoard.getMember().getNickname());
             Board board = boardRepository.save(requestBoard);
             if (request.getTags() != null) {
                 List<Tag> tags = tagService.createTags(request.getTags());
