@@ -1,9 +1,11 @@
 package com.bonheur.domain.auth.controller;
 
+import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.auth.model.dto.SocialSignUpRequest;
 import com.bonheur.domain.auth.model.dto.SocialSignUpResponse;
 import com.bonheur.domain.auth.service.AuthService;
 import com.bonheur.domain.common.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,9 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @ApiDocumentResponse
+    @Operation(summary = "소셜 회원가입")
+    // 이상 Swagger 코드
     @PostMapping("/auth/social-signup")
     public ApiResponse<SocialSignUpResponse> signUp(
             @Valid @RequestBody SocialSignUpRequest request
