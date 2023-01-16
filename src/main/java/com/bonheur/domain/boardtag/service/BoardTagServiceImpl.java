@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ public class BoardTagServiceImpl implements BoardTagService{
     @Override
     @Transactional
     public List<Long> createBoardTags(Board board, List<Tag> tags){
-        List<Long> boardTagsId = null;
+        List<Long> boardTagsId = new ArrayList<>();
         for(Tag tag : tags){
             boardTagsId.add(boardTagRepository.save(BoardTag.newBoardTag(board, tag)).getId());
         }

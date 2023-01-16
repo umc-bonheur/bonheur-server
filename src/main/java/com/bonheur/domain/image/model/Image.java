@@ -28,17 +28,17 @@ public class Image extends BaseEntity {
     private Board board;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Image(String url, String path, Long order, Board board){
+    private Image(String url, String path, Long sequence, Board board){
         this.url = url;
         this.path = path;
-        this.order = order;
+        this.sequence = sequence;
         this.board = board;
     }
-    public static Image newImage(String url, String path, Long order, Board board){
+    public static Image newImage(String url, String path, Long sequence, Board board){
         return Image.builder()
                 .url(url)
                 .path(path)
-                .order(order)
+                .sequence(sequence)
                 .board(board)
                 .build();
     }

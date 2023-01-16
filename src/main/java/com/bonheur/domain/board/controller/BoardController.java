@@ -20,7 +20,7 @@ public class BoardController {
 
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
-            @RequestPart(value = "images", required=false) List<MultipartFile> images,
+            @RequestPart(value = "images") List<MultipartFile> images,
             @RequestPart CreateBoardRequest createBoardRequest) throws IOException {
 
         return ApiResponse.success(boardService.createBoard(createBoardRequest, images));

@@ -5,6 +5,7 @@ import com.bonheur.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -17,7 +18,7 @@ public class TagServiceImpl implements TagService{
     @Override
     @Transactional
     public List<Tag> createTags(List<String> tags){
-        List<Tag> tagList = null;
+        List<Tag> tagList = new ArrayList<>();
         for(String tag : tags) {
             Optional<Tag> oldTag = tagRepository.findTagByName(tag);
             if (oldTag.isEmpty()){

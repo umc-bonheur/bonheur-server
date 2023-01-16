@@ -26,9 +26,11 @@ public class ImageServiceImpl implements ImageService{
     public void upLoadImages(Board board, List<MultipartFile> images) throws IOException {
         Long order = 1L;
         for(MultipartFile image : images){
-            FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image);
-            imageRepository.save(Image.newImage(fileUploadResponse.getFileUrl(),fileUploadResponse.getFilePath(), order, board));
-            order+=1;
+            if(!image.isEmpty()){
+                FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image);
+                imageRepository.save(Image.newImage(fileUploadResponse.getFileUrl(),fileUploadResponse.getFilePath(), order, board));
+                order+=1;
+            }
         }
     }
 }

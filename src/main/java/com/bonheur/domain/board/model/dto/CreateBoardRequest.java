@@ -2,6 +2,7 @@ package com.bonheur.domain.board.model.dto;
 
 import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.member.model.Member;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequest {
     private String contents;
     private Long member_id;
