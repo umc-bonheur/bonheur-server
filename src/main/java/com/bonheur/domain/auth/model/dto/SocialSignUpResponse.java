@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SocialSignUpResponse {
 
-    private String token;
+    private String sessionId;
 
     private Long memberId;
 
