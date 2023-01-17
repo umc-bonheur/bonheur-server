@@ -23,14 +23,16 @@ public class BoardController {
             @RequestPart(value = "images") List<MultipartFile> images,
             @RequestPart CreateBoardRequest createBoardRequest) throws IOException {
 
-        return ApiResponse.success(boardService.createBoard(createBoardRequest, images));
+        Long memberId = 1L; //session 관련 검증 추가해야 함!
+
+        return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
     }
 
     @PatchMapping("/api/boards/{boardId}")
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
             @RequestPart(value = "images") List<MultipartFile> images,
-            @RequestPart UpdateBoardRequest updateBoardRequest){
+            @RequestPart UpdateBoardRequest updateBoardRequest) throws IOException{
 
         return ApiResponse.success(boardService.updateBoard(boardId, updateBoardRequest, images));
     }

@@ -10,6 +10,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BoardService {
-     CreateBoardResponse createBoard(CreateBoardRequest request, List<MultipartFile> images) throws IOException;
-     UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images);
+     CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
+     UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
 }
