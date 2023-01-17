@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateBoardResponse {
     private Long boardId;
-
     @Builder
     private UpdateBoardResponse(Long boardId){
         this.boardId = boardId;

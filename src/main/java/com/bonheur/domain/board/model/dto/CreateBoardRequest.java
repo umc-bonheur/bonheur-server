@@ -13,12 +13,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequest {
     private String contents;
-    private Long member_id;
     private List<String> tags;
     @Builder
-    private CreateBoardRequest(String contents, Long member_id, List<String> tags){
+    private CreateBoardRequest(String contents, List<String> tags){
         this.contents = contents;
-        this.member_id = member_id;
         this.tags = tags;
     }
 
