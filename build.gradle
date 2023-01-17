@@ -56,6 +56,15 @@ dependencies {
 	// QueryDSL
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+	// Spring Cloud AWS
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Swagger SpringDoc
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+
+	// Spring Session
+	implementation 'org.springframework.session:spring-session-core'
 }
 
 tasks.named('test') {
