@@ -62,6 +62,9 @@ dependencies {
 
 	// Swagger SpringDoc
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+
+	// Spring Session
+	implementation 'org.springframework.session:spring-session-core'
 }
 
 tasks.named('test') {
