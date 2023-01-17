@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ImageService {
     //이미지 업로드
-    void upLoadImages(Board board, List<MultipartFile> images) throws IOException;
+    void uploadImages(Board board, List<MultipartFile> images) throws IOException;
+    void updateImages(Board board, List<MultipartFile> images) throws IOException;
 }

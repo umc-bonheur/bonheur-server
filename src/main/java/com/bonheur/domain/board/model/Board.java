@@ -43,4 +43,7 @@ public class Board extends BaseEntity {
                 .member(member)
                 .build();
     }
+    public void update(String contents){    //게시글 수정
+        this.contents = contents;
+    }
 }

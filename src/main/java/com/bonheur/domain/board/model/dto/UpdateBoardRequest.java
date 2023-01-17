@@ -11,11 +11,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateBoardRequest {
+public class UpdateBoardRequest {
     private String contents;
     private List<String> tags;
+
     @Builder
-    private CreateBoardRequest(String contents, List<String> tags){
+    private UpdateBoardRequest(String contents, List<String> tags){
         this.contents = contents;
         this.tags = tags;
     }
