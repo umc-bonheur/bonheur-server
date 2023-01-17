@@ -11,7 +11,7 @@ public class KakaoAuthProvider implements AuthProvider {
     private final KakaoAuthApiClient kakaoAuthApiClient;
     @Override
     public String getSocialId(String token) {
-        KakaoProfileResponse response = kakaoAuthApiClient.getProfileInfo(token);
+        KakaoProfileResponse response = kakaoAuthApiClient.getProfileInfo("Bearer " + token);
         return response.getId();
     }
 }
