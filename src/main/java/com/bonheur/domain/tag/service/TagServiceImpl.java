@@ -22,6 +22,9 @@ public class TagServiceImpl implements TagService{
     @Transactional
     public void createBoardTags(Board board, List<String> tags){
         for(String tag : tags) {
+            if(tag.length() >= 11){ //태그 글자수 10자 제한
+                throw new RuntimeException("태그 글자수 제한을 넘었습니다.");
+            }
             Optional<Tag> oldTag = tagRepository.findTagByName(tag);    //기존 tag 테이블에 동일한 태그가 있는 경우
             if (oldTag.isEmpty()){  //기존 tag 테이블에 동일한 태그가 없는 경우
                 Tag tag1 = Tag.newTag(tag);
