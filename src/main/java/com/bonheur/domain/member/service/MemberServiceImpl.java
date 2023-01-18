@@ -3,12 +3,14 @@ package com.bonheur.domain.member.service;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.CreateMemberRequest;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
+import com.bonheur.domain.member.model.dto.FindByTagResponse;
 import com.bonheur.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +36,10 @@ public class MemberServiceImpl implements MemberService{
         response.updateDayOfMonth(dayOfMonth);
 
         return response;
+    }
+
+    @Override
+    public List<FindByTagResponse> findByTag(Long memberId) {
+        return memberRepository.findByTag(memberId);
     }
 }
