@@ -1,6 +1,8 @@
 package com.bonheur.domain.auth.controller;
 
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
+import com.bonheur.domain.auth.model.dto.LoginRequest;
+import com.bonheur.domain.auth.model.dto.LoginResponse;
 import com.bonheur.domain.auth.model.dto.SocialSignUpRequest;
 import com.bonheur.domain.auth.model.dto.SocialSignUpResponse;
 import com.bonheur.domain.auth.service.AuthService;
@@ -34,6 +36,20 @@ public class AuthController {
         httpSession.setAttribute("MEMBER_ID", memberId);
 
         SocialSignUpResponse response = SocialSignUpResponse.of(httpSession.getId(), memberId);
+        return ApiResponse.success(response);
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "로그인 요청")
+    // 이상 Swagger 코드
+    @PostMapping("/auth/login")
+    public ApiResponse<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request
+    ) {
+        Long memberId = authService.login(request);
+        httpSession.setAttribute("MEMBER_ID", memberId);
+
+        LoginResponse response = LoginResponse.of(httpSession.getId(), memberId);
         return ApiResponse.success(response);
     }
 }
