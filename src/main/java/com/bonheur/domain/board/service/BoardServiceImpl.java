@@ -5,6 +5,7 @@ import com.bonheur.domain.board.model.dto.DeleteBoardResponse;
 import com.bonheur.domain.board.model.dto.GetBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
+import com.bonheur.domain.tag.service.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
+    private final TagServiceImpl tagService;
 
     // # 게시글 전체 조회
     // 회원 정보 인증 어노테이션 추가 필요
@@ -53,6 +55,7 @@ public class BoardServiceImpl implements BoardService {
         Long writer = board.getMember().getId();
         if (writer == memberId) {
             boardRepository.delete(board);
+            tagService.deleteTags();
             return DeleteBoardResponse.builder()
                     .result("success")
                     .build();
@@ -75,6 +78,7 @@ public class BoardServiceImpl implements BoardService {
                 .collect(Collectors.toList());
     }
 
+    // # 해당 게시글의 boardTag에 해당 tagName을 가진 tag가 있는지 확인
     @Transactional(readOnly = true)
     public String isInTag(List<BoardTag> boardTags, String tagName) {
         for (BoardTag tag : boardTags) {
