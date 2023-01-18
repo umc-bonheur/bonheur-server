@@ -6,6 +6,7 @@ import com.bonheur.domain.board.model.dto.GetBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,6 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable) {
-
-        // to do : memberId에 따라
         return boardRepository.findAll(pageable).stream()
                 .filter(board -> board.getMember().getId().equals(memberId))
                 .map(board -> GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl()))
@@ -62,5 +61,26 @@ public class BoardServiceImpl implements BoardService {
                     .result("fail")
                     .build();
         }
+    }
+
+    // # 게시글 조회 - by 해시태그
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public List<GetBoardResponse> getBoardsByTag(Long memberId, String tagName, Pageable pageable) {
+        return boardRepository.findAll(pageable).stream()
+                .filter(board -> board.getMember().getId().equals(memberId))
+                .filter(board -> isInTag(board.getBoardTags(), tagName).equals(tagName))
+                .map(board -> GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public String isInTag(List<BoardTag> boardTags, String tagName) {
+        for (BoardTag tag : boardTags) {
+            if (tag.getTag().getName().equals(tagName))
+                return tagName;
+        }
+        return "fail";
     }
 }

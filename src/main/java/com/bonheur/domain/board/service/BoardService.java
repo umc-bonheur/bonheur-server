@@ -12,6 +12,10 @@ import java.util.List;
 @Service
 public interface BoardService {
     public List<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable);
+
     public List<String> getBoardTagsName(List<BoardTag> boardTags);
+
     public DeleteBoardResponse deleteBoard(Long memberId, Long boardId);
+
+    public List<GetBoardResponse> getBoardsByTag(Long memberId, String tagName, Pageable pageable);
 }
