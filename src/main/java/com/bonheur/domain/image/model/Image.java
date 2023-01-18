@@ -19,7 +19,7 @@ public class Image extends BaseEntity {
     private String path;
 
     @Column(nullable = false)
-    private Long order;
+    private Long sequence;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
