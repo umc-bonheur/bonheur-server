@@ -2,10 +2,13 @@ package com.bonheur.domain.member.service;
 
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.CreateMemberRequest;
+import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Calendar;
 
 @Service
 @RequiredArgsConstructor
@@ -20,5 +23,16 @@ public class MemberServiceImpl implements MemberService{
         }
         Member member = memberRepository.save(request.toEntity());
         return member.getId();
+    }
+
+    @Override
+    public FindAllMonthlyResponse findAllMonthly(Long memberId) {
+        FindAllMonthlyResponse response = memberRepository.findAllMonthly(1L);
+
+        Calendar today = Calendar.getInstance();
+        Long dayOfMonth = Long.valueOf(today.getActualMaximum(Calendar.DATE));
+        response.updateDayOfMonth(dayOfMonth);
+
+        return response;
     }
 }
