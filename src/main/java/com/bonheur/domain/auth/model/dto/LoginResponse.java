@@ -6,14 +6,13 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SocialSignUpResponse {
+public class LoginResponse {
 
     private String sessionId;
 
     private Long memberId;
 
-    public static SocialSignUpResponse of(String sessionId, Long memberId) {
-        return new SocialSignUpResponse(sessionId, memberId);
+    public static LoginResponse of(String sessionId, Long memberId) {
+        return new LoginResponse(sessionId, memberId);
     }
-
 }
