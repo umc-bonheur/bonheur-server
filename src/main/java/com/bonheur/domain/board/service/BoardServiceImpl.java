@@ -18,7 +18,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -32,20 +31,17 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException {
-        Optional<Member> member = memberRepository.findById(memberId);
+        Member member = memberRepository.findMemberById(memberId);
 
-        if(member.isPresent()) {
-            Board requestBoard = request.toEntity(member.get());
-            Board board = boardRepository.save(requestBoard);
-            if (request.getTags() != null) {
-                tagService.createBoardTags(board, request.getTags());
-            }
-            if (!images.isEmpty()) {
-                imageService.uploadImages(board, images);
-            }
-            return CreateBoardResponse.newResponse(board.getId());
+        Board requestBoard = request.toEntity(member);
+        Board board = boardRepository.save(requestBoard);
+        if (request.getTags() != null) {
+            tagService.createBoardTags(board, request.getTags());
         }
-        return CreateBoardResponse.newResponse(null);
+        if (!images.isEmpty()) {
+            imageService.uploadImages(board, images);
+        }
+        return CreateBoardResponse.newResponse(board.getId());
     }
 
     @Override
@@ -56,7 +52,6 @@ public class BoardServiceImpl implements BoardService {
         if(board.isPresent()){
             if(!request.getContents().isEmpty()){
                 board.get().update(request.getContents());
-                board.get().updateUpdatedAt(LocalDateTime.now());   //업데이트 시간 변경
             }   //게시글 수정
 
             tagService.updateBoardTags(board.get(), request.getTags()); //게시글 태그 수정

@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -13,7 +14,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequest {
     private String contents;
+
+    @Length(max = 10)
     private List<String> tags;
+
     @Builder
     private CreateBoardRequest(String contents, List<String> tags){
         this.contents = contents;
