@@ -7,7 +7,6 @@ import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import com.bonheur.domain.tag.service.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +50,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public DeleteBoardResponse deleteBoard(Long memberId, Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 글입니다."));
+        Board board = boardRepository.findById(boardId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 글입니다."));
         Long writer = board.getMember().getId();
         if (writer == memberId) {
             boardRepository.delete(board);
