@@ -1,5 +1,7 @@
 package com.bonheur.domain.auth.controller;
 
+import com.bonheur.config.interceptor.Auth;
+import com.bonheur.config.resolver.MemberId;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.auth.model.dto.LoginRequest;
 import com.bonheur.domain.auth.model.dto.LoginResponse;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import static com.bonheur.config.session.SessionConstant.MEMBER_ID;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -33,7 +37,7 @@ public class AuthController {
             @Valid @RequestBody SocialSignUpRequest request
     ) {
         Long memberId = authService.signUp(request);
-        httpSession.setAttribute("MEMBER_ID", memberId);
+        httpSession.setAttribute(MEMBER_ID, memberId);
 
         SocialSignUpResponse response = SocialSignUpResponse.of(httpSession.getId(), memberId);
         return ApiResponse.success(response);
@@ -47,9 +51,21 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request
     ) {
         Long memberId = authService.login(request);
-        httpSession.setAttribute("MEMBER_ID", memberId);
+        httpSession.setAttribute(MEMBER_ID, memberId);
 
         LoginResponse response = LoginResponse.of(httpSession.getId(), memberId);
         return ApiResponse.success(response);
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "로그아웃 요청")
+    // 이상 Swagger 코드
+    @Auth
+    @PostMapping("/auth/logout")
+    public ApiResponse<String> logout(
+            @Valid @MemberId Long memberId
+    ) {
+        httpSession.invalidate();
+        return ApiResponse.success("로그아웃을 요청합니다.");
     }
 }
