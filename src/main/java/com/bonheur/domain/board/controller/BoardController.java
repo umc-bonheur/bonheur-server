@@ -12,7 +12,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import com.bonheur.domain.board.model.dto.CreateBoardRequest;
+import com.bonheur.domain.board.model.dto.CreateBoardResponse;
+import com.bonheur.domain.board.model.dto.UpdateBoardRequest;
+import com.bonheur.domain.board.model.dto.UpdateBoardResponse;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -46,5 +53,23 @@ public class BoardController {
         List<GetBoardResponse> getBoardResponses = boardService.getBoardsByTag(memberId, tagName, pageable);
 
         return ApiResponse.success(getBoardResponses);
+    }
+    @PostMapping("/api/boards")
+    public ApiResponse<CreateBoardResponse> createBoard(
+            @RequestPart(value = "images") List<MultipartFile> images,
+            @RequestPart CreateBoardRequest createBoardRequest) throws IOException {
+
+        Long memberId = 1L; //session 관련 검증 추가해야 함!
+
+        return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
+    }
+
+    @PatchMapping("/api/boards/{boardId}")
+    public ApiResponse<UpdateBoardResponse> updateBoard(
+            @PathVariable("boardId") Long boardId,
+            @RequestPart(value = "images") List<MultipartFile> images,
+            @RequestPart UpdateBoardRequest updateBoardRequest) throws IOException{
+
+        return ApiResponse.success(boardService.updateBoard(boardId, updateBoardRequest, images));
     }
 }
