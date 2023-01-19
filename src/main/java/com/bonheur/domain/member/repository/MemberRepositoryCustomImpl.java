@@ -69,10 +69,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                         tag.name.as("tagName"),
                         tag.name.count().as("countTag")
                         ))
-                .from(member)
+                .from(boardTag, member)
+                .join(boardTag.board, board)
+                .join(boardTag.tag, tag)
                 .where(member.id.eq(memberId),
-                        board.member.eq(member),
-                        board.eq(boardTag.board))
+                        board.member.eq(member))
+                .groupBy(tag.name)
+                .orderBy(tag.name.count().desc())
                 .limit(5)
                 .distinct()
                 .fetch();
