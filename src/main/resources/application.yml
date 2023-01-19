@@ -56,8 +56,9 @@ cloud:
       secret-key: ${secret.aws.credentials.secret}
 ---
 spring:
-  profiles:
-    active: dev
+  config:
+    activate:
+      on-profile: dev
   redis:
     host: ${secret.redis.host}
     port: ${secret.redis.port}
