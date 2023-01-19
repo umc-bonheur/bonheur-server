@@ -28,6 +28,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
         FindAllMonthlyResponse response = memberRepository.findAllMonthly(1L);
 
@@ -39,6 +40,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public List<FindByTagResponse> findByTag(Long memberId) {
         return memberRepository.findByTag(memberId);
     }
