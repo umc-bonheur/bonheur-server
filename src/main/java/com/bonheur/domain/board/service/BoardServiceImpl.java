@@ -73,11 +73,11 @@ public class BoardServiceImpl implements BoardService {
         if (writer == memberId) {
             boardRepository.delete(board);
             return DeleteBoardResponse.builder()
-                    .result("success")
+                    .boardId(boardId)
                     .build();
         } else {
             return DeleteBoardResponse.builder()
-                    .result("fail")
+                    .boardId(null)
                     .build();
         }
     }
