@@ -7,6 +7,7 @@ import com.bonheur.domain.common.dto.ApiResponse;
 import com.bonheur.domain.common.exception.dto.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +31,8 @@ public class BoardController {
     // # 게시글 전체 조회 (페이징 일단 5개로 정의)
     // 회원 인증 어노테이션 추가 필요
     @GetMapping("/api/boards")
-    public ApiResponse<List<GetBoardResponse>> getAllBoards(Long memberId, @PageableDefault(size = 5) Pageable pageable) {
-        List<GetBoardResponse> getBoardResponses = boardService.getAllBoards(memberId, pageable);
+    public ApiResponse<Slice<GetBoardResponse>> getAllBoards(Long memberId, @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardResponse> getBoardResponses = boardService.getAllBoards(memberId, pageable);
 
         return ApiResponse.success(getBoardResponses);
     }
