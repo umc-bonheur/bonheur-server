@@ -4,16 +4,13 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
-import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
@@ -49,13 +46,14 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
 
-        StringTemplate toDate = Expressions.stringTemplate("DATE_FORMAT({0}, {1})", board.createdAt, ConstantImpl.create("%Y-%m-%d"));
+        // todo : 마이페이지 통계 - 며칠동안 행복을 기록했는 지 조회 추가하기
+        // StringTemplate toDate = Expressions.stringTemplate("DATE_FORMAT({0}, {1})", board.createdAt, ConstantImpl.create("%Y-%m-%d"));
 
         return queryFactory
                 .select(Projections.fields(FindAllMonthlyResponse.class,
                         board.countDistinct().as("countHappy"),
-                        boardTag.countDistinct().as("countHashtag"),
-                        toDate.countDistinct().as("countRecordDay")))
+                        boardTag.countDistinct().as("countHashtag")
+                        ))
                 .from(boardTag, member)
                 .join(boardTag.board, board)
                 .where( member.id.eq(memberId),
