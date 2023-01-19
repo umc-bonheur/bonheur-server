@@ -15,10 +15,14 @@ public class GetBoardResponse {
     private List<String> boardTags;
     private String image; // 대표 이미지 url
 
+    private GetBoardResponse(String contents, List<String> boardTags) {
+        this.contents = contents;
+        this.boardTags = boardTags;
+    }
     public static GetBoardResponse of(String contents, List<String> boardTags, String image) {
         return new GetBoardResponse(contents, boardTags, image);
     }
     public static GetBoardResponse withoutImage(String contents, List<String> boardTags) {
-        return new GetBoardResponse(contents, boardTags, null);
+        return new GetBoardResponse(contents, boardTags);
     }
 }
