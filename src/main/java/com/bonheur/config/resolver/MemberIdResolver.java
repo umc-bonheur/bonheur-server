@@ -11,6 +11,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Objects;
 
+import static com.bonheur.config.session.SessionConstant.MEMBER_ID;
+
 @Component
 public class MemberIdResolver implements HandlerMethodArgumentResolver {
     @Override
@@ -23,7 +25,7 @@ public class MemberIdResolver implements HandlerMethodArgumentResolver {
         if (parameter.getMethodAnnotation(Auth.class) == null) {
             throw new InternalServerException(String.format("예상치 못한 에러가 발생하였습니다. 인증이 필요한 컨트롤러(%s-%s)로, @Auth 어노테이션을 붙여주세요.", parameter.getDeclaringClass().getSimpleName(), Objects.requireNonNull(parameter.getMethod()).getName()));
         }
-        Object object = webRequest.getAttribute("MEMBER_ID", 0);
+        Object object = webRequest.getAttribute(MEMBER_ID, 0);
         if (object == null) {
             throw new InternalServerException(String.format("예상치 못한 에러가 발생하였습니다. 컨트롤러(%s-%s)에서 MEMBER_ID 가져오지 못했습니다.", parameter.getDeclaringClass().getSimpleName(), Objects.requireNonNull(parameter.getMethod()).getName()));
         }
