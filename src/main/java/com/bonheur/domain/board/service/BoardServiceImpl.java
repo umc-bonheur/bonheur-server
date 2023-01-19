@@ -39,9 +39,14 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable) {
-        return boardRepository.findAll(pageable).stream()
-                .filter(board -> board.getMember().getId().equals(memberId))
-                .map(board -> GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl()))
+        return boardRepository.findAllWithPaging(memberId, pageable)
+                .stream().map(board -> {
+                        if (board.getImages().isEmpty()) {
+                            return GetBoardResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                        }   else {
+                            return GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                        }
+                    })
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +72,7 @@ public class BoardServiceImpl implements BoardService {
         Long writer = board.getMember().getId();
         if (writer == memberId) {
             boardRepository.delete(board);
-            tagService.deleteTags();
+            //tagService.deleteTags();
             return DeleteBoardResponse.builder()
                     .result("success")
                     .build();
