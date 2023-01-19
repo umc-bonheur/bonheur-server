@@ -63,8 +63,9 @@ dependencies {
 	// Swagger SpringDoc
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 
-	// Spring Session
-	implementation 'org.springframework.session:spring-session-core'
+	// Redis & RedisSession
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
 }
 
 tasks.named('test') {
