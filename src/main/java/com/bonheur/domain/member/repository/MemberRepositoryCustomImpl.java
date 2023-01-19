@@ -4,10 +4,16 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.DateTemplate;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
@@ -42,16 +48,18 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
+
+        StringTemplate toDate = Expressions.stringTemplate("DATE_FORMAT({0}, {1})", board.createdAt, ConstantImpl.create("%Y-%m-%d"));
+
         return queryFactory
                 .select(Projections.fields(FindAllMonthlyResponse.class,
-                        null,
-                        board.id.count().as("countHappy"),
-                        boardTag.id.count().as("countHashtag"),
-                        board.createdAt.count().as("countRecordDay")))
-                .from(member)
-                .where(member.id.eq(memberId),
-                        member.eq(board.member),
-                        board.eq(boardTag.board))
+                        board.countDistinct().as("countHappy"),
+                        boardTag.countDistinct().as("countHashtag"),
+                        toDate.countDistinct().as("countRecordDay")))
+                .from(boardTag, member)
+                .join(boardTag.board, board)
+                .where( member.id.eq(memberId),
+                        board.member.eq(member))
                 .distinct()
                 .fetchFirst();
     }
@@ -60,15 +68,17 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     public List<FindByTagResponse> findByTag(Long memberId) {
         return queryFactory
                 .select(Projections.fields(FindByTagResponse.class,
-                        tag.name,
-                        tag.name.count()
+                        tag.name.as("tagName"),
+                        tag.name.count().as("countTag")
                         ))
                 .from(member)
                 .where(member.id.eq(memberId),
                         board.member.eq(member),
                         board.eq(boardTag.board))
+                .limit(5)
                 .distinct()
                 .fetch();
     }
 
 }
+
