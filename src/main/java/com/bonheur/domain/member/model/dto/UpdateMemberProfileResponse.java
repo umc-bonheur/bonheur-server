@@ -6,16 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateMemberProfileResponse {
+public class UpdateMemberProfileResponse {
     private Long memberId;
 
     @Builder
-    private CreateMemberProfileResponse(Long memberId){
+    private UpdateMemberProfileResponse(Long memberId){
         this.memberId = memberId;
     }
 
-    public static CreateMemberProfileResponse of(Long memberId){
-        return CreateMemberProfileResponse.builder()
+    public static UpdateMemberProfileResponse of(Long memberId){
+        return UpdateMemberProfileResponse.builder()
                 .memberId(memberId)
                 .build();
     }

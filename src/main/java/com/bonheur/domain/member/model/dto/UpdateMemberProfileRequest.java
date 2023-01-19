@@ -5,16 +5,16 @@ import lombok.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateMemberProfileRequest {
+public class UpdateMemberProfileRequest {
     private String nickname;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private CreateMemberProfileRequest(String nickname) {
+    private UpdateMemberProfileRequest(String nickname) {
         this.nickname = nickname;
     }
 
-    public static CreateMemberProfileRequest of(String nickname){
-        return CreateMemberProfileRequest.builder()
+    public static UpdateMemberProfileRequest of(String nickname){
+        return UpdateMemberProfileRequest.builder()
                 .nickname(nickname)
                 .build();
     }

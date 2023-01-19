@@ -2,8 +2,8 @@ package com.bonheur.domain.member.service;
 
 import com.bonheur.domain.file.dto.FileUploadResponse;
 import com.bonheur.domain.member.model.Member;
-import com.bonheur.domain.member.model.dto.CreateMemberProfileRequest;
-import com.bonheur.domain.member.model.dto.CreateMemberProfileResponse;
+import com.bonheur.domain.member.model.dto.UpdateMemberProfileRequest;
+import com.bonheur.domain.member.model.dto.UpdateMemberProfileResponse;
 import com.bonheur.domain.member.model.dto.CreateMemberRequest;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.util.FileUploadUtil;
@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public CreateMemberProfileResponse createMemberProfile(Long memberId, CreateMemberProfileRequest request, MultipartFile image) throws IOException {
+    public UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException {
         Member member = memberRepository.findMemberById(memberId);
         //닉네임 수정
         member.updateNickname(request.getNickname());
@@ -47,6 +47,6 @@ public class MemberServiceImpl implements MemberService{
             member.getProfile().updateProfile(fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());  //프로필 이미지 변경
         }
 
-        return CreateMemberProfileResponse.of(memberId);
+        return UpdateMemberProfileResponse.of(memberId);
     }
 }
