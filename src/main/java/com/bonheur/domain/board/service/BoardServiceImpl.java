@@ -72,7 +72,6 @@ public class BoardServiceImpl implements BoardService {
         Long writer = board.getMember().getId();
         if (writer == memberId) {
             boardRepository.delete(board);
-            //tagService.deleteTags();
             return DeleteBoardResponse.builder()
                     .result("success")
                     .build();
