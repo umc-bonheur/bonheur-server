@@ -4,8 +4,6 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
-import com.bonheur.domain.member.model.dto.FindByTimeResponse;
-import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimePath;
@@ -92,17 +90,15 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public FindByTimeResponse findByTime(Long memberId) {
-        // todo : 에러 해결
-        // 왜.. 나만 date_format을 쓸 수 없는가 ......
-        StringTemplate toTime = stringTemplate("function('date_format', {0}, {1})", board.createdAt, ConstantImpl.create("%Y-%m-%d"));
+    public Long findByTime(Long memberId, String start, String end) {
+        // todo : mysql 문법으로 변경
+        StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
 
         return queryFactory
-                .select(Projections.fields(FindByTimeResponse.class,
-                        board.id.as("morning")
-                        ))
-                .from(board, member)
-                .where( member.id.eq(memberId).and(board.member.eq(member)))
+                .select(toTime.count())
+                .from(board)
+                .where(board.member.id.eq(memberId),
+                        toTime.between(start,end))
                 .groupBy(toTime)
                 .distinct()
                 .fetchFirst();
