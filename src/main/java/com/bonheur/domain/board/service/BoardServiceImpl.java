@@ -67,6 +67,6 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findBoardByIdWithTagAndImage(boardId);
         return GetBoardResponse.of(board.getId(), board.getContents(),
                 board.getImages().stream().map(Image::getUrl).collect(Collectors.toList()),
-                board.getBoardTags().stream().map(boardTag -> boardTag.getTag().getName()).collect(Collectors.toList()));
+                board.getBoardTags().stream().map(boardTag -> boardTag.getTag().getName()).collect(Collectors.toList()), board.getCreatedAt().toString());
     }
 }

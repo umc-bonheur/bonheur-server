@@ -44,7 +44,6 @@ public class BoardController {
             @PathVariable Long boardId,
             Long memberId
     ) {
-        GetBoardResponse response = boardService.getBoard(boardId);
-        return ApiResponse.success(response);
+        return ApiResponse.success(boardService.getBoard(boardId));
     }
 }
