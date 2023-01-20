@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllMonthlyResponse {
-    private Long dayOfMonth;
+    private Long countActiveDay;
     private Long countHappy;
     private Long countHashtag;
     private Long countRecordDay;
 
-    public void updateDayOfMonth(Long dayOfMonth){
-        this.dayOfMonth = dayOfMonth;
+    public void updateCountActiveDay(Long countActiveDay){
+        this.countActiveDay = countActiveDay;
     }
 
 }
