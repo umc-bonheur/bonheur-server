@@ -14,8 +14,9 @@ public class GetBoardResponse {
     private String contents;
     private List<String> images;
     private List<String> tags;
+    private String createdAt;
 
-    public static GetBoardResponse of(@NotNull Long boardId, String contents, List<String> images, List<String> tags) {
-        return new GetBoardResponse(boardId, contents, images, tags);
+    public static GetBoardResponse of(@NotNull Long boardId, String contents, List<String> images, List<String> tags, String createdAt) {
+        return new GetBoardResponse(boardId, contents, images, tags, createdAt);
     }
 }
