@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -32,10 +33,9 @@ public class MemberServiceImpl implements MemberService{
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
         FindAllMonthlyResponse response = memberRepository.findAllMonthly(1L);
 
-        Calendar today = Calendar.getInstance();
-        Long dayOfMonth = Long.valueOf(today.getActualMaximum(Calendar.DATE));
-        response.updateDayOfMonth(dayOfMonth);
-
+        Member findMember = memberRepository.findById(memberId).orElse(null);
+        response.updateCountActiveDay(
+                ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)));
         return response;
     }
 

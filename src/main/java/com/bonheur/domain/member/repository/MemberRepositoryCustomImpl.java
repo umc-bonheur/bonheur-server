@@ -5,9 +5,12 @@ import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
 import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,7 @@ import static com.bonheur.domain.board.model.QBoard.board;
 import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
 import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
+import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
 
 @RequiredArgsConstructor
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
@@ -46,20 +50,26 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
 
-        // todo : 마이페이지 통계 - 며칠동안 행복을 기록했는 지 조회 추가하기
-        // StringTemplate toDate = Expressions.stringTemplate("DATE_FORMAT({0}, {1})", board.createdAt, ConstantImpl.create("%Y-%m-%d"));
-
         return queryFactory
                 .select(Projections.fields(FindAllMonthlyResponse.class,
                         board.countDistinct().as("countHappy"),
-                        boardTag.countDistinct().as("countHashtag")
+                        boardTag.tag.name.countDistinct().as("countHashtag"),
+                        ExpressionUtils.as(
+                                JPAExpressions.select(toDate(board.createdAt).countDistinct())
+                                .from(board)
+                                .where(board.member.id.eq(memberId))
+                                .groupBy(toDate(board.createdAt)),"countRecordDay")
                         ))
-                .from(boardTag, member)
-                .join(boardTag.board, board)
-                .where( member.id.eq(memberId),
-                        board.member.eq(member))
+                .from(boardTag, board)
+                .where(boardTag.board.member.id.eq(memberId),
+                        board.member.id.eq(memberId))
                 .distinct()
                 .fetchFirst();
+    }
+
+    public StringTemplate toDate(DateTimePath path){
+        // 2022-01-20 03:48:02.164938 -> 2022-01-20 형식으로 변환
+        return Expressions.stringTemplate("function('date', {0})", path);
     }
 
     @Override
