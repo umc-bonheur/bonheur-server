@@ -4,6 +4,7 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimePath;
@@ -13,6 +14,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
@@ -20,6 +22,8 @@ import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
 import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
 import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
+import static java.util.Objects.isNull;
+import static org.hibernate.internal.util.NullnessHelper.coalesce;
 
 @RequiredArgsConstructor
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
@@ -57,7 +61,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                                 JPAExpressions.select(toDate(board.createdAt).countDistinct())
                                 .from(board)
                                 .where(board.member.id.eq(memberId))
-                                .groupBy(toDate(board.createdAt)),"countRecordDay")
+                                .groupBy(toDate(board.createdAt))
+                                ,"countRecordDay")
                         ))
                 .from(boardTag, board)
                 .where(boardTag.board.member.id.eq(memberId),
@@ -94,14 +99,16 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         // todo : mysql 문법으로 변경
         StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
 
-        return queryFactory
+        Long result = queryFactory
                 .select(toTime.count())
                 .from(board)
                 .where(board.member.id.eq(memberId),
-                        toTime.between(start,end))
+                        toTime.between(start, end))
                 .groupBy(toTime)
                 .distinct()
                 .fetchFirst();
+
+        return isNull(result) ? 0 : result;
     }
 
 }
