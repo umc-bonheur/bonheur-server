@@ -1,11 +1,10 @@
 package com.bonheur.domain.board.controller;
 
-import com.bonheur.domain.board.model.dto.CreateBoardRequest;
-import com.bonheur.domain.board.model.dto.CreateBoardResponse;
-import com.bonheur.domain.board.model.dto.UpdateBoardRequest;
-import com.bonheur.domain.board.model.dto.UpdateBoardResponse;
+import com.bonheur.config.swagger.dto.ApiDocumentResponse;
+import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.service.BoardService;
 import com.bonheur.domain.common.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +31,20 @@ public class BoardController {
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
             @RequestPart(value = "images") List<MultipartFile> images,
-            @RequestPart UpdateBoardRequest updateBoardRequest) throws IOException{
+            @RequestPart UpdateBoardRequest updateBoardRequest) throws IOException {
 
         return ApiResponse.success(boardService.updateBoard(boardId, updateBoardRequest, images));
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "게시물 상세 조회")
+    // 이상 Swagger 코드
+    @GetMapping("/api/boards/{boardId}")
+    public ApiResponse<GetBoardResponse> getBoard(
+            @PathVariable Long boardId,
+            Long memberId
+    ) {
+        GetBoardResponse response = boardService.getBoard(boardId);
+        return ApiResponse.success(response);
     }
 }
