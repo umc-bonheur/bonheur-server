@@ -18,15 +18,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     public Board findBoardByIdWithTagAndImage(Long boardId) {
         return queryFactory.select(board)
                 .from(board)
+                .leftJoin(board.images,QImage.image)
+                .fetchJoin()
                 .where(
                         board.id.eq(boardId)
                 )
-                .leftJoin(QImage.image)
-                .fetchJoin()
-                .leftJoin(QBoardTag.boardTag)
-                .fetchJoin()
-                .leftJoin(QTag.tag)
-                .fetchJoin()
                 .fetchOne();
     }
 }
