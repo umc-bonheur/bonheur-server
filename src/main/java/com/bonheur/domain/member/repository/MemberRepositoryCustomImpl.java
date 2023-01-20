@@ -4,6 +4,7 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.bonheur.domain.member.model.dto.FindByTimeResponse;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
@@ -79,16 +80,32 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                         tag.name.as("tagName"),
                         tag.name.count().as("countTag")
                         ))
-                .from(boardTag, member)
+                .from(boardTag)
                 .join(boardTag.board, board)
                 .join(boardTag.tag, tag)
-                .where(member.id.eq(memberId),
-                        board.member.eq(member))
+                .where(board.member.id.eq(memberId))
                 .groupBy(tag.name)
                 .orderBy(tag.name.count().desc())
                 .limit(5)
                 .distinct()
                 .fetch();
+    }
+
+    @Override
+    public FindByTimeResponse findByTime(Long memberId) {
+        // todo : 에러 해결
+        // 왜.. 나만 date_format을 쓸 수 없는가 ......
+        StringTemplate toTime = stringTemplate("function('date_format', {0}, {1})", board.createdAt, ConstantImpl.create("%Y-%m-%d"));
+
+        return queryFactory
+                .select(Projections.fields(FindByTimeResponse.class,
+                        board.id.as("morning")
+                        ))
+                .from(board, member)
+                .where( member.id.eq(memberId).and(board.member.eq(member)))
+                .groupBy(toTime)
+                .distinct()
+                .fetchFirst();
     }
 
 }

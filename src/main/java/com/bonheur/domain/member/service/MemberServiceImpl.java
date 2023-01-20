@@ -4,6 +4,7 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.CreateMemberRequest;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.bonheur.domain.member.model.dto.FindByTimeResponse;
 import com.bonheur.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,5 +44,11 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public List<FindByTagResponse> findByTag(Long memberId) {
         return memberRepository.findByTag(memberId);
+    }
+
+    @Override
+    @Transactional
+    public FindByTimeResponse findByTime(Long memberId) {
+        return memberRepository.findByTime(memberId);
     }
 }

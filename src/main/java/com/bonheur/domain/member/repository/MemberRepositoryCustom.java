@@ -4,6 +4,7 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.bonheur.domain.member.model.dto.FindByTimeResponse;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface MemberRepositoryCustom {
     Member findMemberBySocialInfo(@NotNull String socialId, @NotNull MemberSocialType socialType);
     FindAllMonthlyResponse findAllMonthly(Long memberId);
     List<FindByTagResponse> findByTag(Long memberId);
-
+    FindByTimeResponse findByTime(Long memberId);
 }
