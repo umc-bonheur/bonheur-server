@@ -1,5 +1,7 @@
 package com.bonheur.domain.board.repository;
 
-public interface BoardRepositoryCustom {
+import com.bonheur.domain.board.model.Board;
 
+public interface BoardRepositoryCustom {
+    Board findBoardByIdWithTagAndImage(Long boardId);
 }
