@@ -39,17 +39,15 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable) {
-        /*return boardRepository.findAllWithPaging(memberId, pageable)
-                .stream().map(board -> {
-                        if (board.getImages().isEmpty()) {
-                            return GetBoardResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
-                        }   else {
-                            return GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
-                        }
-                    })
-                .collect(Collectors.toList());*/
-        return boardRepository.findAllWithPaging(memberId, pageable);
+    public Slice<GetBoardResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable) {
+        return boardRepository.findAllWithPaging(lastBoardId, memberId, pageable)
+                .map(board -> {
+                    if (board.getImages().isEmpty()) {
+                        return GetBoardResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                    }   else {
+                        return GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                    }
+                });
     }
 
     // # Tag Name을 String List로 받아오기
