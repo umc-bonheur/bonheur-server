@@ -50,11 +50,12 @@ public class BoardController {
     // # 게시글 조회 - 해시태그
     // 회원 인증 어노테이션 추가 필요
     @GetMapping("/api/boards/{tagName}")
-    public ApiResponse<List<GetBoardResponse>> getBoardsByTag(Long memberId, @PathVariable("tagName") String tagName, @PageableDefault(size = 5) Pageable pageable) {
-        List<GetBoardResponse> getBoardResponses = boardService.getBoardsByTag(memberId, tagName, pageable);
+    public ApiResponse<Slice<GetBoardResponse>> getBoardsByTag(Long lastBoardId, Long memberId, @PathVariable("tagName") String tagName, @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardResponse> getBoardResponses = boardService.getBoardsByTag(lastBoardId, memberId, tagName, pageable);
 
         return ApiResponse.success(getBoardResponses);
     }
+
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
