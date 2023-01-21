@@ -12,9 +12,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.io.IOException;
+import com.bonheur.domain.boardtag.model.BoardTag;
+import com.bonheur.domain.tag.repository.TagRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,6 +32,35 @@ public class BoardServiceImpl implements BoardService {
     private final MemberRepository memberRepository;
     private final TagService tagService;
     private final ImageService imageService;
+    private final TagRepository tagRepository;
+
+    // # 게시글 전체 조회
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable) {
+        return boardRepository.findAllWithPaging(lastBoardId, memberId, pageable)
+                .map(board -> {
+                    if (board.getImages().isEmpty()) {
+                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                    }   else {
+                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                    }
+                });
+    }
+
+    // # Tag Name을 String List로 받아오기
+    @Transactional(readOnly = true)
+    public List<String> getBoardTagsName(List<BoardTag> boardTags) {
+        List<String> tagsName = new ArrayList<>();
+
+        for (BoardTag tag : boardTags) {
+            String tagName = tag.getTag().getName();
+            tagsName.add(tagName);
+        }
+
+        return tagsName;
+    }
 
     //게시글 생성
     @Override

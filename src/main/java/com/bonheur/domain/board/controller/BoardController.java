@@ -6,6 +6,9 @@ import com.bonheur.domain.board.service.BoardService;
 import com.bonheur.domain.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +19,15 @@ import java.util.List;
 @RestController
 public class BoardController {
     private final BoardService boardService;
+
+    // # 게시글 전체 조회 (페이징 일단 5개로 정의)
+    // 회원 인증 어노테이션 추가 필요
+    @GetMapping("/api/boards")
+    public ApiResponse<Slice<GetBoardsResponse>> getAllBoards(Long lastBoardId, Long memberId, @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
+
+        return ApiResponse.success(getBoardsResponses);
+    }
 
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
