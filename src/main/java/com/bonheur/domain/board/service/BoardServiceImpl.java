@@ -7,6 +7,7 @@ import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.image.service.ImageService;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
+import com.bonheur.domain.tag.model.Tag;
 import com.bonheur.domain.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,25 @@ public class BoardServiceImpl implements BoardService {
                     .boardId(null)
                     .build();
         }
+    }
+
+    // # 게시글 조회 - by 해시태그
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, String tagName, Pageable pageable) {
+        // tagName에 해당하는 tagId 받아오기
+        Tag tag = tagRepository.findTagByName(tagName).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 태그입니다."));
+        Long tagId = tag.getId();
+
+        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagId, pageable)
+                .map(board -> {
+                    if (board.getImages().isEmpty()) {
+                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                    }   else {
+                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                    }
+                });
     }
 
     //게시글 생성
