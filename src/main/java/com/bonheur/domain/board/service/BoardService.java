@@ -23,7 +23,7 @@ public interface BoardService {
 
     public DeleteBoardResponse deleteBoard(Long memberId, Long boardId);
 
-    public List<GetBoardResponse> getBoardsByTag(Long memberId, String tagName, Pageable pageable);
+    public Slice<GetBoardResponse> getBoardsByTag(Long lastBoardId, Long memberId, String tagName, Pageable pageable);
     CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
     UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
 }

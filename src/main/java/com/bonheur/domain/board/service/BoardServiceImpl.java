@@ -5,6 +5,8 @@ import com.bonheur.domain.board.model.dto.DeleteBoardResponse;
 import com.bonheur.domain.board.model.dto.GetBoardResponse;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.model.BoardTag;
+import com.bonheur.domain.tag.model.Tag;
+import com.bonheur.domain.tag.repository.TagRepository;
 import com.bonheur.domain.tag.service.TagServiceImpl;
 import com.bonheur.domain.board.model.dto.CreateBoardRequest;
 import com.bonheur.domain.board.model.dto.CreateBoardResponse;
@@ -21,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class BoardServiceImpl implements BoardService {
     private final TagServiceImpl tagService;
     private final MemberRepository memberRepository;
     private final ImageService imageService;
+    private final TagRepository tagRepository;
 
     // # 게시글 전체 조회
     // 회원 정보 인증 어노테이션 추가 필요
@@ -86,23 +88,21 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public List<GetBoardResponse> getBoardsByTag(Long memberId, String tagName, Pageable pageable) {
-        return boardRepository.findAll(pageable).stream()
-                .filter(board -> board.getMember().getId().equals(memberId))
-                .filter(board -> isInTag(board.getBoardTags(), tagName).equals(tagName))
-                .map(board -> GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl()))
-                .collect(Collectors.toList());
+    public Slice<GetBoardResponse> getBoardsByTag(Long lastBoardId, Long memberId, String tagName, Pageable pageable) {
+        // tagName에 해당하는 tagId 받아오기
+        Tag tag = tagRepository.findTagByName(tagName).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 태그입니다."));
+        Long tagId = tag.getId();
+
+        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagId, pageable)
+                .map(board -> {
+                    if (board.getImages().isEmpty()) {
+                        return GetBoardResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                    }   else {
+                        return GetBoardResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                    }
+                });
     }
 
-    // # 해당 게시글의 boardTag에 해당 tagName을 가진 tag가 있는지 확인
-    @Transactional(readOnly = true)
-    public String isInTag(List<BoardTag> boardTags, String tagName) {
-        for (BoardTag tag : boardTags) {
-            if (tag.getTag().getName().equals(tagName))
-                return tagName;
-        }
-        return "fail";
-    }
 
     //게시글 생성
     @Override
