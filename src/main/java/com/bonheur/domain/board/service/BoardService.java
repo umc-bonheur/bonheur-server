@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface BoardService {
      Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable);
+     DeleteBoardResponse deleteBoard(Long memberId, Long boardId);
      CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
      UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
 
