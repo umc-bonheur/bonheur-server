@@ -1,12 +1,15 @@
 package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
+import com.bonheur.domain.board.model.QBoard;
+import com.bonheur.domain.boardtag.model.QBoardTag;
 import com.bonheur.domain.image.model.QImage;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import com.bonheur.domain.tag.model.QTag;
 import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
