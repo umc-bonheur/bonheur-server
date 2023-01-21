@@ -11,7 +11,7 @@ import java.util.List;
 public interface BoardService {
      Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable);
      DeleteBoardResponse deleteBoard(Long memberId, Long boardId);
-     Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, String tagName, Pageable pageable);
+     Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable);
      CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
      UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
 

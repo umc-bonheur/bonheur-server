@@ -86,12 +86,8 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, String tagName, Pageable pageable) {
-        // tagName에 해당하는 tagId 받아오기
-        Tag tag = tagRepository.findTagByName(tagName).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 태그입니다."));
-        Long tagId = tag.getId();
-
-        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagId, pageable)
+    public Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
+        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, pageable)
                 .map(board -> {
                     if (board.getImages().isEmpty()) {
                         return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
