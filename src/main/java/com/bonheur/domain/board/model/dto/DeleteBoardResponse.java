@@ -1,17 +1,18 @@
 package com.bonheur.domain.board.model.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DeleteBoardResponse {
-    private String result;
+    private Long boardId;
 
     // parameter 한 개여서 public으로 작성
     @Builder
-    public DeleteBoardResponse(String result){
-        this.result = result;
+    public DeleteBoardResponse(Long boardId){
+        this.boardId = boardId;
     }
 }

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
+import static com.bonheur.config.session.SessionConstant.MEMBER_ID;
+
 @RequiredArgsConstructor
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
@@ -25,8 +27,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (auth == null) {
             return true;
         }
-        Long userId = loginCheckHandler.getUserId(request);
-        request.setAttribute("MEMBER_ID", userId);
+        Long memberId = loginCheckHandler.getMemberId(request);
+        request.setAttribute(MEMBER_ID, memberId);
         return true;
     }
 

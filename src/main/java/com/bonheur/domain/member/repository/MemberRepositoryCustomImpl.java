@@ -1,5 +1,6 @@
 package com.bonheur.domain.member.repository;
 
+import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,5 +21,15 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                         member.memberSocialInfo.socialId.eq(socialId),
                         member.memberSocialInfo.socialType.eq(socialType)
                 ).fetchFirst() != null;
+    }
+
+    @Override
+    public Member findMemberBySocialInfo(String socialId, MemberSocialType socialType) {
+        return queryFactory
+                .selectFrom(member)
+                .where(
+                        member.memberSocialInfo.socialId.eq(socialId),
+                        member.memberSocialInfo.socialType.eq(socialType)
+                ).fetchFirst();
     }
 }
