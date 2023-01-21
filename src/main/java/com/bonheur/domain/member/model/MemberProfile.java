@@ -21,8 +21,4 @@ public class MemberProfile {
     public static MemberProfile of(String url, String path) {
         return new MemberProfile(url, path);
     }
-    public void updateProfile(String url, String path){
-        this.url = url;
-        this.path = path;
-    }
 }

@@ -1,22 +1,16 @@
 package com.bonheur.domain.member.model.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateMemberProfileResponse {
     private Long memberId;
 
-    @Builder
-    private UpdateMemberProfileResponse(Long memberId){
-        this.memberId = memberId;
-    }
-
-    public static UpdateMemberProfileResponse of(Long memberId){
-        return UpdateMemberProfileResponse.builder()
-                .memberId(memberId)
-                .build();
+    public static UpdateMemberProfileResponse of(@NotNull Long memberId){
+        return new UpdateMemberProfileResponse(memberId);
     }
 }

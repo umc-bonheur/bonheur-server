@@ -38,13 +38,13 @@ public class MemberServiceImpl implements MemberService{
         member.updateNickname(request.getNickname());
 
         //이미지 수정
-        if(member.getProfile().getUrl() != null){    //기존의 프로필 이미지가 있는 경우
+        if(member.getProfile() != null){    //기존의 프로필 이미지가 있는 경우
             fileUploadUtil.deleteFile(member.getProfile().getPath());   //프로필 이미지 s3에서 삭제
-            member.getProfile().updateProfile(null, null); //member 테이블에서 이미지 삭제
+            member.updateProfile(null, null); //member 테이블에서 이미지 삭제
         }
         if(!image.isEmpty()){   //기존의 프로필 이미지를 새로운 이미지로 변경하는 경우
             FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image);  //프로필 이미지 s3에 업로드
-            member.getProfile().updateProfile(fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());  //프로필 이미지 변경
+            member.updateProfile(fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());  //프로필 이미지 변경
         }
 
         return UpdateMemberProfileResponse.of(memberId);
