@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 public interface BoardService {
-    public Slice<GetBoardResponse> getAllBoards(Long memberId, Pageable pageable);
+    public Slice<GetBoardResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable);
 
     public List<String> getBoardTagsName(List<BoardTag> boardTags);
 
