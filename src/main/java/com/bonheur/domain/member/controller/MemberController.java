@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Operation;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class MemberController {
     @PatchMapping("/api/member/profiles")
     public ApiResponse<UpdateMemberProfileResponse> updateProfile(
             @RequestPart MultipartFile image,
-            @RequestPart UpdateMemberProfileRequest updateMemberProfileRequest) throws IOException {
+            @RequestPart @Valid UpdateMemberProfileRequest updateMemberProfileRequest) throws IOException {
 
         Long memberId = 1L; //session 관련 검증 추가해야 함!
 
