@@ -1,7 +1,6 @@
 package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
-import com.bonheur.domain.board.model.QBoard;
 import com.bonheur.domain.boardtag.model.QBoardTag;
 import com.bonheur.domain.image.model.QImage;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -39,7 +38,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     @Override
     // # 게시글 조회 - by TagName (무한 스크롤, no-offset)
-    public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, Long tagId, Pageable pageable) {
+    public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
         QTag tag = QTag.tag;
         QBoardTag boardTag = QBoardTag.boardTag;
         List<Board> results = queryFactory.selectFrom(board)
@@ -50,7 +49,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                         board.member.id.eq(memberId),
                         // tag
                         board.id.in(queryFactory.select(boardTag.board.id).from(boardTag)
-                                .where(tag.id.eq(tagId))
+                                .where(tag.id.in(tagIds))
                                 .leftJoin(tag).on(tag.id.eq(boardTag.tag.id))
                         )
                 )
