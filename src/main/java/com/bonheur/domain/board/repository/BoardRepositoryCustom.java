@@ -1,11 +1,9 @@
 package com.bonheur.domain.board.repository;
 
-import com.bonheur.domain.board.model.dto.GetBoardResponse;
+import com.bonheur.domain.board.model.Board;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-import java.util.List;
-
 public interface BoardRepositoryCustom {
-    public Slice<GetBoardResponse> findAllWithPaging(Long memberId, Pageable pageable);
+    public Slice<Board> findAllWithPaging(Long lastBoardId, Long memberId, Pageable pageable);
 }
