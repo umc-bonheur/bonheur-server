@@ -40,6 +40,15 @@ public class BoardController {
         else return ApiResponse.error(ErrorCode.E400_INVALID_AUTH_TOKEN);
     }
 
+    // # 게시글 조회 - 해시태그
+    // 회원 인증 어노테이션 추가 필요
+    @GetMapping("/api/boards/{tagName}")
+    public ApiResponse<Slice<GetBoardsResponse>> getBoardsByTag(Long lastBoardId, Long memberId, @PathVariable("tagName") String tagName, @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByTag(lastBoardId, memberId, tagName, pageable);
+
+        return ApiResponse.success(getBoardsResponses);
+    }
+
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
