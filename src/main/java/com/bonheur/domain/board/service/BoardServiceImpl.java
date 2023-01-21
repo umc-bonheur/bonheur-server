@@ -1,11 +1,9 @@
 package com.bonheur.domain.board.service;
 
 import com.bonheur.domain.board.model.Board;
-import com.bonheur.domain.board.model.dto.CreateBoardRequest;
-import com.bonheur.domain.board.model.dto.CreateBoardResponse;
-import com.bonheur.domain.board.model.dto.UpdateBoardRequest;
-import com.bonheur.domain.board.model.dto.UpdateBoardResponse;
+import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.repository.BoardRepository;
+import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.image.service.ImageService;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
@@ -18,6 +16,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +58,15 @@ public class BoardServiceImpl implements BoardService {
             imageService.updateImages(board.get(), images); //이미지 수정
         }
         return UpdateBoardResponse.newResponse(boardId);
+    }
+
+
+
+    @Override
+    public GetBoardResponse getBoard(Long boardId) {
+        Board board = boardRepository.findBoardByIdWithTagAndImage(boardId);
+        return GetBoardResponse.of(board.getId(), board.getContents(),
+                board.getImages().stream().map(Image::getUrl).collect(Collectors.toList()),
+                board.getBoardTags().stream().map(boardTag -> boardTag.getTag().getName()).collect(Collectors.toList()), board.getCreatedAt().toString());
     }
 }
