@@ -37,6 +37,31 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return checkLastPage(pageable, results);
     }
 
+    @Override
+    // # 게시글 조회 - by TagName (무한 스크롤, no-offset)
+    public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, Long tagId, Pageable pageable) {
+        QTag tag = QTag.tag;
+        QBoardTag boardTag = QBoardTag.boardTag;
+        List<Board> results = queryFactory.selectFrom(board)
+                .where(
+                        // no-offset 페이징 처리
+                        ltBoardId(lastBoardId),
+                        // memberId
+                        board.member.id.eq(memberId),
+                        // tag
+                        board.id.in(queryFactory.select(boardTag.board.id).from(boardTag)
+                                .where(tag.id.eq(tagId))
+                                .leftJoin(tag).on(tag.id.eq(boardTag.tag.id))
+                        )
+                )
+                .orderBy(board.createdAt.desc())
+                .limit(pageable.getPageSize() + 1) // Slice 방식
+                .fetch();
+
+        // 무한 스크롤 처리
+        return checkLastPage(pageable, results);
+    }
+
     // no-offset 방식 처리 (처음 조회시 boardId가 null로 들어옴)
     private BooleanExpression ltBoardId(Long boardId) {
         if (boardId == null) return null;
