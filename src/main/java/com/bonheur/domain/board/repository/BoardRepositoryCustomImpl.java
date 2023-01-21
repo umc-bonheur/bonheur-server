@@ -2,6 +2,8 @@ package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.QBoard;
+import com.bonheur.domain.boardtag.model.QBoardTag;
+import com.bonheur.domain.tag.model.QTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     private final JPAQueryFactory queryFactory;
     QBoard board = QBoard.board;
 
-    // # 게시글 조회 (무한 스크롤, no-offset) 2 - 도전 예정
+    // # 게시글 전체 조회 (무한 스크롤, no-offset)
     public Slice<Board> findAllWithPaging(Long lastBoardId, Long memberId, Pageable pageable) {
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
@@ -25,6 +27,30 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                         // memberId
                         board.member.id.eq(memberId)
                 ).orderBy(board.createdAt.desc())
+                .limit(pageable.getPageSize() + 1) // Slice 방식
+                .fetch();
+
+        // 무한 스크롤 처리
+        return checkLastPage(pageable, results);
+    }
+
+    // # 게시글 조회 - by TagName (무한 스크롤, no-offset)
+    public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, Long tagId, Pageable pageable) {
+        QTag tag = QTag.tag;
+        QBoardTag boardTag = QBoardTag.boardTag;
+        List<Board> results = queryFactory.selectFrom(board)
+                .where(
+                        // no-offset 페이징 처리
+                        ltBoardId(lastBoardId),
+                        // memberId
+                        board.member.id.eq(memberId),
+                        // tag
+                        board.id.in(queryFactory.select(boardTag.board.id).from(boardTag)
+                                .where(tag.id.eq(tagId))
+                                .leftJoin(tag).on(tag.id.eq(boardTag.tag.id))
+                        )
+                )
+                .orderBy(board.createdAt.desc())
                 .limit(pageable.getPageSize() + 1) // Slice 방식
                 .fetch();
 
