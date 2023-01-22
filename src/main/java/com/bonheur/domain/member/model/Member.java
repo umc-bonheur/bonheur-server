@@ -46,4 +46,12 @@ public class Member extends BaseEntity {
                 .nickname(nickname)
                 .build();
     }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updateProfile(String url, String path){
+        this.profile = MemberProfile.of(url, path);
+    }
 }
