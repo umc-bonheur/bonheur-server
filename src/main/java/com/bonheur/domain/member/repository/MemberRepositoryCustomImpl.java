@@ -111,6 +111,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public Long findByDay(Long memberId, String day){
+        // todo : mysql 문법으로 변경
+        // StringTemplate toDay = stringTemplate("DAYOFWEEK({0})", board.createdAt);
         StringTemplate toDay = stringTemplate("DAY_OF_WEEK({0})", board.createdAt);
 
         Long countDayOfWeek = queryFactory
