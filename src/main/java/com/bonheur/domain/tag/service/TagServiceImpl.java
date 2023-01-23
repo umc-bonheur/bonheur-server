@@ -8,10 +8,10 @@ import com.bonheur.domain.tag.model.dto.CreateTagResponse;
 import com.bonheur.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service

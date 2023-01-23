@@ -7,8 +7,8 @@ import com.bonheur.domain.tag.model.Tag;
 import com.bonheur.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
