@@ -3,7 +3,9 @@ package com.bonheur.domain.member.repository;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllActiveResponse;
+import com.bonheur.domain.member.model.dto.FindByDayResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.StringTemplate;
@@ -132,25 +134,32 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Long findByDay(Long memberId, String day){
+    public List<FindByDayResponse> findByDay(Long memberId){
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
-         StringTemplate toDay = stringTemplate("DAYOFWEEK({0})", board.createdAt);
+        StringTemplate toDay = stringTemplate("DAYOFWEEK({0})", board.createdAt);
 
         /* h2 */
         // StringTemplate toDay = stringTemplate("DAY_OF_WEEK({0})", board.createdAt);
 
-        Long countDayOfWeek = queryFactory
-                .select(toDay.count())
+        return queryFactory
+                .select(Projections.fields(FindByDayResponse.class,
+                                        toDay.when("1").then("sun")
+                                                .when("2").then("mon")
+                                                .when("3").then("tue")
+                                                .when("4").then("wed")
+                                                .when("5").then("thr")
+                                                .when("6").then("fri")
+                                                .when("7").then("sat")
+                                                .otherwise("기타").max().as("dayOfWeek"),
+                                        toDay.count().as("countDay")
+                        ))
                 .from(board)
-                .where(board.member.id.eq(memberId),
-                        toDay.eq(day))
+                .where(board.member.id.eq(memberId))
                 .groupBy(toDay)
                 .distinct()
-                .fetchFirst();
-
-        return isNull(countDayOfWeek) ? 0 :countDayOfWeek;
+                .fetch();
     }
 
     @Override

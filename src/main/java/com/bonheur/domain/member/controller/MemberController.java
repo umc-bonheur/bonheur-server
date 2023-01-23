@@ -63,7 +63,7 @@ public class MemberController {
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 요일 조회")
     @GetMapping("/api/mypages/day")
-    public ApiResponse<FindByDayResponse> findByDay() {
+    public ApiResponse<List<FindByDayResponse>> findByDay() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findByDay(memberId));
     }

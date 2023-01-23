@@ -85,16 +85,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public FindByDayResponse findByDay(Long memberId) {
-        Long sun = memberRepository.findByDay(memberId, "1");
-        Long mon = memberRepository.findByDay(memberId, "2");
-        Long tue = memberRepository.findByDay(memberId, "3");
-        Long wed = memberRepository.findByDay(memberId, "4");
-        Long thu = memberRepository.findByDay(memberId, "5");
-        Long fri = memberRepository.findByDay(memberId, "6");
-        Long sat = memberRepository.findByDay(memberId, "7");
-
-        return FindByDayResponse.of(sun,mon,tue,wed,thu,fri,sat);
+    public List<FindByDayResponse> findByDay(Long memberId) {
+        return memberRepository.findByDay(memberId);
     }
 
     @Override
