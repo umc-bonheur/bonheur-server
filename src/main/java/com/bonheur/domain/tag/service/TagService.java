@@ -1,10 +1,9 @@
 package com.bonheur.domain.tag.service;
 
-import com.bonheur.domain.board.model.Board;
+import com.bonheur.domain.tag.model.dto.CreateTagResponse;
 
 import java.util.List;
 
 public interface TagService {
-    void createBoardTags(Board board, List<String> tags);
-    void updateBoardTags(Board board, List<String> tags);
+    CreateTagResponse createTags(Long memberId, List<String> tags);
 }

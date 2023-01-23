@@ -17,6 +17,8 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
 
+    @ApiDocumentResponse
+    @Operation(summary = "게시물 생성")
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
@@ -27,6 +29,8 @@ public class BoardController {
         return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "게시물 수정")
     @PatchMapping("/api/boards/{boardId}")
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
