@@ -7,4 +7,6 @@ public interface AuthService {
     Long signUp(SocialSignUpRequest request);
 
     Long login(LoginRequest request);
+
+    void withdrawal(Long memberId);
 }

@@ -11,10 +11,7 @@ import com.bonheur.domain.auth.service.AuthService;
 import com.bonheur.domain.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -66,6 +63,19 @@ public class AuthController {
             @Valid @MemberId Long memberId
     ) {
         httpSession.invalidate();
-        return ApiResponse.success("로그아웃을 요청합니다.");
+        return ApiResponse.success("로그아웃이 되었습니다.");
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "회원 탈퇴 요청")
+    // 이상 Swagger 코드
+    @Auth
+    @DeleteMapping("/auth/withdrawal")
+    public ApiResponse<String> withdrawal(
+            @Valid @MemberId Long memberId
+    ) {
+        authService.withdrawal(memberId);
+        httpSession.invalidate();
+        return ApiResponse.success("회원 탈퇴가 되었습니다.");
     }
 }
