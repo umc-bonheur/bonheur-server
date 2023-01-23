@@ -92,10 +92,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
-        // StringTemplate toTime = stringTemplate("DATE_FORMAT({0}, '%h')", board.createdAt);
+        StringTemplate toTime = stringTemplate("DATE_FORMAT({0}, '%h')", board.createdAt);
 
         /* h2 */
-        StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
+        // StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
 
         Long result = queryFactory
                 .select(toTime.count())
@@ -114,10 +114,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
-        // StringTemplate toDay = stringTemplate("DAYOFWEEK({0})", board.createdAt);
+         StringTemplate toDay = stringTemplate("DAYOFWEEK({0})", board.createdAt);
 
         /* h2 */
-        StringTemplate toDay = stringTemplate("DAY_OF_WEEK({0})", board.createdAt);
+        // StringTemplate toDay = stringTemplate("DAY_OF_WEEK({0})", board.createdAt);
 
         Long countDayOfWeek = queryFactory
                 .select(toDay.count())
@@ -136,10 +136,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
-        // StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
+        StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
 
         /* h2 */
-        StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
+        // StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
 
         Long countByMonth = queryFactory
                 .select(toMonth.count())
