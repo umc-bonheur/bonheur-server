@@ -2,10 +2,7 @@ package com.bonheur.domain.member.repository;
 
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
-import com.bonheur.domain.member.model.dto.FindAllActiveResponse;
-import com.bonheur.domain.member.model.dto.FindByDayResponse;
-import com.bonheur.domain.member.model.dto.FindByMonthResponse;
-import com.bonheur.domain.member.model.dto.FindByTagResponse;
+import com.bonheur.domain.member.model.dto.*;
 
 import java.util.List;
 
