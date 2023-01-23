@@ -47,8 +47,11 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public FindAllActiveResponse findAllActive(Long memberId) {
 
-        // 2022-01-20 03:48:02.164938 -> 2022-01-20 형식으로 변환
-        StringTemplate toDate = stringTemplate("date({0})", board.createdAt);
+        /* mysql */
+        StringTemplate toDate = stringTemplate("DATE_FORMAT({0}, '%Y-%m-%d')", board.createdAt);
+
+        /* h2 */
+        // StringTemplate toDate = stringTemplate("FORMATDATETIME({0}, 'yyyy-MM-dd')", board.createdAt);
 
         return queryFactory
                 .select(Projections.fields(FindAllActiveResponse.class,
@@ -165,10 +168,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
-        StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
+        // StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
 
         /* h2 */
-        // StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
+        StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
 
         return queryFactory
                 .select(Projections.fields(FindByMonthResponse.class,
