@@ -77,7 +77,7 @@ public class MemberServiceImpl implements MemberService{
         Long morning = memberRepository.findByTime(memberId, "06", "12");
         Long afternoon = memberRepository.findByTime(memberId, "12", "18");
         Long evening = memberRepository.findByTime(memberId, "18", "20");
-        Long night = memberRepository.findByTime(memberId, "20", "25");
+        Long night = memberRepository.findNightTime(memberId);
         Long dawn = memberRepository.findByTime(memberId, "01", "06");
 
         return FindByTimeResponse.of(morning,afternoon,evening,night,dawn);

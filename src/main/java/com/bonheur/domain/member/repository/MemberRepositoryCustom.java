@@ -15,6 +15,9 @@ public interface MemberRepositoryCustom {
     FindAllActiveResponse findAllActive(Long memberId);
     List<FindByTagResponse> findByTag(Long memberId);
     Long findByTime(Long memberId, String start, String end);
+    Long findNightTime(Long memberId);
     Long findByDay(Long memberId, String day);
     Long findByMonth(Long memberId, String month);
+
+
 }

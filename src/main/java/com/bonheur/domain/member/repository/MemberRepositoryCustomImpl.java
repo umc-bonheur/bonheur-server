@@ -110,6 +110,28 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
+    public Long findNightTime(Long memberId) {
+        // todo : 사용할 데이터베이스 문법으로 변경
+
+        /* mysql */
+        StringTemplate toTime = stringTemplate("DATE_FORMAT({0}, '%h')", board.createdAt);
+
+        /* h2 */
+        // StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
+
+        Long result = queryFactory
+                .select(toTime.count())
+                .from(board)
+                .where(board.member.id.eq(memberId),
+                        toTime.between("20", "25").or(toTime.between("00","01")))
+                .groupBy(toTime)
+                .distinct()
+                .fetchFirst();
+
+        return isNull(result) ? 0 : result;
+    }
+
+    @Override
     public Long findByDay(Long memberId, String day){
         // todo : 사용할 데이터베이스 문법으로 변경
 
