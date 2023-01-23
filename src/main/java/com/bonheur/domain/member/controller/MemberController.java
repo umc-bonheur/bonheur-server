@@ -36,31 +36,41 @@ public class MemberController {
         return ApiResponse.success(memberService.updateMemberProfile(memberId, updateMemberProfileRequest, image));
     }
 
-    @GetMapping("/mypages")
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 종합 조회")
+    @GetMapping("/api/mypages")
     public ApiResponse<FindAllMonthlyResponse> findAllMonthly() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findAllMonthly(memberId));
     }
 
-    @GetMapping("/mypages/tag")
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 태그별 조회")
+    @GetMapping("/api/mypages/tag")
     public ApiResponse<List<FindByTagResponse>> findByTag() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findByTag(memberId));
     }
 
-    @GetMapping("/mypages/time")
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 시간별 조회")
+    @GetMapping("/api/mypages/time")
     public ApiResponse<FindByTimeResponse> findByTime() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findByTime(memberId));
     }
 
-    @GetMapping("/mypages/day")
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 요일 조회")
+    @GetMapping("/api/mypages/day")
     public ApiResponse<FindByDayResponse> findByDay() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findByDay(memberId));
     }
 
-    @GetMapping("/mypages/month")
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 월별 조회")
+    @GetMapping("/api/mypages/month")
     public ApiResponse<FindByMonthResponse> findByMonth() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findByMonth(memberId));
