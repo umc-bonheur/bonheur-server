@@ -7,14 +7,12 @@ import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.image.service.ImageService;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
-import com.bonheur.domain.tag.model.Tag;
 import com.bonheur.domain.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bonheur.domain.boardtag.model.BoardTag;
-import com.bonheur.domain.tag.repository.TagRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +32,6 @@ public class BoardServiceImpl implements BoardService {
     private final MemberRepository memberRepository;
     private final TagService tagService;
     private final ImageService imageService;
-    private final TagRepository tagRepository;
 
     // # 게시글 전체 조회
     // 회원 정보 인증 어노테이션 추가 필요
