@@ -2,6 +2,7 @@ package com.bonheur.domain.member.model;
 
 import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.common.BaseEntity;
+import com.bonheur.domain.membertag.model.MemberTag;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Board> boards = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberTag> memberTags = new ArrayList<>();
+
 
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String socialId, MemberSocialType socialType, String nickname) {
@@ -45,5 +49,13 @@ public class Member extends BaseEntity {
                 .socialType(socialType)
                 .nickname(nickname)
                 .build();
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updateProfile(String url, String path){
+        this.profile = MemberProfile.of(url, path);
     }
 }
