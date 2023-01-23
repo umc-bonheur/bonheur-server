@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FindByMonthResponse {
     String month;
-    Long countByMonth;
+    Long countMonth;
 }

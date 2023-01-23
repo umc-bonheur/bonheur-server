@@ -185,7 +185,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                                 .when("11").then("nov")
                                 .when("12").then("dec")
                                 .otherwise("기타").max().as("month"),
-                        toMonth.count().as("countByMonth")
+                        toMonth.count().as("countMonth")
                 ))
                 .from(board)
                 .where(board.member.id.eq(memberId))
