@@ -85,28 +85,11 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public List<FindByDayResponse> findByDay(Long memberId) {
-        return memberRepository.findByDay(memberId);
-    }
+    public List<FindByDayResponse> findByDay(Long memberId) { return memberRepository.findByDay(memberId); }
 
     @Override
     @Transactional
-    public FindByMonthResponse findByMonth(Long memberId) {
-        Long jan = memberRepository.findByMonth(memberId, "01");
-        Long feb = memberRepository.findByMonth(memberId, "02");
-        Long mar = memberRepository.findByMonth(memberId, "03");
-        Long apr = memberRepository.findByMonth(memberId, "04");
-        Long may = memberRepository.findByMonth(memberId, "05");
-        Long jun = memberRepository.findByMonth(memberId, "06");
-        Long jul = memberRepository.findByMonth(memberId, "07");
-        Long aug = memberRepository.findByMonth(memberId, "08");
-        Long sept = memberRepository.findByMonth(memberId, "09");
-        Long oct = memberRepository.findByMonth(memberId, "10");
-        Long nov = memberRepository.findByMonth(memberId, "11");
-        Long dec = memberRepository.findByMonth(memberId, "12");
-
-        return FindByMonthResponse.of(jan,feb,mar,apr,may,jun,jul,aug,sept,oct,nov,dec);
-    }
+    public List<FindByMonthResponse> findByMonth(Long memberId) { return memberRepository.findByMonth(memberId); }
 }
 
 

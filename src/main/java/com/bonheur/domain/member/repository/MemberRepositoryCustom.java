@@ -4,6 +4,7 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllActiveResponse;
 import com.bonheur.domain.member.model.dto.FindByDayResponse;
+import com.bonheur.domain.member.model.dto.FindByMonthResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface MemberRepositoryCustom {
     Long findByTime(Long memberId, String start, String end);
     Long findNightTime(Long memberId);
     List<FindByDayResponse> findByDay(Long memberId);
-    Long findByMonth(Long memberId, String month);
+    List<FindByMonthResponse> findByMonth(Long memberId);
 
 
 }

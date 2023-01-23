@@ -4,6 +4,7 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllActiveResponse;
 import com.bonheur.domain.member.model.dto.FindByDayResponse;
+import com.bonheur.domain.member.model.dto.FindByMonthResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
@@ -158,12 +159,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .from(board)
                 .where(board.member.id.eq(memberId))
                 .groupBy(toDay)
+                .orderBy(toDay.asc())
                 .distinct()
                 .fetch();
     }
 
     @Override
-    public Long findByMonth(Long memberId, String month) {
+    public List<FindByMonthResponse> findByMonth(Long memberId) {
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
@@ -172,16 +174,29 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         /* h2 */
         // StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
 
-        Long countByMonth = queryFactory
-                .select(toMonth.count())
+        return queryFactory
+                .select(Projections.fields(FindByMonthResponse.class,
+                        toMonth.when("01").then("jan")
+                                .when("02").then("feb")
+                                .when("03").then("mar")
+                                .when("04").then("apr")
+                                .when("05").then("may")
+                                .when("06").then("jun")
+                                .when("07").then("jul")
+                                .when("08").then("aug")
+                                .when("09").then("sept")
+                                .when("10").then("oct")
+                                .when("11").then("nov")
+                                .when("12").then("dec")
+                                .otherwise("기타").max().as("month"),
+                        toMonth.count().as("countByMonth")
+                ))
                 .from(board)
-                .where(board.member.id.eq(memberId),
-                        toMonth.eq(month))
+                .where(board.member.id.eq(memberId))
                 .groupBy(toMonth)
+                .orderBy(toMonth.asc())
                 .distinct()
-                .fetchFirst();
-
-        return isNull(countByMonth) ? 0 :countByMonth;
+                .fetch();
     }
 
 }

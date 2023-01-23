@@ -71,7 +71,7 @@ public class MemberController {
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 월별 조회")
     @GetMapping("/api/mypages/month")
-    public ApiResponse<FindByMonthResponse> findByMonth() {
+    public ApiResponse<List<FindByMonthResponse>> findByMonth() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findByMonth(memberId));
     }

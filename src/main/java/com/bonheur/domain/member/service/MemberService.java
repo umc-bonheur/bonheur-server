@@ -18,5 +18,5 @@ public interface MemberService {
     FindByTimeResponse findByTime(Long memberId);
 
     List<FindByDayResponse> findByDay(Long memberId);
-    FindByMonthResponse findByMonth(Long memberId);
+    List<FindByMonthResponse> findByMonth(Long memberId);
 }
