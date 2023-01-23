@@ -45,8 +45,8 @@ public class BoardController {
     @ResponseBody
     @PostMapping ("/api/boards/tag")
     public ApiResponse<Slice<GetBoardsResponse>> getBoardsByTag(
-            Long lastBoardId, @RequestBody GetBoardByTagRequest getBoardByTagRequest,
-            @PageableDefault(size = 5) Pageable pageable) {
+            @RequestParam(required = false) Long lastBoardId, @RequestBody GetBoardByTagRequest getBoardByTagRequest,
+            @RequestParam(required = false) @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses =
                 boardService.getBoardsByTag(lastBoardId, getBoardByTagRequest.getMemberId(), getBoardByTagRequest.getTagIds(), pageable);
 
