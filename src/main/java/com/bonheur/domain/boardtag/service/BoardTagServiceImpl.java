@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +20,8 @@ public class BoardTagServiceImpl implements BoardTagService{
     @Transactional
     public void createBoardTags(Board board, List<Long> tagsIds){    //게시글과 해시태그 맵핑(연결)
         for(Long tagId : tagsIds) {
-            Optional<Tag> tag = tagRepository.findById(tagId);
-            if (!tag.isEmpty()){
-                boardTagRepository.save(BoardTag.newBoardTag(board, tag.get()));
-            }
+            Tag tag = tagRepository.findTagById(tagId);
+            boardTagRepository.save(BoardTag.newBoardTag(board, tag));
         }
     }
 

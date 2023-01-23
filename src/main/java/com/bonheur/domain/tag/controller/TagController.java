@@ -19,7 +19,7 @@ public class TagController {
     @PostMapping("/api/tags")
     public ApiResponse<CreateTagResponse> createTags(
             @RequestBody CreateTagRequest createTagRequest) {
-
-        return ApiResponse.success(tagService.createTags(createTagRequest.getTags()));
+        Long memberId = 1L; //session 관련 검증 추가해야 함!
+        return ApiResponse.success(tagService.createTags(memberId, createTagRequest.getTags()));
     }
 }
