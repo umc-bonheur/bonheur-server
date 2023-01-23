@@ -14,17 +14,19 @@ public class GetBoardsResponse {
     private String contents;
     private List<String> boardTags;
     private String image; // 대표 이미지 url
+    private String createdAt;
 
-    private GetBoardsResponse(String contents, List<String> boardTags) {
+    private GetBoardsResponse(String contents, List<String> boardTags, String createdAt) {
         this.contents = contents;
         this.boardTags = boardTags;
+        this.createdAt = createdAt;
     }
 
-    public static GetBoardsResponse of(String contents, List<String> boardTags, String image) {
-        return new GetBoardsResponse(contents, boardTags, image);
+    public static GetBoardsResponse of(String contents, List<String> boardTags, String image, String createdAt) {
+        return new GetBoardsResponse(contents, boardTags, image, createdAt);
     }
 
-    public static GetBoardsResponse withoutImage(String contents, List<String> boardTags) {
-        return new GetBoardsResponse(contents, boardTags);
+    public static GetBoardsResponse withoutImage(String contents, List<String> boardTags, String createdAt) {
+        return new GetBoardsResponse(contents, boardTags, createdAt);
     }
 }
