@@ -1,11 +1,6 @@
 package com.bonheur.domain.member.service;
 
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileRequest;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileResponse;
-import com.bonheur.domain.member.model.dto.CreateMemberRequest;
-import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
-import com.bonheur.domain.member.model.dto.FindByTagResponse;
-import com.bonheur.domain.member.model.dto.FindByTimeResponse;
+import com.bonheur.domain.member.model.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,4 +16,6 @@ public interface MemberService {
     List<FindByTagResponse> findByTag(Long memberId);
 
     FindByTimeResponse findByTime(Long memberId);
+
+    FindByDayResponse findByDay(Long memberId);
 }

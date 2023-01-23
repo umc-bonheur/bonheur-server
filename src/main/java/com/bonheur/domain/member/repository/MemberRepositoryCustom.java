@@ -15,4 +15,5 @@ public interface MemberRepositoryCustom {
     FindAllMonthlyResponse findAllMonthly(Long memberId);
     List<FindByTagResponse> findByTag(Long memberId);
     Long findByTime(Long memberId, String start, String end);
+    Long findByDay(Long memberId, String day);
 }

@@ -2,12 +2,7 @@ package com.bonheur.domain.member.service;
 
 import com.bonheur.domain.file.dto.FileUploadResponse;
 import com.bonheur.domain.member.model.Member;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileRequest;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileResponse;
-import com.bonheur.domain.member.model.dto.CreateMemberRequest;
-import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
-import com.bonheur.domain.member.model.dto.FindByTagResponse;
-import com.bonheur.domain.member.model.dto.FindByTimeResponse;
+import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -83,8 +78,21 @@ public class MemberServiceImpl implements MemberService{
         Long night = memberRepository.findByTime(memberId, "20", "25");
         Long dawn = memberRepository.findByTime(memberId, "01", "06");
 
-        FindByTimeResponse response = FindByTimeResponse.of(morning,afternoon,evening,night,dawn);
-        return response;
+        return FindByTimeResponse.of(morning,afternoon,evening,night,dawn);
+    }
+
+    @Override
+    @Transactional
+    public FindByDayResponse findByDay(Long memberId) {
+        Long sun = memberRepository.findByDay(memberId, "1");
+        Long mon = memberRepository.findByDay(memberId, "2");
+        Long tue = memberRepository.findByDay(memberId, "3");
+        Long wed = memberRepository.findByDay(memberId, "4");
+        Long thu = memberRepository.findByDay(memberId, "5");
+        Long fri = memberRepository.findByDay(memberId, "6");
+        Long sat = memberRepository.findByDay(memberId, "7");
+
+        return FindByDayResponse.of(sun,mon,tue,wed,thu,fri,sat);
     }
 }
 

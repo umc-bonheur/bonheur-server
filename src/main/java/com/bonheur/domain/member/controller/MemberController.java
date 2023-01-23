@@ -2,13 +2,9 @@ package com.bonheur.domain.member.controller;
 
 
 import com.bonheur.domain.common.dto.ApiResponse;
-import com.bonheur.domain.member.model.dto.FindByTagResponse;
-import com.bonheur.domain.member.model.dto.FindByTimeResponse;
+import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileRequest;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileResponse;
 import com.bonheur.domain.member.service.MemberService;
-import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,6 +56,14 @@ public class MemberController {
     public ApiResponse<FindByTimeResponse> findByTime() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         FindByTimeResponse response = memberService.findByTime(memberId);
+
+        return ApiResponse.success(response);
+    }
+
+    @GetMapping("/mypages/day")
+    public ApiResponse<FindByDayResponse> findByDay() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        FindByDayResponse response = memberService.findByDay(memberId);
 
         return ApiResponse.success(response);
     }

@@ -4,7 +4,6 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimePath;
@@ -14,7 +13,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
@@ -23,7 +21,6 @@ import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
 import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
 import static java.util.Objects.isNull;
-import static org.hibernate.internal.util.NullnessHelper.coalesce;
 
 @RequiredArgsConstructor
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
@@ -97,6 +94,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public Long findByTime(Long memberId, String start, String end) {
         // todo : mysql 문법으로 변경
+        // StringTemplate toTime = stringTemplate("DATE_FORMAT({0}, '%h')", board.createdAt);
         StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
 
         Long result = queryFactory
@@ -109,6 +107,22 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .fetchFirst();
 
         return isNull(result) ? 0 : result;
+    }
+
+    @Override
+    public Long findByDay(Long memberId, String day){
+        StringTemplate toDay = stringTemplate("DAY_OF_WEEK({0})", board.createdAt);
+
+        Long countDayOfWeek = queryFactory
+                .select(toDay.count())
+                .from(board)
+                .where(board.member.id.eq(memberId),
+                        toDay.eq(day))
+                .groupBy(toDay)
+                .distinct()
+                .fetchFirst();
+
+        return isNull(countDayOfWeek) ? 0 :countDayOfWeek;
     }
 
 }
