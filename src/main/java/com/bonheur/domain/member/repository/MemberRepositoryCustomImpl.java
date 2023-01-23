@@ -2,12 +2,10 @@ package com.bonheur.domain.member.repository;
 
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
-import com.bonheur.domain.member.model.dto.FindAllMonthlyResponse;
+import com.bonheur.domain.member.model.dto.FindAllActiveResponse;
 import com.bonheur.domain.member.model.dto.FindByTagResponse;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.DateTimePath;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -48,13 +46,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public FindAllMonthlyResponse findAllMonthly(Long memberId) {
+    public FindAllActiveResponse findAllActive(Long memberId) {
 
         // 2022-01-20 03:48:02.164938 -> 2022-01-20 형식으로 변환
         StringTemplate toDate = stringTemplate("date({0})", board.createdAt);
 
         return queryFactory
-                .select(Projections.fields(FindAllMonthlyResponse.class,
+                .select(Projections.fields(FindAllActiveResponse.class,
                         board.countDistinct().as("countHappy"),
                         boardTag.tag.name.countDistinct().as("countHashtag"),
                         ExpressionUtils.as(

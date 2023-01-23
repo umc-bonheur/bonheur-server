@@ -11,7 +11,7 @@ public interface MemberService {
 
     UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException;
 
-    FindAllMonthlyResponse findAllMonthly(Long memberId);
+    FindAllActiveResponse findAllActive(Long memberId);
 
     List<FindByTagResponse> findByTag(Long memberId);
 

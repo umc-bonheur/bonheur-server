@@ -37,11 +37,11 @@ public class MemberController {
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "마이페이지 통계 - 종합 조회")
+    @Operation(summary = "마이페이지 통계 - 활동 종합 조회")
     @GetMapping("/api/mypages")
-    public ApiResponse<FindAllMonthlyResponse> findAllMonthly() {
+    public ApiResponse<FindAllActiveResponse> findAllActive() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        return ApiResponse.success(memberService.findAllMonthly(memberId));
+        return ApiResponse.success(memberService.findAllActive(memberId));
     }
 
     @ApiDocumentResponse

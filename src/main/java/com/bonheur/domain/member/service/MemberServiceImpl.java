@@ -54,8 +54,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public FindAllMonthlyResponse findAllMonthly(Long memberId) {
-        FindAllMonthlyResponse response = memberRepository.findAllMonthly(memberId);
+    public FindAllActiveResponse findAllActive(Long memberId) {
+        FindAllActiveResponse response = memberRepository.findAllActive(memberId);
         Member findMember = memberRepository.findById(memberId).orElse(null);
 
         // 활동 일자 추가
