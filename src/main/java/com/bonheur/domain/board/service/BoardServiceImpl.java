@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +44,11 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findAllWithPaging(lastBoardId, memberId, pageable)
                 .map(board -> {
                     if (board.getImages().isEmpty()) {
-                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()),
+                                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")));
                     }   else {
-                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl(),
+                                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")));
                     }
                 });
     }
@@ -90,9 +93,11 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, pageable)
                 .map(board -> {
                     if (board.getImages().isEmpty()) {
-                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()));
+                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()),
+                                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")));
                     }   else {
-                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl());
+                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl(),
+                                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")));
                     }
                 });
     }
