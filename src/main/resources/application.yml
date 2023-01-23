@@ -3,28 +3,12 @@ cloud:
     region:
       static: ap-northeast-2
 
-external:
-  client:
-    kakao:
-      profile:
-        base-url: https://kapi.kakao.com
-        url: /v2/user/me
-    google:
-      profile:
-        base-url: https://www.googleapis.com
-        url: /oauth2/v2/userinfo
-    apple:
-      profile:
-        base-url: https://appleid.apple.com
-        url: /auth/keys
-    naver:
-      profile:
-        base-url: https://openapi.naver.com
-        url: /v1/nid/me
 spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  session:
+    store-type: redis
 
 springdoc:
   swagger-ui:
@@ -32,6 +16,7 @@ springdoc:
     path: '/v1/api-docs.html'
     try-it-out-enabled: false
   version: 'v1'
+
 ---
 spring:
   config:
@@ -39,7 +24,7 @@ spring:
       on-profile: local
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/bonheur
+    url: jdbc:h2:tcp://localhost/~/bonheur;
     username: bonheur
     password: bo123
 
@@ -51,6 +36,10 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
         show_sql: true
+  redis:
+    host: localhost
+    port: 6379
+    password: 1234
 
 apple:
   client_id: dummy-apple-client_id
@@ -65,8 +54,12 @@ cloud:
     credentials:
       access-key: ${secret.aws.credentials.access}
       secret-key: ${secret.aws.credentials.secret}
-
 ---
 spring:
-  profiles:
-    active: dev
+  config:
+    activate:
+      on-profile: dev
+  redis:
+    host: ${secret.redis.host}
+    port: ${secret.redis.port}
+    password: ${secret.redis.password}

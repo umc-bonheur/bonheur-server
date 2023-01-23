@@ -1,5 +1,7 @@
 package com.bonheur.domain.auth.controller;
 
+import com.bonheur.config.interceptor.Auth;
+import com.bonheur.config.resolver.MemberId;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.auth.model.dto.LoginRequest;
 import com.bonheur.domain.auth.model.dto.LoginResponse;
@@ -9,13 +11,12 @@ import com.bonheur.domain.auth.service.AuthService;
 import com.bonheur.domain.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import static com.bonheur.config.session.SessionConstant.MEMBER_ID;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +34,7 @@ public class AuthController {
             @Valid @RequestBody SocialSignUpRequest request
     ) {
         Long memberId = authService.signUp(request);
-        httpSession.setAttribute("MEMBER_ID", memberId);
+        httpSession.setAttribute(MEMBER_ID, memberId);
 
         SocialSignUpResponse response = SocialSignUpResponse.of(httpSession.getId(), memberId);
         return ApiResponse.success(response);
@@ -47,9 +48,34 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request
     ) {
         Long memberId = authService.login(request);
-        httpSession.setAttribute("MEMBER_ID", memberId);
+        httpSession.setAttribute(MEMBER_ID, memberId);
 
         LoginResponse response = LoginResponse.of(httpSession.getId(), memberId);
         return ApiResponse.success(response);
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "로그아웃 요청")
+    // 이상 Swagger 코드
+    @Auth
+    @PostMapping("/auth/logout")
+    public ApiResponse<String> logout(
+            @Valid @MemberId Long memberId
+    ) {
+        httpSession.invalidate();
+        return ApiResponse.success("로그아웃이 되었습니다.");
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "회원 탈퇴 요청")
+    // 이상 Swagger 코드
+    @Auth
+    @DeleteMapping("/auth/withdrawal")
+    public ApiResponse<String> withdrawal(
+            @Valid @MemberId Long memberId
+    ) {
+        authService.withdrawal(memberId);
+        httpSession.invalidate();
+        return ApiResponse.success("회원 탈퇴가 되었습니다.");
     }
 }
