@@ -168,10 +168,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         // todo : 사용할 데이터베이스 문법으로 변경
 
         /* mysql */
-        // StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
+        StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
 
         /* h2 */
-        StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
+        // StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
 
         return queryFactory
                 .select(Projections.fields(FindByMonthResponse.class,
