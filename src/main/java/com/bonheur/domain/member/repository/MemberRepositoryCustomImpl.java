@@ -127,5 +127,23 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         return isNull(countDayOfWeek) ? 0 :countDayOfWeek;
     }
 
+    @Override
+    public Long findByMonth(Long memberId, String month) {
+        // todo : mysql 문법으로 변경
+        // StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
+        StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
+
+        Long countByMonth = queryFactory
+                .select(toMonth.count())
+                .from(board)
+                .where(board.member.id.eq(memberId),
+                        toMonth.eq(month))
+                .groupBy(toMonth)
+                .distinct()
+                .fetchFirst();
+
+        return isNull(countByMonth) ? 0 :countByMonth;
+    }
+
 }
 

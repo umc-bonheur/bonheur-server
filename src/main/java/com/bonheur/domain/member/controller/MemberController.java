@@ -68,4 +68,12 @@ public class MemberController {
         return ApiResponse.success(response);
     }
 
+    @GetMapping("/mypages/month")
+    public ApiResponse<FindByMonthResponse> findByMonth() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        FindByMonthResponse response = memberService.findByMonth(memberId);
+
+        return ApiResponse.success(response);
+    }
+
 }
