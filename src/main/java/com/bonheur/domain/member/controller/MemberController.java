@@ -39,41 +39,31 @@ public class MemberController {
     @GetMapping("/mypages")
     public ApiResponse<FindAllMonthlyResponse> findAllMonthly() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        FindAllMonthlyResponse response = memberService.findAllMonthly(memberId);
-
-        return ApiResponse.success(response);
+        return ApiResponse.success(memberService.findAllMonthly(memberId));
     }
 
     @GetMapping("/mypages/tag")
     public ApiResponse<List<FindByTagResponse>> findByTag() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        List<FindByTagResponse> response = memberService.findByTag(memberId);
-
-        return ApiResponse.success(response);
+        return ApiResponse.success(memberService.findByTag(memberId));
     }
 
     @GetMapping("/mypages/time")
     public ApiResponse<FindByTimeResponse> findByTime() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        FindByTimeResponse response = memberService.findByTime(memberId);
-
-        return ApiResponse.success(response);
+        return ApiResponse.success(memberService.findByTime(memberId));
     }
 
     @GetMapping("/mypages/day")
     public ApiResponse<FindByDayResponse> findByDay() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        FindByDayResponse response = memberService.findByDay(memberId);
-
-        return ApiResponse.success(response);
+        return ApiResponse.success(memberService.findByDay(memberId));
     }
 
     @GetMapping("/mypages/month")
     public ApiResponse<FindByMonthResponse> findByMonth() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        FindByMonthResponse response = memberService.findByMonth(memberId);
-
-        return ApiResponse.success(response);
+        return ApiResponse.success(memberService.findByMonth(memberId));
     }
 
 }

@@ -55,11 +55,13 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
-        FindAllMonthlyResponse response = memberRepository.findAllMonthly(1L);
-
+        FindAllMonthlyResponse response = memberRepository.findAllMonthly(memberId);
         Member findMember = memberRepository.findById(memberId).orElse(null);
+
+        // 활동 일자 추가
         response.updateCountActiveDay(
                 ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)));
+
         return response;
     }
 

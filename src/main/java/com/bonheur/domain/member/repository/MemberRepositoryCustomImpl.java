@@ -50,15 +50,18 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public FindAllMonthlyResponse findAllMonthly(Long memberId) {
 
+        // 2022-01-20 03:48:02.164938 -> 2022-01-20 형식으로 변환
+        StringTemplate toDate = stringTemplate("date({0})", board.createdAt);
+
         return queryFactory
                 .select(Projections.fields(FindAllMonthlyResponse.class,
                         board.countDistinct().as("countHappy"),
                         boardTag.tag.name.countDistinct().as("countHashtag"),
                         ExpressionUtils.as(
-                                JPAExpressions.select(toDate(board.createdAt).countDistinct())
+                                JPAExpressions.select(toDate.countDistinct())
                                 .from(board)
                                 .where(board.member.id.eq(memberId))
-                                .groupBy(toDate(board.createdAt))
+                                .groupBy(toDate)
                                 ,"countRecordDay")
                         ))
                 .from(boardTag, board)
@@ -66,11 +69,6 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                         board.member.id.eq(memberId))
                 .distinct()
                 .fetchFirst();
-    }
-
-    public StringTemplate toDate(DateTimePath path){
-        // 2022-01-20 03:48:02.164938 -> 2022-01-20 형식으로 변환
-        return Expressions.stringTemplate("function('date', {0})", path);
     }
 
     @Override
@@ -93,8 +91,12 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public Long findByTime(Long memberId, String start, String end) {
-        // todo : mysql 문법으로 변경
+        // todo : 사용할 데이터베이스 문법으로 변경
+
+        /* mysql */
         // StringTemplate toTime = stringTemplate("DATE_FORMAT({0}, '%h')", board.createdAt);
+
+        /* h2 */
         StringTemplate toTime = stringTemplate("FORMATDATETIME({0}, 'HH')", board.createdAt);
 
         Long result = queryFactory
@@ -111,8 +113,12 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public Long findByDay(Long memberId, String day){
-        // todo : mysql 문법으로 변경
+        // todo : 사용할 데이터베이스 문법으로 변경
+
+        /* mysql */
         // StringTemplate toDay = stringTemplate("DAYOFWEEK({0})", board.createdAt);
+
+        /* h2 */
         StringTemplate toDay = stringTemplate("DAY_OF_WEEK({0})", board.createdAt);
 
         Long countDayOfWeek = queryFactory
@@ -129,8 +135,12 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public Long findByMonth(Long memberId, String month) {
-        // todo : mysql 문법으로 변경
+        // todo : 사용할 데이터베이스 문법으로 변경
+
+        /* mysql */
         // StringTemplate toMonth = stringTemplate("DATE_FORMAT({0}, '%m')", board.createdAt);
+
+        /* h2 */
         StringTemplate toMonth = stringTemplate("FORMATDATETIME({0}, 'MM')", board.createdAt);
 
         Long countByMonth = queryFactory
