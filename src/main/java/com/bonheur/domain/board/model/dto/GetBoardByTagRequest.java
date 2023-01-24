@@ -9,6 +9,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GetBoardByTagRequest {
-    private Long memberId;
     private List<Long> tagIds;
 }

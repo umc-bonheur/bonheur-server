@@ -24,7 +24,7 @@ public class BoardController {
     // # 게시글 전체 조회 (페이징 일단 5개로 정의)
     // 회원 인증 어노테이션 추가 필요
     @GetMapping("/api/boards")
-    public ApiResponse<Slice<GetBoardsResponse>> getAllBoards(Long lastBoardId, Long memberId, @PageableDefault(size = 5) Pageable pageable) {
+    public ApiResponse<Slice<GetBoardsResponse>> getAllBoards(@RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId, @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
 
         return ApiResponse.success(getBoardsResponses);
@@ -45,10 +45,11 @@ public class BoardController {
     @ResponseBody
     @PostMapping ("/api/boards/tag")
     public ApiResponse<Slice<GetBoardsResponse>> getBoardsByTag(
-            @RequestParam(required = false) Long lastBoardId, @RequestBody GetBoardByTagRequest getBoardByTagRequest,
+            @RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId,
+            @RequestBody GetBoardByTagRequest getBoardByTagRequest,
             @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses =
-                boardService.getBoardsByTag(lastBoardId, getBoardByTagRequest.getMemberId(), getBoardByTagRequest.getTagIds(), pageable);
+                boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), pageable);
 
         return ApiResponse.success(getBoardsResponses);
     }
