@@ -4,7 +4,6 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.*;
 import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.dsl.DateTimeOperation;
 import com.querydsl.core.types.dsl.NumberOperation;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
 import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
 import static com.querydsl.core.types.Projections.*;
-import static com.querydsl.core.types.dsl.Expressions.dateTimeOperation;
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 import static java.util.Objects.isNull;
 
@@ -56,17 +54,6 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .where(boardTag.board.member.id.eq(memberId),
                         board.member.id.eq(memberId))
                 .distinct()
-                .fetchFirst();
-    }
-
-    @Override
-    public Long findRecordDay(Long memberId){
-        DateTimeOperation<Integer> toDate = dateTimeOperation(Integer.class, Ops.DateTimeOps.DATE, board.createdAt);
-        return queryFactory
-                .select(toDate.countDistinct())
-                .from(board)
-                .where(board.member.id.eq(memberId))
-                .groupBy(toDate)
                 .fetchFirst();
     }
 
