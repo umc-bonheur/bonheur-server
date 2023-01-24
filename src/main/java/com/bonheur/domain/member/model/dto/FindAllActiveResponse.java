@@ -15,7 +15,7 @@ public class FindAllActiveResponse {
 
     public FindAllActiveResponse updateActiveDayAndRecordDay(Long activeDay, Long recordDay){
         this.activeDay = activeDay;
-        this.recordDay = activeDay;
+        this.recordDay = recordDay;
         return this;
     }
 }
