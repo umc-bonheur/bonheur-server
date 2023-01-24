@@ -74,11 +74,11 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public FindByTimeResponse findByTime(Long memberId) {
-        Long morning = memberRepository.findByTime(memberId, "06", "12");
-        Long afternoon = memberRepository.findByTime(memberId, "12", "18");
-        Long evening = memberRepository.findByTime(memberId, "18", "20");
+        Long morning = memberRepository.findByTime(memberId, 6, 12);
+        Long afternoon = memberRepository.findByTime(memberId, 12, 18);
+        Long evening = memberRepository.findByTime(memberId, 18, 20);
         Long night = memberRepository.findNightTime(memberId);
-        Long dawn = memberRepository.findByTime(memberId, "01", "06");
+        Long dawn = memberRepository.findByTime(memberId, 1, 6);
 
         return FindByTimeResponse.of(morning,afternoon,evening,night,dawn);
     }

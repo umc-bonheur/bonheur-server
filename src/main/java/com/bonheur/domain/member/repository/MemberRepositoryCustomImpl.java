@@ -6,7 +6,7 @@ import com.bonheur.domain.member.model.dto.*;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.DateTimeOperation;
 import com.querydsl.core.types.dsl.NumberOperation;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,6 +18,8 @@ import static com.bonheur.domain.board.model.QBoard.board;
 import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
 import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
+import static com.querydsl.core.types.dsl.Expressions.dateTimeOperation;
+import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 import static java.util.Objects.isNull;
 
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public FindAllActiveResponse findAllActive(Long memberId) {
-        NumberOperation<Integer> toDate = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DATE, board.createdAt);
+        DateTimeOperation<Integer> toDate = dateTimeOperation(Integer.class, Ops.DateTimeOps.DATE, board.createdAt);
 
         return queryFactory
                 .select(Projections.fields(FindAllActiveResponse.class,
@@ -85,13 +87,14 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Long findByTime(Long memberId, String start, String end) {
-        NumberOperation<Integer> toTime = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.HOUR, board.createdAt);
+    public Long findByTime(Long memberId, int start, int end) {
+        NumberOperation<Integer> toTime = numberOperation(Integer.class, Ops.DateTimeOps.HOUR, board.createdAt);
 
         Long result = queryFactory
                 .select(toTime.count())
                 .from(board)
-                .where(board.member.id.eq(memberId))
+                .where(board.member.id.eq(memberId),
+                        toTime.between(start, end))
                 .groupBy(toTime)
                 .distinct()
                 .fetchFirst();
@@ -101,7 +104,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public Long findNightTime(Long memberId) {
-        NumberOperation<Integer> toTime = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.HOUR, board.createdAt);
+        NumberOperation<Integer> toTime = numberOperation(Integer.class, Ops.DateTimeOps.HOUR, board.createdAt);
 
         Long result = queryFactory
                 .select(toTime.count())
@@ -117,7 +120,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public List<FindByDayResponse> findByDay(Long memberId){
-        NumberOperation<Integer> toDay = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_WEEK, board.createdAt);
+        NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_WEEK, board.createdAt);
 
         return queryFactory
                 .select(Projections.fields(FindByDayResponse.class,
@@ -140,7 +143,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public List<FindByMonthResponse> findByMonth(Long memberId) {
-        NumberOperation<Integer> toMonth = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
+        NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
 
         return queryFactory
                 .select(Projections.fields(FindByMonthResponse.class,
