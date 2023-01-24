@@ -3,12 +3,9 @@ package com.bonheur.domain.member.repository;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.*;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimeOperation;
 import com.querydsl.core.types.dsl.NumberOperation;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +15,7 @@ import static com.bonheur.domain.board.model.QBoard.board;
 import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
 import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
+import static com.querydsl.core.types.Projections.*;
 import static com.querydsl.core.types.dsl.Expressions.dateTimeOperation;
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 import static java.util.Objects.isNull;
@@ -48,19 +46,12 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public FindAllActiveResponse findAllActive(Long memberId) {
-        DateTimeOperation<Integer> toDate = dateTimeOperation(Integer.class, Ops.DateTimeOps.DATE, board.createdAt);
-
+    public FindAllActiveResponse findCountHappyAndCountTag(Long memberId) {
         return queryFactory
-                .select(Projections.fields(FindAllActiveResponse.class,
+                .select(fields(FindAllActiveResponse.class,
                         board.countDistinct().as("countHappy"),
-                        boardTag.tag.name.countDistinct().as("countHashtag"),
-                        ExpressionUtils.as(
-                                JPAExpressions.select(toDate.countDistinct())
-                                .from(board)
-                                .where(board.member.id.eq(memberId))
-                                .groupBy(toDate)
-                                ,"countRecordDay")))
+                        boardTag.tag.name.countDistinct().as("countTag")
+                        ))
                 .from(boardTag, board)
                 .where(boardTag.board.member.id.eq(memberId),
                         board.member.id.eq(memberId))
@@ -69,9 +60,20 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
+    public Long findRecordDay(Long memberId){
+        DateTimeOperation<Integer> toDate = dateTimeOperation(Integer.class, Ops.DateTimeOps.DATE, board.createdAt);
+        return queryFactory
+                .select(toDate.countDistinct())
+                .from(board)
+                .where(board.member.id.eq(memberId))
+                .groupBy(toDate)
+                .fetchFirst();
+    }
+
+    @Override
     public List<FindByTagResponse> findByTag(Long memberId) {
         return queryFactory
-                .select(Projections.fields(FindByTagResponse.class,
+                .select(fields(FindByTagResponse.class,
                         tag.name.as("tagName"),
                         tag.name.count().as("countTag")
                         ))
@@ -123,7 +125,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_WEEK, board.createdAt);
 
         return queryFactory
-                .select(Projections.fields(FindByDayResponse.class,
+                .select(fields(FindByDayResponse.class,
                                         toDay.when(1).then("sun")
                                                 .when(2).then("mon")
                                                 .when(3).then("tue")
@@ -146,7 +148,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
 
         return queryFactory
-                .select(Projections.fields(FindByMonthResponse.class,
+                .select(fields(FindByMonthResponse.class,
                         toMonth.when(1).then("jan")
                                 .when(2).then("feb")
                                 .when(3).then("mar")

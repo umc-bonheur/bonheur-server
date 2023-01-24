@@ -55,14 +55,14 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public FindAllActiveResponse findAllActive(Long memberId) {
-        FindAllActiveResponse response = memberRepository.findAllActive(memberId);
+        FindAllActiveResponse response = memberRepository.findCountHappyAndCountTag(memberId);
         Member findMember = memberRepository.findById(memberId).orElse(null);
 
-        // 활동 일자 추가
-        response.updateCountActiveDay(
-                ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)));
-
-        return response;
+        // 앱을 사용한 날, 기록을 작성한 날 추가
+        return response.updateActiveDayAndRecordDay(
+                ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)),
+                memberRepository.findRecordDay(memberId)
+        );
     }
 
     @Override
