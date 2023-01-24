@@ -1,5 +1,6 @@
 package com.bonheur.domain.member.service;
 
+import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.file.dto.FileUploadResponse;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.*;
@@ -15,11 +16,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
     private final FileUploadUtil fileUploadUtil;
 
     @Override
@@ -55,14 +58,17 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public FindAllActiveResponse findAllActive(Long memberId) {
-        FindAllActiveResponse response = memberRepository.findAllActive(memberId);
+        FindAllActiveResponse response = memberRepository.findCountHappyAndCountTag(memberId);
         Member findMember = memberRepository.findById(memberId).orElse(null);
 
-        // 활동 일자 추가
-        response.updateCountActiveDay(
-                ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)));
+        return response.updateActiveDayAndRecordDay(
+                // 앱을 사용한 날
+                ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)),
 
-        return response;
+                // 기록 작성한 날
+                boardRepository.findByMember(findMember)
+                        .stream().collect(Collectors.groupingBy(board -> board.getCreatedAt().toLocalDate())).values().stream().count()
+        );
     }
 
     @Override
@@ -74,11 +80,11 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public FindByTimeResponse findByTime(Long memberId) {
-        Long morning = memberRepository.findByTime(memberId, "06", "12");
-        Long afternoon = memberRepository.findByTime(memberId, "12", "18");
-        Long evening = memberRepository.findByTime(memberId, "18", "20");
+        Long morning = memberRepository.findByTime(memberId, 6, 12);
+        Long afternoon = memberRepository.findByTime(memberId, 12, 18);
+        Long evening = memberRepository.findByTime(memberId, 18, 20);
         Long night = memberRepository.findNightTime(memberId);
-        Long dawn = memberRepository.findByTime(memberId, "01", "06");
+        Long dawn = memberRepository.findByTime(memberId, 1, 6);
 
         return FindByTimeResponse.of(morning,afternoon,evening,night,dawn);
     }

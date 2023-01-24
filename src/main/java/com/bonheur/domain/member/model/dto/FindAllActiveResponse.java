@@ -8,13 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllActiveResponse {
-    private Long countActiveDay;
+    private Long activeDay;
     private Long countHappy;
-    private Long countHashtag;
-    private Long countRecordDay;
+    private Long countTag;
+    private Long recordDay;
 
-    public void updateCountActiveDay(Long countActiveDay){
-        this.countActiveDay = countActiveDay;
+    public FindAllActiveResponse updateActiveDayAndRecordDay(Long activeDay, Long recordDay){
+        this.activeDay = activeDay;
+        this.recordDay = recordDay;
+        return this;
     }
-
 }

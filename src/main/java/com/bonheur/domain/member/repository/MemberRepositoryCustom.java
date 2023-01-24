@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
 public interface MemberRepositoryCustom {
     boolean existMemberBySocialInfo(@NotNull String socialId, @NotNull MemberSocialType socialType);
     Member findMemberBySocialInfo(@NotNull String socialId, @NotNull MemberSocialType socialType);
-    FindAllActiveResponse findAllActive(Long memberId);
+    FindAllActiveResponse findCountHappyAndCountTag(Long memberId);
     List<FindByTagResponse> findByTag(Long memberId);
-    Long findByTime(Long memberId, String start, String end);
+    Long findByTime(Long memberId, int start, int end);
     Long findNightTime(Long memberId);
     List<FindByDayResponse> findByDay(Long memberId);
     List<FindByMonthResponse> findByMonth(Long memberId);
