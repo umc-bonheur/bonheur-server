@@ -23,6 +23,8 @@ public class BoardController {
 
     // # 게시글 전체 조회 (페이징 일단 5개로 정의)
     // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 전체 조회")
     @GetMapping("/api/boards")
     public ApiResponse<Slice<GetBoardsResponse>> getAllBoards(@RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId, @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
@@ -32,6 +34,8 @@ public class BoardController {
 
     // # 게시글 삭제
     // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 삭제")
     @DeleteMapping("/api/boards/{boardId}")
     public ApiResponse<DeleteBoardResponse> deleteBoard(Long memberId, @PathVariable("boardId") Long boardId) {
         DeleteBoardResponse deleteBoardResponse = boardService.deleteBoard(memberId, boardId);
@@ -42,6 +46,8 @@ public class BoardController {
 
     // # 게시글 조회 - 해시태그
     // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 조회 - 해시태그")
     @ResponseBody
     @PostMapping ("/api/boards/tag")
     public ApiResponse<Slice<GetBoardsResponse>> getBoardsByTag(
@@ -54,6 +60,8 @@ public class BoardController {
         return ApiResponse.success(getBoardsResponses);
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 작성")
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
@@ -64,6 +72,8 @@ public class BoardController {
         return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 수정")
     @PatchMapping("/api/boards/{boardId}")
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
