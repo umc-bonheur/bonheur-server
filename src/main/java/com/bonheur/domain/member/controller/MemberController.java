@@ -39,41 +39,41 @@ public class MemberController {
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 활동 종합 조회")
     @GetMapping("/api/mypages")
-    public ApiResponse<FindAllActiveResponse> findAllActive() {
+    public ApiResponse<FindActiveRecordResponse> findMyActiveRecord() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        return ApiResponse.success(memberService.findAllActive(memberId));
+        return ApiResponse.success(memberService.findMyActiveRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 태그별 조회")
     @GetMapping("/api/mypages/tag")
-    public ApiResponse<List<FindByTagResponse>> findByTag() {
+    public ApiResponse<List<FindTagRecordResponse>> findMyTagRecord() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        return ApiResponse.success(memberService.findByTag(memberId));
+        return ApiResponse.success(memberService.findMyTagRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 시간별 조회")
     @GetMapping("/api/mypages/time")
-    public ApiResponse<FindByTimeResponse> findByTime() {
+    public ApiResponse<FindTimeRecordResponse> findMyTimeRecord() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        return ApiResponse.success(memberService.findByTime(memberId));
+        return ApiResponse.success(memberService.findMyTimeRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 요일 조회")
     @GetMapping("/api/mypages/day")
-    public ApiResponse<List<FindByDayResponse>> findByDay() {
+    public ApiResponse<List<FindDayRecordResponse>> findMyDayRecord() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        return ApiResponse.success(memberService.findByDay(memberId));
+        return ApiResponse.success(memberService.findMyDayRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 월별 조회")
     @GetMapping("/api/mypages/month")
-    public ApiResponse<List<FindByMonthResponse>> findByMonth() {
+    public ApiResponse<List<FindMonthRecordResponse>> findMyMonthRecord() {
         Long memberId = 1L; // 임시 로그인한 유저 id
-        return ApiResponse.success(memberService.findByMonth(memberId));
+        return ApiResponse.success(memberService.findMyMonthRecord(memberId));
     }
 
 }

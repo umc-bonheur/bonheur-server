@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindAllActiveResponse {
+public class FindActiveRecordResponse {
     private Long activeDay;
     private Long countHappy;
     private Long countTag;
     private Long recordDay;
 
-    public FindAllActiveResponse updateActiveDayAndRecordDay(Long activeDay, Long recordDay){
+    public FindActiveRecordResponse updateActiveDayAndRecordDay(Long activeDay, Long recordDay){
         this.activeDay = activeDay;
         this.recordDay = recordDay;
         return this;

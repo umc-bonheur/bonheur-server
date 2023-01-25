@@ -44,9 +44,9 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public FindAllActiveResponse findCountHappyAndCountTag(Long memberId) {
+    public FindActiveRecordResponse findCountHappyAndCountTagByMemberId(Long memberId) {
         return queryFactory
-                .select(fields(FindAllActiveResponse.class,
+                .select(fields(FindActiveRecordResponse.class,
                         board.countDistinct().as("countHappy"),
                         boardTag.tag.name.countDistinct().as("countTag")
                         ))
@@ -58,9 +58,9 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public List<FindByTagResponse> findByTag(Long memberId) {
+    public List<FindTagRecordResponse> findTagRecordByMemberId(Long memberId) {
         return queryFactory
-                .select(fields(FindByTagResponse.class,
+                .select(fields(FindTagRecordResponse.class,
                         tag.name.as("tagName"),
                         tag.name.count().as("countTag")
                         ))
@@ -76,7 +76,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Long findByTime(Long memberId, int start, int end) {
+    public Long findTimeRecordByMemberId(Long memberId, int start, int end) {
         NumberOperation<Integer> toTime = numberOperation(Integer.class, Ops.DateTimeOps.HOUR, board.createdAt);
 
         Long result = queryFactory
@@ -92,7 +92,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Long findNightTime(Long memberId) {
+    public Long findNightTimeRecordByMemberId(Long memberId) {
         NumberOperation<Integer> toTime = numberOperation(Integer.class, Ops.DateTimeOps.HOUR, board.createdAt);
 
         Long result = queryFactory
@@ -108,11 +108,11 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public List<FindByDayResponse> findByDay(Long memberId){
+    public List<FindDayRecordResponse> findDayRecordByMemberId(Long memberId){
         NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_WEEK, board.createdAt);
 
         return queryFactory
-                .select(fields(FindByDayResponse.class,
+                .select(fields(FindDayRecordResponse.class,
                                         toDay.when(1).then("sun")
                                                 .when(2).then("mon")
                                                 .when(3).then("tue")
@@ -131,11 +131,11 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public List<FindByMonthResponse> findByMonth(Long memberId) {
+    public List<FindMonthRecordResponse> findMonthRecordByMemberId(Long memberId) {
         NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
 
         return queryFactory
-                .select(fields(FindByMonthResponse.class,
+                .select(fields(FindMonthRecordResponse.class,
                         toMonth.when(1).then("jan")
                                 .when(2).then("feb")
                                 .when(3).then("mar")
