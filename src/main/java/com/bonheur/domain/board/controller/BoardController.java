@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class BoardController {
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
-            @RequestPart CreateBoardRequest createBoardRequest) throws IOException {
+            @RequestPart @Valid CreateBoardRequest createBoardRequest) throws IOException {
 
         Long memberId = 1L; //session 관련 검증 추가해야 함!
 
@@ -35,7 +36,7 @@ public class BoardController {
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
             @RequestPart(value = "images") List<MultipartFile> images,
-            @RequestPart UpdateBoardRequest updateBoardRequest) throws IOException {
+            @RequestPart @Valid UpdateBoardRequest updateBoardRequest) throws IOException {
 
         return ApiResponse.success(boardService.updateBoard(boardId, updateBoardRequest, images));
     }

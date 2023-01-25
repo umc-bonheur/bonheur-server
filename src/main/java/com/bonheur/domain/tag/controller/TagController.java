@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class TagController {
@@ -18,7 +20,7 @@ public class TagController {
     @Operation(summary = "해시태그 생성")
     @PostMapping("/api/tags")
     public ApiResponse<CreateTagResponse> createTags(
-            @RequestBody CreateTagRequest createTagRequest) {
+            @Valid @RequestBody CreateTagRequest createTagRequest) {
         Long memberId = 1L; //session 관련 검증 추가해야 함!
         return ApiResponse.success(tagService.createTags(memberId, createTagRequest.getTags()));
     }
