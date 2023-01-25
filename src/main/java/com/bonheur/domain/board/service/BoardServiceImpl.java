@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,29 @@ public class BoardServiceImpl implements BoardService {
                 });
     }
 
+    // # 게시글 조회 - by 날짜
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardsResponse> getBoardsByDate(Long lastBoardId, Long memberId, String date, Pageable pageable) {
+        // date : 2023-01-26 를 LocalDateTime으로 생성
+        int year = Integer.parseInt(date.substring(0, 4)); // 2023
+        int month = Integer.parseInt(date.substring(5, 7)); // 01
+        int day = Integer.parseInt(date.substring(8, 10)); // 26
+        LocalDateTime start = LocalDateTime.of(year, month, day, 0, 0, 0); // 검색 시작 시간
+        LocalDateTime end = LocalDateTime.of(year, month, day, 23, 59, 59); // 검색 종료 시간
+        return boardRepository.findByDateWithPaging(lastBoardId, memberId, start, end, pageable)
+                .map(board -> {
+                    if (board.getImages().isEmpty()) {
+                        return GetBoardsResponse.withoutImage(board.getContents(), getBoardTagsName(board.getBoardTags()),
+                                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")));
+                    }   else {
+                        return GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()), board.getImages().get(0).getUrl(),
+                                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")));
+                    }
+                });
+    }
+
     //게시글 생성
     @Override
     @Transactional
@@ -134,8 +158,6 @@ public class BoardServiceImpl implements BoardService {
         }
         return UpdateBoardResponse.newResponse(boardId);
     }
-
-
 
     @Override
     public GetBoardResponse getBoard(Long boardId) {

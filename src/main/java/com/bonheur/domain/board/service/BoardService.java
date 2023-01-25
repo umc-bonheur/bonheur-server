@@ -14,6 +14,6 @@ public interface BoardService {
      Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable);
      CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
      UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
-
+     Slice<GetBoardsResponse> getBoardsByDate(Long lastBoardId, Long memberId, String date, Pageable pageable);
      GetBoardResponse getBoard(Long boardId);
 }
