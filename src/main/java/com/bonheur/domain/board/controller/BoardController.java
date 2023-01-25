@@ -60,8 +60,6 @@ public class BoardController {
         return ApiResponse.success(getBoardsResponses);
     }
 
-    @ApiDocumentResponse
-    @Operation(summary = "행복기록 작성")
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
@@ -72,8 +70,6 @@ public class BoardController {
         return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
     }
 
-    @ApiDocumentResponse
-    @Operation(summary = "행복기록 수정")
     @PatchMapping("/api/boards/{boardId}")
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
