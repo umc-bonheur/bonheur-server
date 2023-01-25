@@ -1,19 +1,19 @@
 package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
-import com.bonheur.domain.boardtag.model.QBoardTag;
 import com.bonheur.domain.image.model.QImage;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import com.bonheur.domain.tag.model.QTag;
 import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
+import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
+import static com.bonheur.domain.tag.model.QTag.tag;
 
 @RequiredArgsConstructor
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
@@ -39,8 +39,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     @Override
     // # 게시글 조회 - by TagName (무한 스크롤, no-offset)
     public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
-        QTag tag = QTag.tag;
-        QBoardTag boardTag = QBoardTag.boardTag;
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
                         // no-offset 페이징 처리
