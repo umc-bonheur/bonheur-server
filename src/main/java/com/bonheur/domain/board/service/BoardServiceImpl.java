@@ -71,7 +71,9 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 글입니다."));
         Long writer = board.getMember().getId();
         if (writer.equals(memberId)) {
-            boardRepository.delete(board);
+            imageService.deleteImages(board);
+            boardRepository.delete(board); // board 삭제
+
             return DeleteBoardResponse.builder()
                     .boardId(boardId)
                     .build();
@@ -80,6 +82,18 @@ public class BoardServiceImpl implements BoardService {
                     .boardId(null)
                     .build();
         }
+    }
+
+    // # file path를 string으로 저장하는 함수
+    private List<String> getFilePaths(Board board) {
+        List<Image> images = board.getImages();
+        List<String> filePaths = new ArrayList<>();
+
+        for (Image img : images) {
+            filePaths.add(img.getPath());
+        }
+
+        return filePaths;
     }
 
     // # 게시글 조회 - by 해시태그
