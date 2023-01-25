@@ -60,6 +60,21 @@ public class BoardController {
         return ApiResponse.success(getBoardsResponses);
     }
 
+    // # 게시글 조회 - 날짜별
+    // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 조회 - 날짜", description = "date 형식 : ex) 2023-01-26")
+    @ResponseBody
+    @PostMapping("/api/boards/calendar")
+    public ApiResponse<Slice<GetBoardsResponse>> getBoardsByDate(
+            @RequestParam(required = false) Long lastBoardId, Long memberId,
+            @RequestParam String searchDate, @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses =
+                boardService.getBoardsByDate(lastBoardId, memberId, searchDate, pageable);
+
+        return ApiResponse.success(getBoardsResponses);
+    }
+
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
