@@ -1,10 +1,9 @@
 package com.bonheur.domain.member.service;
 
+import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.file.dto.FileUploadResponse;
 import com.bonheur.domain.member.model.Member;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileRequest;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileResponse;
-import com.bonheur.domain.member.model.dto.CreateMemberRequest;
+import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +13,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
     private final FileUploadUtil fileUploadUtil;
 
     @Override
@@ -49,4 +54,46 @@ public class MemberServiceImpl implements MemberService{
 
         return UpdateMemberProfileResponse.of(memberId);
     }
+
+    @Override
+    @Transactional
+    public FindActiveRecordResponse findMyActiveRecord(Long memberId) {
+        FindActiveRecordResponse response = memberRepository.findCountHappyAndCountTagByMemberId(memberId);
+        Member findMember = memberRepository.findById(memberId).orElse(null);
+
+        return response.updateActiveDayAndRecordDay(
+                // 앱을 사용한 날
+                ChronoUnit.DAYS.between((findMember.getCreatedAt()), LocalDateTime.now().plusDays(1)),
+
+                // 기록 작성한 날
+                boardRepository.findByMember(findMember)
+                        .stream().collect(Collectors.groupingBy(board -> board.getCreatedAt().toLocalDate())).values().stream().count()
+        );
+    }
+
+    @Override
+    @Transactional
+    public List<FindTagRecordResponse> findMyTagRecord(Long memberId) { return memberRepository.findTagRecordByMemberId(memberId); }
+
+    @Override
+    @Transactional
+    public FindTimeRecordResponse findMyTimeRecord(Long memberId) {
+        Long morning = memberRepository.findTimeRecordByMemberId(memberId, 6, 12);
+        Long afternoon = memberRepository.findTimeRecordByMemberId(memberId, 12, 18);
+        Long evening = memberRepository.findTimeRecordByMemberId(memberId, 18, 20);
+        Long night = memberRepository.findNightTimeRecordByMemberId(memberId);
+        Long dawn = memberRepository.findTimeRecordByMemberId(memberId, 1, 6);
+
+        return FindTimeRecordResponse.of(morning,afternoon,evening,night,dawn);
+    }
+
+    @Override
+    @Transactional
+    public List<FindDayRecordResponse> findMyDayRecord(Long memberId) { return memberRepository.findDayRecordByMemberId(memberId); }
+
+    @Override
+    @Transactional
+    public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) { return memberRepository.findMonthRecordByMemberId(memberId); }
 }
+
+
