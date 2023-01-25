@@ -46,4 +46,16 @@ public class ImageServiceImpl implements ImageService{
         }
         uploadImages(board, images);            //새로운 이미지 업로드
     }
+
+    // # image s3에서 삭제
+    @Override
+    @Transactional
+    public void deleteImages(Board board) {
+        List<Image> toDeleteImages = imageRepository.findAllByBoard_Id(board.getId());
+
+        for (Image img : toDeleteImages) {
+            fileUploadUtil.deleteFile(img.getPath());
+            imageRepository.delete(img);
+        }
+    }
 }

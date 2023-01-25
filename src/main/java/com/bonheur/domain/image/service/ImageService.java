@@ -10,4 +10,6 @@ public interface ImageService {
     //이미지 업로드
     void uploadImages(Board board, List<MultipartFile> images) throws IOException;
     void updateImages(Board board, List<MultipartFile> images) throws IOException;
+
+    void deleteImages(Board board);
 }
