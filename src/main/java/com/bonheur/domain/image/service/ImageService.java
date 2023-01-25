@@ -11,5 +11,5 @@ public interface ImageService {
     void uploadImages(Board board, List<MultipartFile> images) throws IOException;
     void updateImages(Board board, List<MultipartFile> images) throws IOException;
 
-    void deleteImages(Board board);
+    void deleteImagesIns3(Board board);
 }
