@@ -57,8 +57,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public FindAllActiveResponse findAllActive(Long memberId) {
-        FindAllActiveResponse response = memberRepository.findCountHappyAndCountTag(memberId);
+    public FindActiveRecordResponse findMyActiveRecord(Long memberId) {
+        FindActiveRecordResponse response = memberRepository.findCountHappyAndCountTagByMemberId(memberId);
         Member findMember = memberRepository.findById(memberId).orElse(null);
 
         return response.updateActiveDayAndRecordDay(
@@ -73,29 +73,27 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public List<FindByTagResponse> findByTag(Long memberId) {
-        return memberRepository.findByTag(memberId);
+    public List<FindTagRecordResponse> findMyTagRecord(Long memberId) { return memberRepository.findTagRecordByMemberId(memberId); }
+
+    @Override
+    @Transactional
+    public FindTimeRecordResponse findMyTimeRecord(Long memberId) {
+        Long morning = memberRepository.findTimeRecordByMemberId(memberId, 6, 12);
+        Long afternoon = memberRepository.findTimeRecordByMemberId(memberId, 12, 18);
+        Long evening = memberRepository.findTimeRecordByMemberId(memberId, 18, 20);
+        Long night = memberRepository.findNightTimeRecordByMemberId(memberId);
+        Long dawn = memberRepository.findTimeRecordByMemberId(memberId, 1, 6);
+
+        return FindTimeRecordResponse.of(morning,afternoon,evening,night,dawn);
     }
 
     @Override
     @Transactional
-    public FindByTimeResponse findByTime(Long memberId) {
-        Long morning = memberRepository.findByTime(memberId, 6, 12);
-        Long afternoon = memberRepository.findByTime(memberId, 12, 18);
-        Long evening = memberRepository.findByTime(memberId, 18, 20);
-        Long night = memberRepository.findNightTime(memberId);
-        Long dawn = memberRepository.findByTime(memberId, 1, 6);
-
-        return FindByTimeResponse.of(morning,afternoon,evening,night,dawn);
-    }
+    public List<FindDayRecordResponse> findMyDayRecord(Long memberId) { return memberRepository.findDayRecordByMemberId(memberId); }
 
     @Override
     @Transactional
-    public List<FindByDayResponse> findByDay(Long memberId) { return memberRepository.findByDay(memberId); }
-
-    @Override
-    @Transactional
-    public List<FindByMonthResponse> findByMonth(Long memberId) { return memberRepository.findByMonth(memberId); }
+    public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) { return memberRepository.findMonthRecordByMemberId(memberId); }
 }
 
 

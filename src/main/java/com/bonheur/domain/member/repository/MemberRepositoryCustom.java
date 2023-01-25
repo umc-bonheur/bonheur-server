@@ -11,12 +11,12 @@ import javax.validation.constraints.NotNull;
 public interface MemberRepositoryCustom {
     boolean existMemberBySocialInfo(@NotNull String socialId, @NotNull MemberSocialType socialType);
     Member findMemberBySocialInfo(@NotNull String socialId, @NotNull MemberSocialType socialType);
-    FindAllActiveResponse findCountHappyAndCountTag(Long memberId);
-    List<FindByTagResponse> findByTag(Long memberId);
-    Long findByTime(Long memberId, int start, int end);
-    Long findNightTime(Long memberId);
-    List<FindByDayResponse> findByDay(Long memberId);
-    List<FindByMonthResponse> findByMonth(Long memberId);
+    FindActiveRecordResponse findCountHappyAndCountTagByMemberId(Long memberId);
+    List<FindTagRecordResponse> findTagRecordByMemberId(Long memberId);
+    Long findTimeRecordByMemberId(Long memberId, int start, int end);
+    Long findNightTimeRecordByMemberId(Long memberId);
+    List<FindDayRecordResponse> findDayRecordByMemberId(Long memberId);
+    List<FindMonthRecordResponse> findMonthRecordByMemberId(Long memberId);
 
 
 }

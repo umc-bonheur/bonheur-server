@@ -11,12 +11,12 @@ public interface MemberService {
 
     UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException;
 
-    FindAllActiveResponse findAllActive(Long memberId);
+    FindActiveRecordResponse findMyActiveRecord(Long memberId);
 
-    List<FindByTagResponse> findByTag(Long memberId);
+    List<FindTagRecordResponse> findMyTagRecord(Long memberId);
 
-    FindByTimeResponse findByTime(Long memberId);
+    FindTimeRecordResponse findMyTimeRecord(Long memberId);
 
-    List<FindByDayResponse> findByDay(Long memberId);
-    List<FindByMonthResponse> findByMonth(Long memberId);
+    List<FindDayRecordResponse> findMyDayRecord(Long memberId);
+    List<FindMonthRecordResponse> findMyMonthRecord(Long memberId);
 }

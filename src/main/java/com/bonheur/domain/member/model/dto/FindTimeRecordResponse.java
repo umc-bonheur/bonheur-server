@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class FindByTimeResponse {
+public class FindTimeRecordResponse {
     // 06-12
     private Long morning;
 
@@ -21,7 +21,7 @@ public class FindByTimeResponse {
     private Long dawn;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private FindByTimeResponse(Long morning, Long afternoon, Long evening, Long night, Long dawn){
+    private FindTimeRecordResponse(Long morning, Long afternoon, Long evening, Long night, Long dawn){
         this.morning = morning;
         this.afternoon = afternoon;
         this.evening = evening;
@@ -29,8 +29,8 @@ public class FindByTimeResponse {
         this.dawn = dawn;
     }
 
-    public static FindByTimeResponse of(Long morning, Long afternoon, Long evening, Long night, Long dawn){
-        return FindByTimeResponse.builder()
+    public static FindTimeRecordResponse of(Long morning, Long afternoon, Long evening, Long night, Long dawn){
+        return FindTimeRecordResponse.builder()
                 .morning(morning)
                 .afternoon(afternoon)
                 .evening(evening)

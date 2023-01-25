@@ -1,6 +1,5 @@
 package com.bonheur.domain.member.model.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindByMonthResponse {
-    String month;
-    Long countMonth;
+public class FindTagRecordResponse {
+    private String tagName;
+    private Long countTag;
 }

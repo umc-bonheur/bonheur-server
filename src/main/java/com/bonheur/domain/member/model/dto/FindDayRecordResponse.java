@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindByDayResponse {
+public class FindDayRecordResponse {
     private String dayOfWeek;
     private Long countDay;
 }
