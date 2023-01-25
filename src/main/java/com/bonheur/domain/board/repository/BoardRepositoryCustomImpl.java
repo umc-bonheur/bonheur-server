@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
@@ -37,7 +38,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     }
 
     @Override
-    // # 게시글 조회 - by TagName (무한 스크롤, no-offset)
+    // # 게시글 조회 - by Tag (무한 스크롤, no-offset)
     public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
@@ -50,6 +51,26 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                                 .where(tag.id.in(tagIds))
                                 .leftJoin(tag).on(tag.id.eq(boardTag.tag.id))
                         )
+                )
+                .orderBy(board.createdAt.desc())
+                .limit(pageable.getPageSize() + 1) // Slice 방식
+                .fetch();
+
+        // 무한 스크롤 처리
+        return checkLastPage(pageable, results);
+    }
+
+    @Override
+    // # 게시글 조회 - by 날짜 (무한 스크롤, no-offset)
+    public Slice<Board> findByDateWithPaging(Long lastBoardId, Long memberId, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+        List<Board> results = queryFactory.selectFrom(board)
+                .where(
+                        // no-offset 페이징 처리
+                        ltBoardId(lastBoardId),
+                        // memberId
+                        board.member.id.eq(memberId),
+                        // date
+                        board.createdAt.between(start, end)
                 )
                 .orderBy(board.createdAt.desc())
                 .limit(pageable.getPageSize() + 1) // Slice 방식
