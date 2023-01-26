@@ -39,9 +39,7 @@ public class BoardController {
     @DeleteMapping("/api/boards/{boardId}")
     public ApiResponse<DeleteBoardResponse> deleteBoard(Long memberId, @PathVariable("boardId") Long boardId) {
         DeleteBoardResponse deleteBoardResponse = boardService.deleteBoard(memberId, boardId);
-        if (deleteBoardResponse.getBoardId().equals(boardId))
-            return ApiResponse.success(deleteBoardResponse);
-        else return ApiResponse.error(ErrorCode.E400_INVALID_AUTH_TOKEN);
+        return ApiResponse.success(deleteBoardResponse);
     }
 
     // # 게시글 조회 - 해시태그
