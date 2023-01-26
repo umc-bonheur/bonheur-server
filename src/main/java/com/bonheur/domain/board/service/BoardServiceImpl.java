@@ -63,13 +63,9 @@ public class BoardServiceImpl implements BoardService {
             imageService.deleteImagesIns3(board); // s3, 테이블에서 이미지 삭제
             boardRepository.delete(board); // board 삭제
 
-            return DeleteBoardResponse.builder()
-                    .boardId(boardId)
-                    .build();
+            return DeleteBoardResponse.of(boardId);
         } else {
-            return DeleteBoardResponse.builder()
-                    .boardId(null)
-                    .build();
+            return DeleteBoardResponse.of(null);
         }
     }
 
