@@ -37,7 +37,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     }
 
     @Override
-    // # 게시글 조회 - by TagName (무한 스크롤, no-offset)
+    // # 게시글 조회 - by Tag (무한 스크롤, no-offset)
     public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
