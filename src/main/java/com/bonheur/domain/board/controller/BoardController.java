@@ -4,8 +4,12 @@ import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.service.BoardService;
 import com.bonheur.domain.common.dto.ApiResponse;
+import com.bonheur.domain.common.exception.dto.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +20,43 @@ import java.util.List;
 @RestController
 public class BoardController {
     private final BoardService boardService;
+
+    // # 게시글 전체 조회 (페이징 일단 5개로 정의)
+    // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 전체 조회")
+    @GetMapping("/api/boards")
+    public ApiResponse<Slice<GetBoardsResponse>> getAllBoards(@RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId, @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
+
+        return ApiResponse.success(getBoardsResponses);
+    }
+
+    // # 게시글 삭제
+    // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 삭제")
+    @DeleteMapping("/api/boards/{boardId}")
+    public ApiResponse<DeleteBoardResponse> deleteBoard(Long memberId, @PathVariable("boardId") Long boardId) {
+        DeleteBoardResponse deleteBoardResponse = boardService.deleteBoard(memberId, boardId);
+        return ApiResponse.success(deleteBoardResponse);
+    }
+
+    // # 게시글 조회 - 해시태그
+    // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 조회 - 해시태그")
+    @ResponseBody
+    @PostMapping ("/api/boards/tag")
+    public ApiResponse<Slice<GetBoardsResponse>> getBoardsByTag(
+            @RequestParam(required = false) Long lastBoardId, Long memberId,
+            @RequestBody GetBoardByTagRequest getBoardByTagRequest,
+            @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses =
+                boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), pageable);
+
+        return ApiResponse.success(getBoardsResponses);
+    }
 
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
