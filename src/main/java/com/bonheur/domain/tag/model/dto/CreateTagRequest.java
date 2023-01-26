@@ -1,8 +1,6 @@
 package com.bonheur.domain.tag.model.dto;
 
 import lombok.*;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -12,17 +10,9 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateTagRequest {
 
-    @Valid
-    private List<tagList> tags;
+    private List<@NotBlank @Size(max = 10)String> tags;
 
-    @Data
-    public static class tagList{
-        @NotBlank
-        @Size(max = 10)
-        private String tag;
-    }
-
-    public static CreateTagRequest of(List<tagList> tags){
+    public static CreateTagRequest of(List<String> tags){
         return new CreateTagRequest(tags);
     }
 }
