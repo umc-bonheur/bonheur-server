@@ -1,11 +1,13 @@
 package com.bonheur.domain.member.controller;
 
-import com.bonheur.config.swagger.dto.ApiDocumentResponse;
+
 import com.bonheur.domain.common.dto.ApiResponse;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileRequest;
-import com.bonheur.domain.member.model.dto.UpdateMemberProfileResponse;
+import com.bonheur.domain.member.model.dto.*;
+import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,8 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import javax.validation.Valid;
 import java.io.IOException;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,4 +35,45 @@ public class MemberController {
 
         return ApiResponse.success(memberService.updateMemberProfile(memberId, updateMemberProfileRequest, image));
     }
+
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 활동 종합 조회")
+    @GetMapping("/api/mypages")
+    public ApiResponse<FindActiveRecordResponse> findMyActiveRecord() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        return ApiResponse.success(memberService.findMyActiveRecord(memberId));
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 태그별 조회")
+    @GetMapping("/api/mypages/tag")
+    public ApiResponse<List<FindTagRecordResponse>> findMyTagRecord() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        return ApiResponse.success(memberService.findMyTagRecord(memberId));
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 시간별 조회")
+    @GetMapping("/api/mypages/time")
+    public ApiResponse<FindTimeRecordResponse> findMyTimeRecord() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        return ApiResponse.success(memberService.findMyTimeRecord(memberId));
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 요일 조회")
+    @GetMapping("/api/mypages/day")
+    public ApiResponse<List<FindDayRecordResponse>> findMyDayRecord() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        return ApiResponse.success(memberService.findMyDayRecord(memberId));
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "마이페이지 통계 - 월별 조회")
+    @GetMapping("/api/mypages/month")
+    public ApiResponse<List<FindMonthRecordResponse>> findMyMonthRecord() {
+        Long memberId = 1L; // 임시 로그인한 유저 id
+        return ApiResponse.success(memberService.findMyMonthRecord(memberId));
+    }
+
 }

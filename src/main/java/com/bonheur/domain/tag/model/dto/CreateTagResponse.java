@@ -9,9 +9,9 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateTagResponse {
-    private List<Long> tagsIds;
+    private List<Long> tagIds;
 
-    public static CreateTagResponse of(@NotNull List<Long> tagsIds){
-        return new CreateTagResponse(tagsIds);
+    public static CreateTagResponse of(@NotNull List<Long> tagIds){
+        return new CreateTagResponse(tagIds);
     }
 }

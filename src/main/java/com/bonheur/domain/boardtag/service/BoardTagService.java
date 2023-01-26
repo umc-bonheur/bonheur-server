@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface BoardTagService {
     void createBoardTags(Board board, List<Long> tagIds);
-    void updateBoardTags(Board board, List<Long> tagsIds);
+    void updateBoardTags(Board board, List<Long> tagIds);
 }

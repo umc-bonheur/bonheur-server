@@ -13,5 +13,5 @@ public class UpdateBoardRequest {
     @NotBlank
     private String contents;
 
-    private List<Long> tagsIds;
+    private List<Long> tagIds;
 }

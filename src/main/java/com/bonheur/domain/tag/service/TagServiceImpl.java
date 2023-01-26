@@ -4,7 +4,6 @@ import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.membertag.service.MemberTagService;
 import com.bonheur.domain.tag.model.Tag;
-import com.bonheur.domain.tag.model.dto.CreateTagRequest.tagList;
 import com.bonheur.domain.tag.model.dto.CreateTagResponse;
 import com.bonheur.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +22,21 @@ public class TagServiceImpl implements TagService{
     private final MemberTagService memberTagService;
     @Override
     @Transactional
-    public CreateTagResponse createTags(Long memberId, List<tagList> tags){
+    public CreateTagResponse createTags(Long memberId, List<String> tags){
         Member member = memberRepository.findMemberById(memberId);
-        List<Long> tagsIds = new ArrayList<>();
-        for(tagList tag : tags) {
-            Optional<Tag> oldTag = tagRepository.findTagByName(tag.getTag());    //기존 tag 테이블에 동일한 태그가 있는 경우
+        List<Long> tagIds = new ArrayList<>();
+        for(String tag : tags) {
+            Optional<Tag> oldTag = tagRepository.findTagByName(tag);    //기존 tag 테이블에 동일한 태그가 있는 경우
             if (oldTag.isEmpty()){  //기존 tag 테이블에 동일한 태그가 없는 경우
-                Tag tag1 = Tag.newTag(tag.getTag());
-                tagsIds.add(tagRepository.save(tag1).getId());
+                Tag tag1 = Tag.newTag(tag);
+                tagIds.add(tagRepository.save(tag1).getId());
             }
             else{
-                tagsIds.add(oldTag.get().getId());
+                tagIds.add(oldTag.get().getId());
             }
         }
-        memberTagService.createMemberTags(member, tagsIds);
+        memberTagService.createMemberTags(member, tagIds);
 
-        return CreateTagResponse.of(tagsIds);
+        return CreateTagResponse.of(tagIds);
     }
 }
