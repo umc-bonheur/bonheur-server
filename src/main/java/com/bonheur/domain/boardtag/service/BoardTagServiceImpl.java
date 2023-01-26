@@ -29,7 +29,7 @@ public class BoardTagServiceImpl implements BoardTagService{
 
     @Override
     @Transactional
-    public void updateBoardTags(Board board, List<Long> tagsIds){
+    public void updateBoardTags(Board board, List<Long> tagIds){
         List<BoardTag> boardTags = boardTagRepository.findAllByBoard(board); //기존 게시글 태그들
 
         if(boardTags != null){
@@ -38,8 +38,8 @@ public class BoardTagServiceImpl implements BoardTagService{
             }
         }
 
-        if(tagsIds != null) {
-            createBoardTags(board, tagsIds);    //게시글 새로운 태그 추가
+        if(tagIds != null) {
+            createBoardTags(board, tagIds);    //게시글 새로운 태그 추가
         }
     }
 }

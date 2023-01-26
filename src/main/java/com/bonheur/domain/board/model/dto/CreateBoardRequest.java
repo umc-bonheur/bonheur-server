@@ -14,7 +14,7 @@ public class CreateBoardRequest {
     @NotBlank
     private String contents;
 
-    private List<Long> tagsIds;
+    private List<Long> tagIds;
 
     public Board toEntity(Member member){
         return Board.newBoard(contents, member);

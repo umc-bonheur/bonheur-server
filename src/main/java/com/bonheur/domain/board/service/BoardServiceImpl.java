@@ -35,8 +35,8 @@ public class BoardServiceImpl implements BoardService {
         Board requestBoard = request.toEntity(member);
         Board board = boardRepository.save(requestBoard);
 
-        if (request.getTagsIds() != null) {
-            boardTagService.createBoardTags(board, request.getTagsIds());   //게시글과 해시태그 연결
+        if (request.getTagIds() != null) {
+            boardTagService.createBoardTags(board, request.getTagIds());   //게시글과 해시태그 연결
         }
         if (!images.isEmpty()) {
             imageService.uploadImages(board, images);
@@ -54,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
                 board.get().update(request.getContents());
             }   //게시글 수정
 
-            boardTagService.updateBoardTags(board.get(), request.getTagsIds()); //게시글 태그 수정
+            boardTagService.updateBoardTags(board.get(), request.getTagIds()); //게시글 태그 수정
 
             imageService.updateImages(board.get(), images); //이미지 수정
         }
