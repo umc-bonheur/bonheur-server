@@ -62,6 +62,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public GetBoardResponse getBoard(Long boardId) {
         Board board = boardRepository.findBoardByIdWithTagAndImage(boardId);
         return GetBoardResponse.of(board.getId(), board.getContents(),
