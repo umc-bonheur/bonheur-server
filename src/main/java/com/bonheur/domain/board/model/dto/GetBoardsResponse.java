@@ -23,10 +23,7 @@ public class GetBoardsResponse {
     }
 
     public static GetBoardsResponse of(String contents, List<String> boardTags, String image, String createdAt) {
+        if (image == null) return new GetBoardsResponse(contents, boardTags, createdAt);
         return new GetBoardsResponse(contents, boardTags, image, createdAt);
-    }
-
-    public static GetBoardsResponse withoutImage(String contents, List<String> boardTags, String createdAt) {
-        return new GetBoardsResponse(contents, boardTags, createdAt);
     }
 }
