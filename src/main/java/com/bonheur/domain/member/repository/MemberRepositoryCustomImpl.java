@@ -3,6 +3,7 @@ package com.bonheur.domain.member.repository;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.*;
+import com.bonheur.domain.tag.model.Tag;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.NumberOperation;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,6 +14,7 @@ import java.util.List;
 import static com.bonheur.domain.board.model.QBoard.board;
 import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
 import static com.bonheur.domain.member.model.QMember.member;
+import static com.bonheur.domain.membertag.model.QMemberTag.memberTag;
 import static com.bonheur.domain.tag.model.QTag.tag;
 import static com.querydsl.core.types.Projections.*;
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
@@ -158,5 +160,20 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Tag> getTagUsedByMember(Long memberId) {
+        return queryFactory.select(tag)
+                .from(tag)
+                .leftJoin(tag.memberTags,memberTag).fetchJoin()
+                .leftJoin(memberTag.member).fetchJoin()
+                .where(
+                        memberTag.member.id.eq(memberId)
+                )
+                .distinct()
+                .orderBy(memberTag.updatedAt.desc())
+                .offset(0)
+                .limit(5)
+                .fetch();
+    }
 }
 
