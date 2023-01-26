@@ -3,6 +3,7 @@ package com.bonheur.domain.member.repository;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.*;
+import com.bonheur.domain.tag.model.Tag;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public interface MemberRepositoryCustom {
     List<FindMonthRecordResponse> findMonthRecordByMemberId(Long memberId);
 
 
+    List<Tag> getTagUsedByMember(Long memberId);
 }
