@@ -28,8 +28,10 @@ public class BoardTagServiceImpl implements BoardTagService{
     @Override
     @Transactional
     public void updateBoardTags(Board board, List<Long> tagIds){
-
-        boardTagRepository.deleteAllInBatch(boardTagRepository.findAllByBoard(board));    //기존 게시글 태그 삭제
+        List<BoardTag> boardTags = boardTagRepository.findAllByBoard(board);
+        if(!boardTags.isEmpty()){
+            boardTagRepository.deleteAllInBatch(boardTags);    //기존 게시글 태그 삭제
+        }
 
         if(!tagIds.isEmpty()) {
             createBoardTags(board, tagIds);    //게시글 새로운 태그 추가

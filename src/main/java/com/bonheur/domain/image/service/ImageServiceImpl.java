@@ -37,7 +37,9 @@ public class ImageServiceImpl implements ImageService{
     @Transactional
     public void updateImages(Board board, List<MultipartFile> images) throws IOException{
         List<Image> oldImages = deleteImagesIns3(board);
-        imageRepository.deleteAllInBatch(oldImages);          //기존의 이미지 삭제
+        if(!oldImages.isEmpty()) {
+            imageRepository.deleteAllInBatch(oldImages);          //기존의 이미지 삭제
+        }
         uploadImages(board, images);            //새로운 이미지 업로드
     }
 
