@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,8 +41,18 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findAllWithPaging(lastBoardId, memberId, pageable)
                 .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")))
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
+    }
+
+    @Override
+    @Transactional
+    // # 날짜별 그룹화
+    public GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice) {
+
+        List<GetBoardsResponse> getBoardsResponsesOfSlice = getBoardsResponseSlice.getContent();
+        return GetBoardsGroupsResponse.of(getBoardsResponsesOfSlice.stream().collect(Collectors.groupingBy(GetBoardsResponse::getCreatedAtDate)));
     }
 
     // # Tag Name을 String List로 받아오기
@@ -77,7 +88,8 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, pageable)
                 .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss")))
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
     }
 
