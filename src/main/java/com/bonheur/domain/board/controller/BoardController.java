@@ -4,7 +4,6 @@ import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.service.BoardService;
 import com.bonheur.domain.common.dto.ApiResponse;
-import com.bonheur.domain.common.exception.dto.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
@@ -13,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -58,21 +58,25 @@ public class BoardController {
         return ApiResponse.success(getBoardsResponses);
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "게시물 생성")
     @PostMapping("/api/boards")
     public ApiResponse<CreateBoardResponse> createBoard(
             @RequestPart(value = "images") List<MultipartFile> images,
-            @RequestPart CreateBoardRequest createBoardRequest) throws IOException {
+            @RequestPart @Valid CreateBoardRequest createBoardRequest) throws IOException {
 
         Long memberId = 1L; //session 관련 검증 추가해야 함!
 
         return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "게시물 수정")
     @PatchMapping("/api/boards/{boardId}")
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @PathVariable("boardId") Long boardId,
             @RequestPart(value = "images") List<MultipartFile> images,
-            @RequestPart UpdateBoardRequest updateBoardRequest) throws IOException {
+            @RequestPart @Valid UpdateBoardRequest updateBoardRequest) throws IOException {
 
         return ApiResponse.success(boardService.updateBoard(boardId, updateBoardRequest, images));
     }

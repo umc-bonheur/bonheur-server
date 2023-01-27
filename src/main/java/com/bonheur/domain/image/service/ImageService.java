@@ -1,6 +1,7 @@
 package com.bonheur.domain.image.service;
 
 import com.bonheur.domain.board.model.Board;
+import com.bonheur.domain.image.model.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,5 +12,5 @@ public interface ImageService {
     void uploadImages(Board board, List<MultipartFile> images) throws IOException;
     void updateImages(Board board, List<MultipartFile> images) throws IOException;
 
-    void deleteImagesIns3(Board board);
+    List<Image> deleteImagesIns3(Board board);
 }
