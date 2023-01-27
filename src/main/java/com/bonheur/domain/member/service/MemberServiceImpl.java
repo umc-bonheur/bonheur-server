@@ -94,6 +94,12 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) { return memberRepository.findMonthRecordByMemberId(memberId); }
+
+    @Override
+    @Transactional
+    public List<GetTagUsedByMemberResponse> getTagUsedByMember(Long memberId) {
+        return memberRepository.getTagUsedByMember(memberId).stream().map(tag -> GetTagUsedByMemberResponse.of(tag.getId(),tag.getName())).collect(Collectors.toList());
+    }
 }
 
 
