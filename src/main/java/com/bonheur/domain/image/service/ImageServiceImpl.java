@@ -36,13 +36,11 @@ public class ImageServiceImpl implements ImageService{
     @Override
     @Transactional
     public void updateImages(Board board, List<MultipartFile> images) throws IOException{
-        List<Image> oldImages = imageRepository.findAllByBoard_Id(board.getId()); //기존 이미지 테이블에 있는 게시글 관련 이미지들
+        List<Image> oldImages = imageRepository.findAllByBoard(board); //기존 이미지 테이블에 있는 게시글 관련 이미지들
 
-        if(oldImages != null){
-            for(Image image : oldImages){
-                fileUploadUtil.deleteFile(image.getPath()); //s3에서 기존의 이미지 삭제
-                imageRepository.delete(image);          //기존의 이미지 삭제
-            }
+        if(!oldImages.isEmpty()){
+            oldImages.forEach(image -> fileUploadUtil.deleteFile(image.getPath())); //s3에서 기존의 이미지 삭제
+            imageRepository.deleteAllInBatch(oldImages);          //기존의 이미지 삭제
         }
         uploadImages(board, images);            //새로운 이미지 업로드
     }
