@@ -50,7 +50,6 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     // # 날짜별 그룹화
     public GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice) {
-
         List<GetBoardsResponse> getBoardsResponsesOfSlice = getBoardsResponseSlice.getContent();
         return GetBoardsGroupsResponse.of(getBoardsResponsesOfSlice.stream().collect(Collectors.groupingBy(GetBoardsResponse::getCreatedAtDate)));
     }
