@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,33 +30,22 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException {
         Member member = memberRepository.findMemberById(memberId);
+        Board board = boardRepository.save(request.toEntity(member));
 
-        Board requestBoard = request.toEntity(member);
-        Board board = boardRepository.save(requestBoard);
-
-        if (request.getTagIds() != null) {
+        if (!request.getTagIds().isEmpty()) {
             boardTagService.createBoardTags(board, request.getTagIds());   //게시글과 해시태그 연결
         }
-        if (!images.isEmpty()) {
-            imageService.uploadImages(board, images);
-        }
+        imageService.uploadImages(board, images);
         return CreateBoardResponse.of(board.getId());
     }
 
     @Override
     @Transactional
     public UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException{
-        Optional<Board> board = boardRepository.findById(boardId);
-
-        if(board.isPresent()){
-            if(!request.getContents().isEmpty()){
-                board.get().update(request.getContents());
-            }   //게시글 수정
-
-            boardTagService.updateBoardTags(board.get(), request.getTagIds()); //게시글 태그 수정
-
-            imageService.updateImages(board.get(), images); //이미지 수정
-        }
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("존재하지 않은 게시글입니다."));
+        board.update(request.getContents());    //게시글 수정
+        boardTagService.updateBoardTags(board, request.getTagIds()); //게시글 태그 수정
+        imageService.updateImages(board, images); //이미지 수정
         return UpdateBoardResponse.of(boardId);
     }
 
