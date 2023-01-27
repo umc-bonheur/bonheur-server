@@ -1,6 +1,6 @@
 package com.bonheur.domain.tag.service;
 
-import com.bonheur.domain.member.model.Member;
+import com.bonheur.domain.common.BaseEntity;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.membertag.service.MemberTagService;
 import com.bonheur.domain.tag.model.Tag;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,23 +20,18 @@ public class TagServiceImpl implements TagService{
     private final TagRepository tagRepository;
     private final MemberRepository memberRepository;
     private final MemberTagService memberTagService;
+
     @Override
     @Transactional
     public CreateTagResponse createTags(Long memberId, List<String> tags){
-        Member member = memberRepository.findMemberById(memberId);
-        List<Long> tagIds = new ArrayList<>();
-        for(String tag : tags) {
-            Optional<Tag> oldTag = tagRepository.findTagByName(tag);    //기존 tag 테이블에 동일한 태그가 있는 경우
-            if (oldTag.isEmpty()){  //기존 tag 테이블에 동일한 태그가 없는 경우
-                Tag tag1 = Tag.newTag(tag);
-                tagIds.add(tagRepository.save(tag1).getId());
+        List<Tag> tagList = new ArrayList<>();
+        tags.forEach( tag -> {
+                Tag hashtag = tagRepository.findTagByName(tag).orElseGet(() -> tagRepository.save(Tag.newTag(tag)));
+                tagList.add(hashtag);
             }
-            else{
-                tagIds.add(oldTag.get().getId());
-            }
-        }
-        memberTagService.createMemberTags(member, tagIds);
+        );
+        memberTagService.createMemberTags(memberRepository.findMemberById(memberId), tagList);
 
-        return CreateTagResponse.of(tagIds);
+        return CreateTagResponse.of(tagList.stream().map(BaseEntity::getId).collect(Collectors.toList()));
     }
 }
