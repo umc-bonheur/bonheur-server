@@ -37,6 +37,14 @@ public class MemberController {
     }
 
     @ApiDocumentResponse
+    @Operation(summary = "프로필 조회")
+    @GetMapping("/api/member/profiles")
+    public ApiResponse<GetMemberProfileResponse> getMemberProfile() {
+        Long memberId = 1L; //session 관련 검증 추가해야 함!
+        return ApiResponse.success(memberService.getMemberProfile(memberId));
+    }
+
+    @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 활동 종합 조회")
     @GetMapping("/api/mypages")
     public ApiResponse<FindActiveRecordResponse> findMyActiveRecord() {
