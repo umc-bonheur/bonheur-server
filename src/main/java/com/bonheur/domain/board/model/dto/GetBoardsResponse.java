@@ -17,15 +17,7 @@ public class GetBoardsResponse {
     private String createdAtDate; // 형식 : 00월 00일 0요일
     private String createdAtTime; // 형식 : 0M 00:00
 
-    private GetBoardsResponse(String contents, List<String> boardTags, String createdAtDate, String createdAtTime) {
-        this.contents = contents;
-        this.boardTags = boardTags;
-        this.createdAtDate= createdAtDate;
-        this.createdAtTime = createdAtTime;
-    }
-
     public static GetBoardsResponse of(String contents, List<String> boardTags, String image, String createdAtDate, String createdAtTime) {
-        if (image == null) return new GetBoardsResponse(contents, boardTags, createdAtDate, createdAtTime);
         return new GetBoardsResponse(contents, boardTags, image, createdAtDate, createdAtTime);
     }
 }
