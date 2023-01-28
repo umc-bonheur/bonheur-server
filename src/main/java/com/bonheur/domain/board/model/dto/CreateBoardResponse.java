@@ -1,22 +1,16 @@
 package com.bonheur.domain.board.model.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardResponse {
     private Long boardId;
 
-    @Builder
-    private CreateBoardResponse(Long boardId){
-        this.boardId = boardId;
-    }
-
-    public static CreateBoardResponse newResponse(Long boardId){
-        return CreateBoardResponse.builder()
-                .boardId(boardId)
-                .build();
+    public static CreateBoardResponse of(@NotNull Long boardId){
+        return new CreateBoardResponse(boardId);
     }
 }
