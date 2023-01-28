@@ -10,6 +10,7 @@ public interface MemberService {
     Long registerMember(CreateMemberRequest request);
 
     UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException;
+    GetMemberProfileResponse getMemberProfile(Long memberId);
 
     FindActiveRecordResponse findMyActiveRecord(Long memberId);
 
@@ -19,4 +20,6 @@ public interface MemberService {
 
     List<FindDayRecordResponse> findMyDayRecord(Long memberId);
     List<FindMonthRecordResponse> findMyMonthRecord(Long memberId);
+
+    List<GetTagUsedByMemberResponse> getTagUsedByMember(Long memberId);
 }

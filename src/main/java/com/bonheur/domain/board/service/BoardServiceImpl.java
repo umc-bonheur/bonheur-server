@@ -3,26 +3,23 @@ package com.bonheur.domain.board.service;
 import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.repository.BoardRepository;
+import com.bonheur.domain.boardtag.service.BoardTagService;
 import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.image.service.ImageService;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
-import com.bonheur.domain.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.io.IOException;
+import java.util.List;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import java.io.IOException;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +27,7 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
-    private final TagService tagService;
+    private final BoardTagService boardTagService;
     private final ImageService imageService;
 
     // # 게시글 전체 조회
@@ -97,36 +94,27 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException {
         Member member = memberRepository.findMemberById(memberId);
+        Board board = boardRepository.save(request.toEntity(member));
 
-        Board requestBoard = request.toEntity(member);
-        Board board = boardRepository.save(requestBoard);
-        if (request.getTags() != null) {
-            tagService.createBoardTags(board, request.getTags());
+        if (!request.getTagIds().isEmpty()) {
+            boardTagService.createBoardTags(board, request.getTagIds());   //게시글과 해시태그 연결
         }
-        if (!images.isEmpty()) {
-            imageService.uploadImages(board, images);
-        }
-        return CreateBoardResponse.newResponse(board.getId());
+        imageService.uploadImages(board, images);
+        return CreateBoardResponse.of(board.getId());
     }
 
     @Override
     @Transactional
     public UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException{
-        Optional<Board> board = boardRepository.findById(boardId);
-
-        if(board.isPresent()){
-            if(!request.getContents().isEmpty()){
-                board.get().update(request.getContents());
-            }   //게시글 수정
-
-            tagService.updateBoardTags(board.get(), request.getTags()); //게시글 태그 수정
-
-            imageService.updateImages(board.get(), images); //이미지 수정
-        }
-        return UpdateBoardResponse.newResponse(boardId);
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("존재하지 않은 게시글입니다."));
+        board.update(request.getContents());    //게시글 수정
+        boardTagService.updateBoardTags(board, request.getTagIds()); //게시글 태그 수정
+        imageService.updateImages(board, images); //이미지 수정
+        return UpdateBoardResponse.of(boardId);
     }
 
     @Override
+    @Transactional
     public GetBoardResponse getBoard(Long boardId) {
         Board board = boardRepository.findBoardByIdWithTagAndImage(boardId);
         return GetBoardResponse.of(board.getId(), board.getContents(),
