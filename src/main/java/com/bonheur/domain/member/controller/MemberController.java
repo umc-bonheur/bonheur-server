@@ -37,6 +37,14 @@ public class MemberController {
     }
 
     @ApiDocumentResponse
+    @Operation(summary = "프로필 조회")
+    @GetMapping("/api/member/profiles")
+    public ApiResponse<GetMemberProfileResponse> getMemberProfile() {
+        Long memberId = 1L; //session 관련 검증 추가해야 함!
+        return ApiResponse.success(memberService.getMemberProfile(memberId));
+    }
+
+    @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 활동 종합 조회")
     @GetMapping("/api/mypages")
     public ApiResponse<FindActiveRecordResponse> findMyActiveRecord() {
@@ -76,4 +84,11 @@ public class MemberController {
         return ApiResponse.success(memberService.findMyMonthRecord(memberId));
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "회원 최근 사용 태그 조회")
+    @GetMapping("/api/member/tags")
+    public ApiResponse<List<GetTagUsedByMemberResponse>> getTagUsedByMember() {
+        Long memberId = 1L;
+        return ApiResponse.success(memberService.getTagUsedByMember(memberId));
+    }
 }
