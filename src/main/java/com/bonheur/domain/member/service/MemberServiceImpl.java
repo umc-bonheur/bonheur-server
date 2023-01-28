@@ -57,6 +57,14 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
+    public GetMemberProfileResponse getMemberProfile(Long memberId){
+        Member member = memberRepository.findMemberById(memberId);
+        return GetMemberProfileResponse.of(member.getNickname(),
+                (member.getProfile() == null) ? null : member.getProfile().getUrl());
+    }
+
+    @Override
+    @Transactional
     public FindActiveRecordResponse findMyActiveRecord(Long memberId) {
         FindActiveRecordResponse response = memberRepository.findCountHappyAndCountTagByMemberId(memberId);
         Member findMember = memberRepository.findById(memberId).orElse(null);
