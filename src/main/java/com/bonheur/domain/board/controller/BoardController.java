@@ -26,10 +26,11 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "행복기록 전체 조회")
     @GetMapping("/api/boards")
-    public ApiResponse<Slice<GetBoardsResponse>> getAllBoards(@RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId, @PageableDefault(size = 5) Pageable pageable) {
+    public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId, @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses);
 
-        return ApiResponse.success(getBoardsResponses);
+        return ApiResponse.success(getBoardsGroupsResponse);
     }
 
     // # 게시글 삭제
@@ -48,14 +49,15 @@ public class BoardController {
     @Operation(summary = "행복기록 조회 - 해시태그")
     @ResponseBody
     @PostMapping ("/api/boards/tag")
-    public ApiResponse<Slice<GetBoardsResponse>> getBoardsByTag(
+    public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(
             @RequestParam(required = false) Long lastBoardId, Long memberId,
             @RequestBody GetBoardByTagRequest getBoardByTagRequest,
             @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses =
                 boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses);
 
-        return ApiResponse.success(getBoardsResponses);
+        return ApiResponse.success(getBoardsGroupsResponse);
     }
 
     @ApiDocumentResponse
