@@ -9,11 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -60,7 +62,21 @@ public class BoardController {
         return ApiResponse.success(getBoardsGroupsResponse);
     }
 
-    // # 캘린더 화면 - count 결과값이 0인지 1이상인지로 판별하면 될 듯
+    // # 게시글 조회 - by 날짜
+    // 회원 정보 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 조회 - 날짜별")
+    @GetMapping("/api/boards/date")
+    public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(Long memberId, @RequestParam(required = false) Long lastBoardId,
+                                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate, Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, lastBoardId,localDate, pageable);
+        Long count = boardService.getCountByDate(memberId, localDate);
+
+        GetBoardsByDateResponse getBoardsByDateResponse = GetBoardsByDateResponse.of(count, getBoardsResponses);
+        return ApiResponse.success(getBoardsByDateResponse);
+    }
+
+    // # 캘린더 화면
     // 회원 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "행복기록 캘린더 - 작성여부")
