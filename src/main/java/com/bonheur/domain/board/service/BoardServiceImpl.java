@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import org.springframework.data.domain.Pageable;
@@ -87,6 +89,37 @@ public class BoardServiceImpl implements BoardService {
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
+    }
+
+    // # 캘린더 조회
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month) {
+        List<GetCalendarResponse> getCalendarList = new ArrayList<>();
+
+        // 해당 달의 마지막 날 계산
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month-1, 1);
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        List<GetCalendarResponse> getCalendarRepo = boardRepository.getCalendar(memberId, year, month, lastDay); // dd | count(*) 형식
+        int dd = 1;
+        for (GetCalendarResponse res : getCalendarRepo) {
+            while (res.getDay() != dd) {
+                getCalendarList.add(GetCalendarResponse.of(dd, 0L)); // repo에서 받아온 날짜가 없으면 count 0개
+                dd++;
+            }
+            if (res.getDay() == dd) {
+                getCalendarList.add(GetCalendarResponse.of(res.getDay(), res.getCount()));
+                dd++;
+            }
+        }
+        while (dd <= lastDay) {
+            getCalendarList.add(GetCalendarResponse.of(dd, 0L));
+            dd++;
+        }
+        return getCalendarList;
     }
 
     //게시글 생성

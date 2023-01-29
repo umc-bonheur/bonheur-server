@@ -16,4 +16,5 @@ public interface BoardService {
      UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
      GetBoardResponse getBoard(Long boardId);
      GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice);
+     List<GetCalendarResponse> getCalendar(Long memberId, int year, int month);
 }

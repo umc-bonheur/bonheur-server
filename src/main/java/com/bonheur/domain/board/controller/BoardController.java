@@ -60,6 +60,16 @@ public class BoardController {
         return ApiResponse.success(getBoardsGroupsResponse);
     }
 
+    // # 캘린더 화면 - count 결과값이 0인지 1이상인지로 판별하면 될 듯
+    // 회원 인증 어노테이션 추가 필요
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 캘린더 - 작성여부")
+    @GetMapping("/api/calendar")
+    public ApiResponse<List<GetCalendarResponse>> getCalendar(Long memberId, @RequestParam int year, @RequestParam int month) {
+        List<GetCalendarResponse> getCalendarResponseList = boardService.getCalendar(memberId, year, month);
+        return ApiResponse.success(getCalendarResponseList);
+    }
+
     @ApiDocumentResponse
     @Operation(summary = "게시물 생성")
     @PostMapping("/api/boards")
