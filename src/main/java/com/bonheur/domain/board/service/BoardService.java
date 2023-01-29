@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BoardService {
@@ -17,4 +18,6 @@ public interface BoardService {
      GetBoardResponse getBoard(Long boardId);
      GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice);
      List<GetCalendarResponse> getCalendar(Long memberId, int year, int month);
+     Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, Pageable pageable);
+     Long getCountByDate(Long memberId, LocalDate localDate);
 }

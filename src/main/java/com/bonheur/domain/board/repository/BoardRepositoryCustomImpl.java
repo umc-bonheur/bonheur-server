@@ -1,10 +1,8 @@
 package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
-import com.bonheur.domain.board.model.dto.GetCalendarResponse;
 import com.bonheur.domain.image.model.QImage;
 import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberOperation;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -65,6 +64,31 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return checkLastPage(pageable, results);
     }
 
+    // # 게시글 조회 - 날짜별
+    @Override
+    public Slice<Board> findByCreatedAtWithPaging(Long lastBoardId, Long memberId, LocalDate localDate, Pageable pageable) {
+        NumberOperation<Integer> toYear = numberOperation(Integer.class, Ops.DateTimeOps.YEAR, board.createdAt);
+        NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
+        NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
+        List<Board> results = queryFactory.selectFrom(board)
+                .where(
+                        // no-offset 페이징 처리
+                        ltBoardId(lastBoardId),
+                        // memeberId
+                        board.member.id.eq(memberId),
+                        // createdAt
+                        toYear.eq(localDate.getYear()),
+                        toMonth.eq(localDate.getMonthValue()),
+                        toDay.eq(localDate.getDayOfMonth())
+                )
+                .orderBy(board.createdAt.desc())
+                .limit(pageable.getPageSize() + 1) // Slice 방식
+                .fetch();
+
+        // 무한 스크롤 처리
+        return checkLastPage(pageable, results);
+    }
+
     // no-offset 방식 처리 (처음 조회시 boardId가 null로 들어옴)
     private BooleanExpression ltBoardId(Long boardId) {
         if (boardId == null) return null;
@@ -86,14 +110,12 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     @Override
     // # 캘린더 조회
-    public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month, int lastDay) {
+    public List<Integer> getCalendar(Long memberId, int year, int month, int lastDay) {
         NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
         LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime end = LocalDateTime.of(year, month, lastDay, 23, 59, 59);
 
-        // 작성한 날짜에 대해서만 count
-        return queryFactory.select(Projections.fields(GetCalendarResponse.class, toDay.as("day"), toDay.count().as("count")))
-                .from(board)
+        return queryFactory.select(toDay).from(board)
                 .where(
                         // memberId
                         board.member.id.eq(memberId),
@@ -102,6 +124,25 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 )
                 .groupBy(toDay)
                 .fetch();
+    }
+
+    // # 게시글 날짜별 조회 count
+    @Override
+    public Long getCountByDate(Long memberId, LocalDate localDate) {
+        NumberOperation<Integer> toYear = numberOperation(Integer.class, Ops.DateTimeOps.YEAR, board.createdAt);
+        NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
+        NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
+
+        return queryFactory.select(board.count())
+                .from(board)
+                .where(
+                        // memeberId
+                        board.member.id.eq(memberId),
+                        // createdAt
+                        toYear.eq(localDate.getYear()),
+                        toMonth.eq(localDate.getMonthValue()),
+                        toDay.eq(localDate.getDayOfMonth())
+                ).fetchOne();
     }
 
     @Override

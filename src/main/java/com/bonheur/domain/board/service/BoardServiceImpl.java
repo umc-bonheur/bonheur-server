@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -91,6 +92,26 @@ public class BoardServiceImpl implements BoardService {
                 );
     }
 
+    // # 게시글 조회 - by 날짜
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, Pageable pageable) {
+        return boardRepository.findByCreatedAtWithPaging(lastBoardId, memberId, localDate, pageable)
+                .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
+                        board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
+                );
+    }
+
+    // # 게시글 조회 - by 날짜 count
+    @Override
+    @Transactional(readOnly = true)
+    public Long getCountByDate(Long memberId, LocalDate localDate) {
+        return boardRepository.getCountByDate(memberId, localDate);
+    }
+
     // # 캘린더 조회
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
@@ -103,20 +124,18 @@ public class BoardServiceImpl implements BoardService {
         cal.set(year, month-1, 1);
         int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        List<GetCalendarResponse> getCalendarRepo = boardRepository.getCalendar(memberId, year, month, lastDay); // dd | count(*) 형식
+        List<Integer> createdDate = boardRepository.getCalendar(memberId, year, month, lastDay); // dd | count(*) 형식
         int dd = 1;
-        for (GetCalendarResponse res : getCalendarRepo) {
-            while (res.getDay() != dd) {
-                getCalendarList.add(GetCalendarResponse.of(dd, 0L)); // repo에서 받아온 날짜가 없으면 count 0개
+        for (Integer created : createdDate) {
+            while (created != dd) {
+                getCalendarList.add(GetCalendarResponse.of(dd, false)); // repo에서 받아온 날짜가 없으면 X
                 dd++;
             }
-            if (res.getDay() == dd) {
-                getCalendarList.add(GetCalendarResponse.of(res.getDay(), res.getCount()));
-                dd++;
-            }
+            getCalendarList.add(GetCalendarResponse.of(created, true));
+            dd++;
         }
         while (dd <= lastDay) {
-            getCalendarList.add(GetCalendarResponse.of(dd, 0L));
+            getCalendarList.add(GetCalendarResponse.of(dd, false));
             dd++;
         }
         return getCalendarList;
