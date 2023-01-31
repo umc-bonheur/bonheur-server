@@ -63,7 +63,7 @@ public class MemberController {
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 시간별 조회")
     @GetMapping("/api/mypages/time")
-    public ApiResponse<FindTimeRecordResponse> findMyTimeRecord() {
+    public ApiResponse<List<FindTimeRecordResponse>> findMyTimeRecord() {
         Long memberId = 1L; // 임시 로그인한 유저 id
         return ApiResponse.success(memberService.findMyTimeRecord(memberId));
     }

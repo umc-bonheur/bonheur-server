@@ -3,39 +3,24 @@ package com.bonheur.domain.member.model.dto;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FindTimeRecordResponse {
-    // 06-12
-    private Long morning;
+    private String time;
+    private Long countTime;
+    private Boolean mostRecordTime = false;
 
-    // 12-18
-    private Long afternoon;
-
-    // 18-20
-    private Long evening;
-
-    //20-01
-    private Long night;
-
-    //01-06
-    private Long dawn;
-
-    @Builder(access = AccessLevel.PRIVATE)
-    private FindTimeRecordResponse(Long morning, Long afternoon, Long evening, Long night, Long dawn){
-        this.morning = morning;
-        this.afternoon = afternoon;
-        this.evening = evening;
-        this.night = night;
-        this.dawn = dawn;
+    private FindTimeRecordResponse(String time, Long countTime) {
+        this.time = time;
+        this.countTime = countTime;
     }
 
-    public static FindTimeRecordResponse of(Long morning, Long afternoon, Long evening, Long night, Long dawn){
-        return FindTimeRecordResponse.builder()
-                .morning(morning)
-                .afternoon(afternoon)
-                .evening(evening)
-                .night(night)
-                .dawn(dawn)
-                .build();
+    public static FindTimeRecordResponse createFindTimeRecordResponse(String time, Long countTime){
+        return new FindTimeRecordResponse(time, countTime);
+
     }
+    public void updateMostRecordTime(){
+        this.mostRecordTime = true;
+    }
+
 }
