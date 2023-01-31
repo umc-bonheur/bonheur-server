@@ -99,9 +99,11 @@ public class MemberServiceImpl implements MemberService{
         Long maxCount = response.stream().map(x -> x.getCountTime()).max(Long::compare).get();
 
         // maxCount와 동일하다면 해당 요일을 mostRecordTime로 설정
-        response.stream()
-                .filter(x -> x.getCountTime() == maxCount)
-                .forEach(x -> x.updateMostRecordTime());
+        if(maxCount != 0){
+            response.stream()
+                    .filter(x -> x.getCountTime() == maxCount)
+                    .forEach(x -> x.updateMostRecordTime());
+        }
 
         return response;
     }
