@@ -128,7 +128,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     // # 게시글 날짜별 조회 count
     @Override
-    public Long getCountByDate(Long memberId, LocalDate localDate) {
+    public Long getNumOfBoardsByDate(Long memberId, LocalDate localDate) {
         NumberOperation<Integer> toYear = numberOperation(Integer.class, Ops.DateTimeOps.YEAR, board.createdAt);
         NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
         NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);

@@ -12,6 +12,6 @@ public interface BoardRepositoryCustom {
     Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable);
     Board findBoardByIdWithTagAndImage(Long boardId);
     List<Integer> getCalendar(Long memberId, int year, int month, int lastDay);
-    Slice<Board> findByCreatedAtWithPaging(Long lastBoardId, Long memeberId, LocalDate localDate, Pageable pageable);
-    Long getCountByDate(Long memberId, LocalDate localDate);
+    Slice<Board> findByCreatedAtWithPaging(Long lastBoardId, Long memberId, LocalDate localDate, Pageable pageable);
+    Long getNumOfBoardsByDate(Long memberId, LocalDate localDate);
 }

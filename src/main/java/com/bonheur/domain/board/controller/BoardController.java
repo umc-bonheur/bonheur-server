@@ -70,7 +70,7 @@ public class BoardController {
     public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(Long memberId, @RequestParam(required = false) Long lastBoardId,
                                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate, Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, lastBoardId,localDate, pageable);
-        Long count = boardService.getCountByDate(memberId, localDate);
+        Long count = boardService.getNumOfBoardsByDate(memberId, localDate);
 
         GetBoardsByDateResponse getBoardsByDateResponse = GetBoardsByDateResponse.of(count, getBoardsResponses);
         return ApiResponse.success(getBoardsByDateResponse);

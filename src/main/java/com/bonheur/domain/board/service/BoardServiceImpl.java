@@ -108,8 +108,8 @@ public class BoardServiceImpl implements BoardService {
     // # 게시글 조회 - by 날짜 count
     @Override
     @Transactional(readOnly = true)
-    public Long getCountByDate(Long memberId, LocalDate localDate) {
-        return boardRepository.getCountByDate(memberId, localDate);
+    public Long getNumOfBoardsByDate(Long memberId, LocalDate localDate) {
+        return boardRepository.getNumOfBoardsByDate(memberId, localDate);
     }
 
     // # 캘린더 조회
