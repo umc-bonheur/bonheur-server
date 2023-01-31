@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -108,15 +109,8 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
-        List<FindDayRecordResponse> response = Arrays.asList(
-                FindDayRecordResponse.createFindDayRecordResponse("sun", 0L),
-                FindDayRecordResponse.createFindDayRecordResponse("mon", 0L),
-                FindDayRecordResponse.createFindDayRecordResponse("tue", 0L),
-                FindDayRecordResponse.createFindDayRecordResponse("wed", 0L),
-                FindDayRecordResponse.createFindDayRecordResponse("thr", 0L),
-                FindDayRecordResponse.createFindDayRecordResponse("fri", 0L),
-                FindDayRecordResponse.createFindDayRecordResponse("sat", 0L)
-        );
+        List<FindDayRecordResponse> response = Stream.of("sun", "mon", "tue", "wed", "thr", "fri", "sat")
+                .map(day -> FindDayRecordResponse.createFindDayRecordResponse(day, 0L)).collect(Collectors.toList());
 
         List<FindDayRecordResponse> findDayRecordResponseList = memberRepository.findDayRecordByMemberId(memberId);
 
@@ -139,20 +133,8 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
-        List<FindMonthRecordResponse> response = Arrays.asList(
-                FindMonthRecordResponse.createFindMonthRecordResponse("jan",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("feb",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("mar",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("apr",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("may",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("jun",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("jul",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("aug",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("sept",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("oct",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("nov",0L),
-                FindMonthRecordResponse.createFindMonthRecordResponse("dec",0L)
-        );
+        List<FindMonthRecordResponse> response = Stream.of("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec")
+                .map(month -> FindMonthRecordResponse.createFindMonthRecordResponse(month, 0L)).collect(Collectors.toList());
 
         // 월별 기록 조회
         List<FindMonthRecordResponse> findMonthRecordResponseList = memberRepository.findMonthRecordByMemberId(memberId);
