@@ -11,8 +11,7 @@ public class FindDayRecordResponse {
     private Long countDay;
     private Boolean mostRecordDay = false;
 
-    public FindDayRecordResponse updateMostRecordDay(){
+    public void updateMostRecordDay(){
         this.mostRecordDay = true;
-        return this;
     }
 }
