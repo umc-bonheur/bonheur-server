@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,14 +86,23 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public FindTimeRecordResponse findMyTimeRecord(Long memberId) {
-        Long morning = memberRepository.findTimeRecordByMemberId(memberId, 6, 12);
-        Long afternoon = memberRepository.findTimeRecordByMemberId(memberId, 12, 18);
-        Long evening = memberRepository.findTimeRecordByMemberId(memberId, 18, 20);
-        Long night = memberRepository.findNightTimeRecordByMemberId(memberId);
-        Long dawn = memberRepository.findTimeRecordByMemberId(memberId, 1, 6);
+    public List<FindTimeRecordResponse> findMyTimeRecord(Long memberId) {
+        List<FindTimeRecordResponse> response = Arrays.asList(
+                FindTimeRecordResponse.createFindTimeRecordResponse("morning", memberRepository.findTimeRecordByMemberId(memberId, 6, 12)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("afternoon", memberRepository.findTimeRecordByMemberId(memberId, 12, 18)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("evening", memberRepository.findTimeRecordByMemberId(memberId, 18, 20)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("night", memberRepository.findNightTimeRecordByMemberId(memberId)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("dawn", memberRepository.findTimeRecordByMemberId(memberId, 1, 6)));
 
-        return FindTimeRecordResponse.of(morning,afternoon,evening,night,dawn);
+        // 가장 많이 기록된 횟수 구하기
+        Long maxCount = response.stream().map(x -> x.getCountTime()).max(Long::compare).get();
+
+        // maxCount와 동일하다면 해당 요일을 mostRecordTime로 설정
+        response.stream()
+                .filter(x -> x.getCountTime() == maxCount)
+                .forEach(x -> x.updateMostRecordTime());
+
+        return response;
     }
 
     @Override
