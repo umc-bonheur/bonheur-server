@@ -117,27 +117,24 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month) {
-        List<GetCalendarResponse> getCalendarList = new ArrayList<>();
 
         // 해당 달의 마지막 날 계산
         Calendar cal = Calendar.getInstance();
         cal.set(year, month-1, 1);
         int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+        List<GetCalendarResponse> getCalendarList = new ArrayList<>();
+        int idx = 0;
+        while (++idx <= lastDay) {
+            getCalendarList.add(GetCalendarResponse.of(idx, false)); // day : false 로 초기화
+        }
+
         List<Integer> createdDate = boardRepository.getCalendar(memberId, year, month, lastDay); // dd | count(*) 형식
-        int dd = 1;
+
         for (Integer created : createdDate) {
-            while (created != dd) {
-                getCalendarList.add(GetCalendarResponse.of(dd, false)); // repo에서 받아온 날짜가 없으면 X
-                dd++;
-            }
-            getCalendarList.add(GetCalendarResponse.of(created, true));
-            dd++;
+            getCalendarList.set(created - 1, GetCalendarResponse.of(created, true));
         }
-        while (dd <= lastDay) {
-            getCalendarList.add(GetCalendarResponse.of(dd, false));
-            dd++;
-        }
+
         return getCalendarList;
     }
 
