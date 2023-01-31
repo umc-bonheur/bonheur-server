@@ -97,7 +97,19 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public List<FindDayRecordResponse> findMyDayRecord(Long memberId) { return memberRepository.findDayRecordByMemberId(memberId); }
+    public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
+        List<FindDayRecordResponse> response = memberRepository.findDayRecordByMemberId(memberId);
+
+        // 가장 많이 기록된 횟수 구하기
+        Long maxCount = response.stream().map(x -> x.getCountDay()).max(Long::compare).get();
+
+        // maxCount와 동일하다면 해당 요일을 mostRecordDay로 설정
+        response.stream()
+                .filter(x -> x.getCountDay() == maxCount)
+                .forEach(x -> x.updateMostRecordDay());
+
+        return response;
+    }
 
     @Override
     @Transactional
