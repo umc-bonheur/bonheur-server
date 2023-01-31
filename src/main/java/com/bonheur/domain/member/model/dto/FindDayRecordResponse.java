@@ -1,7 +1,6 @@
 package com.bonheur.domain.member.model.dto;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @NoArgsConstructor
@@ -11,7 +10,19 @@ public class FindDayRecordResponse {
     private Long countDay;
     private Boolean mostRecordDay = false;
 
+    private FindDayRecordResponse(String dayOfWeek, Long countDay) {
+        this.dayOfWeek = dayOfWeek;
+        this.countDay = countDay;
+    }
+
+    public static FindDayRecordResponse createFindDayRecordResponse(String dayOfWeek, Long countDay){
+        return new FindDayRecordResponse(dayOfWeek, countDay);
+    }
+
     public void updateMostRecordDay(){
         this.mostRecordDay = true;
+    }
+    public void updateCountDay(Long countDay){
+        this.countDay = countDay;
     }
 }

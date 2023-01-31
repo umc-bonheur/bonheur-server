@@ -108,15 +108,30 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
-        List<FindDayRecordResponse> response = memberRepository.findDayRecordByMemberId(memberId);
+        List<FindDayRecordResponse> response = Arrays.asList(
+                FindDayRecordResponse.createFindDayRecordResponse("sun", 0L),
+                FindDayRecordResponse.createFindDayRecordResponse("mon", 0L),
+                FindDayRecordResponse.createFindDayRecordResponse("tue", 0L),
+                FindDayRecordResponse.createFindDayRecordResponse("wed", 0L),
+                FindDayRecordResponse.createFindDayRecordResponse("thr", 0L),
+                FindDayRecordResponse.createFindDayRecordResponse("fri", 0L),
+                FindDayRecordResponse.createFindDayRecordResponse("sat", 0L)
+        );
+
+        List<FindDayRecordResponse> findDayRecordResponseList = memberRepository.findDayRecordByMemberId(memberId);
 
         // 가장 많이 기록된 횟수 구하기
-        Long maxCount = response.stream().map(x -> x.getCountDay()).max(Long::compare).get();
+        Long maxCount = findDayRecordResponseList.stream().map(FindDayRecordResponse::getCountDay).max(Long::compare).orElse(0L);
 
-        // maxCount와 동일하다면 해당 요일을 mostRecordDay로 설정
-        response.stream()
-                .filter(x -> x.getCountDay() == maxCount)
-                .forEach(x -> x.updateMostRecordDay());
+        // countDay 값이 존재한다면 update & maxCount와 동일하다면 해당 요일을 mostRecordDay로 설정
+        for (FindDayRecordResponse findDay : findDayRecordResponseList){
+            response.stream()
+                    .filter(x -> x.getDayOfWeek().equals(findDay.getDayOfWeek()))
+                    .forEach(x -> {
+                        x.updateCountDay(findDay.getCountDay());
+                        if (x.getCountDay().equals(maxCount)) {x.updateMostRecordDay();}
+                    });
+        }
 
         return response;
     }
@@ -124,15 +139,36 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
-        List<FindMonthRecordResponse> response = memberRepository.findMonthRecordByMemberId(memberId);
+        List<FindMonthRecordResponse> response = Arrays.asList(
+                FindMonthRecordResponse.createFindMonthRecordResponse("jan",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("feb",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("mar",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("apr",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("may",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("jun",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("jul",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("aug",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("sept",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("oct",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("nov",0L),
+                FindMonthRecordResponse.createFindMonthRecordResponse("dec",0L)
+        );
+
+        // 월별 기록 조회
+        List<FindMonthRecordResponse> findMonthRecordResponseList = memberRepository.findMonthRecordByMemberId(memberId);
 
         // 가장 많이 기록된 횟수 구하기
-        Long maxCount = response.stream().map(x -> x.getCountMonth()).max(Long::compare).get();
+        Long maxCount = findMonthRecordResponseList.stream().map(FindMonthRecordResponse::getCountMonth).max(Long::compare).orElse(0L);
 
-        // maxCount와 동일하다면 해당 요일을 mostRecordMonth로 설정
-        response.stream()
-                .filter(x -> x.getCountMonth() == maxCount)
-                .forEach(x -> x.updateMostRecordMonth());
+        // countMonth 값이 존재한다면 update & maxCount와 동일하다면 해당 월을 mostRecordMonth로 설정
+        for ( FindMonthRecordResponse findMonth : findMonthRecordResponseList) {
+            response.stream()
+                    .filter(x -> x.getMonth().equals(findMonth.getMonth()))
+                    .forEach(x -> {
+                        x.updateCountMonth(findMonth.getCountMonth());
+                        if(findMonth.getCountMonth().equals(maxCount)){ x.updateMostRecordMonth(); }
+                    });
+        }
 
         return response;
     }
