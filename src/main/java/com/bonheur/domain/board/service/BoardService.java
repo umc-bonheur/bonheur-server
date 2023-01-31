@@ -19,5 +19,5 @@ public interface BoardService {
      GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice);
      List<GetCalendarResponse> getCalendar(Long memberId, int year, int month);
      Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, Pageable pageable);
-     Long getCountByDate(Long memberId, LocalDate localDate);
+     Long getNumOfBoardsByDate(Long memberId, LocalDate localDate);
 }
