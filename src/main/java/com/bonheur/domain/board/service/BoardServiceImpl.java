@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import com.bonheur.domain.boardtag.model.BoardTag;
 import org.springframework.data.domain.Pageable;
@@ -87,6 +90,52 @@ public class BoardServiceImpl implements BoardService {
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
+    }
+
+    // # 게시글 조회 - by 날짜
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, Pageable pageable) {
+        return boardRepository.findByCreatedAtWithPaging(lastBoardId, memberId, localDate, pageable)
+                .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
+                        board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
+                );
+    }
+
+    // # 게시글 조회 - by 날짜 count
+    @Override
+    @Transactional(readOnly = true)
+    public Long getNumOfBoardsByDate(Long memberId, LocalDate localDate) {
+        return boardRepository.getNumOfBoardsByDate(memberId, localDate);
+    }
+
+    // # 캘린더 조회
+    // 회원 정보 인증 어노테이션 추가 필요
+    @Override
+    @Transactional(readOnly = true)
+    public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month) {
+
+        // 해당 달의 마지막 날 계산
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month-1, 1);
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        List<GetCalendarResponse> getCalendarList = new ArrayList<>();
+        int idx = 0;
+        while (++idx <= lastDay) {
+            getCalendarList.add(GetCalendarResponse.of(idx, false)); // day : false 로 초기화
+        }
+
+        List<Integer> createdDate = boardRepository.getCalendar(memberId, year, month, lastDay); // dd | count(*) 형식
+
+        for (Integer created : createdDate) {
+            getCalendarList.set(created - 1, GetCalendarResponse.of(created, true));
+        }
+
+        return getCalendarList;
     }
 
     //게시글 생성
