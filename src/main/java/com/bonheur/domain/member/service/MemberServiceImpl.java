@@ -113,7 +113,19 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) { return memberRepository.findMonthRecordByMemberId(memberId); }
+    public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
+        List<FindMonthRecordResponse> response = memberRepository.findMonthRecordByMemberId(memberId);
+
+        // 가장 많이 기록된 횟수 구하기
+        Long maxCount = response.stream().map(x -> x.getCountMonth()).max(Long::compare).get();
+
+        // maxCount와 동일하다면 해당 요일을 mostRecordMonth로 설정
+        response.stream()
+                .filter(x -> x.getCountMonth() == maxCount)
+                .forEach(x -> x.updateMostRecordMonth());
+
+        return response;
+    }
 
     @Override
     @Transactional

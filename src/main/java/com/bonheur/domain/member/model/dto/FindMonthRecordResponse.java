@@ -11,4 +11,9 @@ import lombok.NoArgsConstructor;
 public class FindMonthRecordResponse {
     String month;
     Long countMonth;
+    Boolean mostRecordMonth = false;
+
+    public void updateMostRecordMonth(){
+        this.mostRecordMonth = true;
+    }
 }
