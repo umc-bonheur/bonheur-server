@@ -120,13 +120,13 @@ public class MemberServiceImpl implements MemberService{
         Long maxCount = findDayRecordResponseList.stream().map(FindDayRecordResponse::getCountDay).max(Long::compare).orElse(0L);
 
         for (FindDayRecordResponse findDay : findDayRecordResponseList){
-            // countMonth 값 update
             if(responseMap.containsKey(findDay.getDayOfWeek())) {
+                // countMonth 값 update
                 responseMap.get(findDay.getDayOfWeek()).updateCountDay(findDay.getCountDay());
-            }
-            // maxCount와 동일하다면 해당 요일을 mostRecordDay로 설정
-            if(responseMap.get(findDay.getDayOfWeek()).getCountDay().equals(maxCount)) {
-                responseMap.get(findDay.getDayOfWeek()).updateMostRecordDay();
+                // maxCount와 동일하다면 해당 요일을 mostRecordDay로 설정
+                if(responseMap.get(findDay.getDayOfWeek()).getCountDay().equals(maxCount)) {
+                    responseMap.get(findDay.getDayOfWeek()).updateMostRecordDay();
+                }
             }
         }
 
@@ -146,14 +146,15 @@ public class MemberServiceImpl implements MemberService{
         Long maxCount = findMonthRecordResponseList.stream().map(FindMonthRecordResponse::getCountMonth).max(Long::compare).orElse(0L);
 
         for ( FindMonthRecordResponse findMonth : findMonthRecordResponseList) {
-            // countMonth 값 update
             if(responseMap.containsKey(findMonth.getMonth())){
+                // countMonth 값 update
                 responseMap.get(findMonth.getMonth()).updateCountMonth(findMonth.getCountMonth());
+                // maxCount와 동일하다면 해당 월을 mostRecordMonth로 설정
+                if(responseMap.get(findMonth.getMonth()).getCountMonth().equals(maxCount)){
+                    responseMap.get(findMonth.getMonth()).updateMostRecordMonth();
+                }
             }
-            // maxCount와 동일하다면 해당 월을 mostRecordMonth로 설정
-            if(responseMap.get(findMonth.getMonth()).getCountMonth().equals(maxCount)){
-                responseMap.get(findMonth.getMonth()).updateMostRecordMonth();
-            }
+
         }
 
         return responseMap.values().stream().collect(Collectors.toList());
