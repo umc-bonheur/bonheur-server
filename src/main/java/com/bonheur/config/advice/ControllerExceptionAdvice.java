@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static com.bonheur.domain.common.exception.dto.ErrorCode.E400_INVALID_FILE_SIZE_TOO_LARGE;
+import static com.bonheur.domain.common.exception.dto.ErrorCode.E500_INTERNAL_SERVER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,5 +27,16 @@ public class ControllerExceptionAdvice {
     private ApiResponse<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error(e.getMessage(), e);
         return ApiResponse.error(E400_INVALID_FILE_SIZE_TOO_LARGE);
+    }
+
+
+    /**
+     * 500 Internal Server
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    private ApiResponse<Object> handleException(Exception exception, HttpServletRequest request) {
+        log.error(exception.getMessage(), exception);
+        return ApiResponse.error(E500_INTERNAL_SERVER);
     }
 }
