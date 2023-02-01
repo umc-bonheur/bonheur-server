@@ -16,7 +16,7 @@ public interface MemberService {
 
     List<FindTagRecordResponse> findMyTagRecord(Long memberId);
 
-    FindTimeRecordResponse findMyTimeRecord(Long memberId);
+    List<FindTimeRecordResponse> findMyTimeRecord(Long memberId);
 
     List<FindDayRecordResponse> findMyDayRecord(Long memberId);
     List<FindMonthRecordResponse> findMyMonthRecord(Long memberId);

@@ -15,8 +15,10 @@ import java.io.IOException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -85,23 +87,78 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public FindTimeRecordResponse findMyTimeRecord(Long memberId) {
-        Long morning = memberRepository.findTimeRecordByMemberId(memberId, 6, 12);
-        Long afternoon = memberRepository.findTimeRecordByMemberId(memberId, 12, 18);
-        Long evening = memberRepository.findTimeRecordByMemberId(memberId, 18, 20);
-        Long night = memberRepository.findNightTimeRecordByMemberId(memberId);
-        Long dawn = memberRepository.findTimeRecordByMemberId(memberId, 1, 6);
+    public List<FindTimeRecordResponse> findMyTimeRecord(Long memberId) {
+        List<FindTimeRecordResponse> response = Arrays.asList(
+                FindTimeRecordResponse.createFindTimeRecordResponse("morning", memberRepository.findTimeRecordByMemberId(memberId, 6, 12)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("afternoon", memberRepository.findTimeRecordByMemberId(memberId, 12, 18)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("evening", memberRepository.findTimeRecordByMemberId(memberId, 18, 20)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("night", memberRepository.findNightTimeRecordByMemberId(memberId)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("dawn", memberRepository.findTimeRecordByMemberId(memberId, 1, 6)));
 
-        return FindTimeRecordResponse.of(morning,afternoon,evening,night,dawn);
+        // 가장 많이 기록된 횟수 구하기
+        Long maxCount = response.stream().map(x -> x.getCountTime()).max(Long::compare).get();
+
+        // maxCount와 동일하다면 해당 요일을 mostRecordTime로 설정
+        if(maxCount != 0){
+            response.stream()
+                    .filter(x -> x.getCountTime() == maxCount)
+                    .forEach(x -> x.updateMostRecordTime());
+        }
+
+        return response;
     }
 
     @Override
     @Transactional
-    public List<FindDayRecordResponse> findMyDayRecord(Long memberId) { return memberRepository.findDayRecordByMemberId(memberId); }
+    public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
+        LinkedHashMap<String, FindDayRecordResponse> responseMap = Stream.of("sun", "mon", "tue", "wed", "thr", "fri", "sat")
+                .collect(Collectors.toMap(Function.identity(), day -> FindDayRecordResponse.createFindDayRecordResponse(day, 0L), (x, y) -> y, LinkedHashMap::new));
+
+        List<FindDayRecordResponse> findDayRecordResponseList = memberRepository.findDayRecordByMemberId(memberId);
+
+        // 가장 많이 기록된 횟수 구하기
+        Long maxCount = findDayRecordResponseList.stream().map(FindDayRecordResponse::getCountDay).max(Long::compare).orElse(0L);
+
+        for (FindDayRecordResponse findDay : findDayRecordResponseList){
+            if(responseMap.containsKey(findDay.getDayOfWeek())) {
+                // countMonth 값 update
+                responseMap.get(findDay.getDayOfWeek()).updateCountDay(findDay.getCountDay());
+                // maxCount와 동일하다면 해당 요일을 mostRecordDay로 설정
+                if(responseMap.get(findDay.getDayOfWeek()).getCountDay().equals(maxCount)) {
+                    responseMap.get(findDay.getDayOfWeek()).updateMostRecordDay();
+                }
+            }
+        }
+
+        return responseMap.values().stream().collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
-    public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) { return memberRepository.findMonthRecordByMemberId(memberId); }
+    public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
+        LinkedHashMap<String, FindMonthRecordResponse> responseMap = Stream.of("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec")
+                .collect(Collectors.toMap(Function.identity(), month -> FindMonthRecordResponse.createFindMonthRecordResponse(month, 0L), (x, y) -> y, LinkedHashMap::new));
+
+        // 월별 기록 조회
+        List<FindMonthRecordResponse> findMonthRecordResponseList = memberRepository.findMonthRecordByMemberId(memberId);
+
+        // 가장 많이 기록된 횟수 구하기
+        Long maxCount = findMonthRecordResponseList.stream().map(FindMonthRecordResponse::getCountMonth).max(Long::compare).orElse(0L);
+
+        for ( FindMonthRecordResponse findMonth : findMonthRecordResponseList) {
+            if(responseMap.containsKey(findMonth.getMonth())){
+                // countMonth 값 update
+                responseMap.get(findMonth.getMonth()).updateCountMonth(findMonth.getCountMonth());
+                // maxCount와 동일하다면 해당 월을 mostRecordMonth로 설정
+                if(responseMap.get(findMonth.getMonth()).getCountMonth().equals(maxCount)){
+                    responseMap.get(findMonth.getMonth()).updateMostRecordMonth();
+                }
+            }
+
+        }
+
+        return responseMap.values().stream().collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
