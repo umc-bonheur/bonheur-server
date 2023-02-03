@@ -55,6 +55,10 @@ jobs:
           echo "${{ secrets.YML_DEV }}" > ./application-dev.yml
         shell: bash
 
+      # gradlew 권한 설정
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       # gradle build
       - name: Build with Gradle
         run: ./gradlew build -x test
