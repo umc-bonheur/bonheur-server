@@ -6,6 +6,7 @@ import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.common.dto.ApiResponse;
 import com.bonheur.domain.tag.model.dto.CreateTagRequest;
 import com.bonheur.domain.tag.model.dto.CreateTagResponse;
+import com.bonheur.domain.tag.model.dto.GetTagIdResponse;
 import com.bonheur.domain.tag.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,16 @@ public class TagController {
             @Valid @MemberId Long memberId,
             @Valid @RequestBody CreateTagRequest createTagRequest) {
         return ApiResponse.success(tagService.createTags(memberId, createTagRequest.getTags()));
+    }
+
+    // # tagName으로 tagId 조회
+    @ApiDocumentResponse
+    @Operation(summary = "tagName으로 tagId 조회")
+    @GetMapping("/api/tag/{tagName}")
+    @Auth
+    public ApiResponse<GetTagIdResponse> getTagIdByTagName(@PathVariable(value = "tagName") String tagName,
+                                                           @Valid @MemberId Long memberId) {
+        GetTagIdResponse getTagIdResponse = tagService.getTagIdByTagName(memberId, tagName);
+        return ApiResponse.success(getTagIdResponse);
     }
 }

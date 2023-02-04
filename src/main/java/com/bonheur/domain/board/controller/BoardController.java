@@ -26,7 +26,6 @@ public class BoardController {
     private final BoardService boardService;
 
     // # 게시글 전체 조회 (페이징 일단 5개로 정의)
-    // 회원 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "행복기록 전체 조회")
     @GetMapping("/api/boards")
@@ -41,7 +40,6 @@ public class BoardController {
     }
 
     // # 게시글 삭제
-    // 회원 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "행복기록 삭제")
     @DeleteMapping("/api/boards/{boardId}")
@@ -52,7 +50,6 @@ public class BoardController {
     }
 
     // # 게시글 조회 - 해시태그
-    // 회원 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "행복기록 조회 - 해시태그")
     @ResponseBody
@@ -71,7 +68,6 @@ public class BoardController {
     }
 
     // # 게시글 조회 - by 날짜
-    // 회원 정보 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "행복기록 조회 - 날짜별")
     @GetMapping("/api/boards/date")
@@ -88,7 +84,6 @@ public class BoardController {
     }
 
     // # 캘린더 화면
-    // 회원 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "행복기록 캘린더 - 작성여부")
     @GetMapping("/api/calendar")
