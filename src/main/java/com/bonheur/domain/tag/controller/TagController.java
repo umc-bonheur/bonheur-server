@@ -1,5 +1,7 @@
 package com.bonheur.domain.tag.controller;
 
+import com.bonheur.config.interceptor.Auth;
+import com.bonheur.config.resolver.MemberId;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.common.dto.ApiResponse;
 import com.bonheur.domain.tag.model.dto.CreateTagRequest;
@@ -19,9 +21,10 @@ public class TagController {
     @ApiDocumentResponse
     @Operation(summary = "해시태그 생성")
     @PostMapping("/api/tags")
+    @Auth
     public ApiResponse<CreateTagResponse> createTags(
+            @Valid @MemberId Long memberId,
             @Valid @RequestBody CreateTagRequest createTagRequest) {
-        Long memberId = 1L; //session 관련 검증 추가해야 함!
         return ApiResponse.success(tagService.createTags(memberId, createTagRequest.getTags()));
     }
 }
