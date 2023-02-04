@@ -1,5 +1,7 @@
 package com.bonheur.domain.board.controller;
 
+import com.bonheur.config.interceptor.Auth;
+import com.bonheur.config.resolver.MemberId;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.service.BoardService;
@@ -28,7 +30,10 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "행복기록 전체 조회")
     @GetMapping("/api/boards")
-    public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@RequestParam(required = false) Long lastBoardId, @RequestParam Long memberId, @PageableDefault(size = 5) Pageable pageable) {
+    @Auth
+    public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@RequestParam(required = false) Long lastBoardId,
+                                                             @Valid @MemberId Long memberId,
+                                                             @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
         GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses);
 
@@ -40,7 +45,8 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "행복기록 삭제")
     @DeleteMapping("/api/boards/{boardId}")
-    public ApiResponse<DeleteBoardResponse> deleteBoard(Long memberId, @PathVariable("boardId") Long boardId) {
+    @Auth
+    public ApiResponse<DeleteBoardResponse> deleteBoard(@Valid @MemberId Long memberId, @PathVariable("boardId") Long boardId) {
         DeleteBoardResponse deleteBoardResponse = boardService.deleteBoard(memberId, boardId);
         return ApiResponse.success(deleteBoardResponse);
     }
@@ -51,8 +57,10 @@ public class BoardController {
     @Operation(summary = "행복기록 조회 - 해시태그")
     @ResponseBody
     @PostMapping ("/api/boards/tag")
+    @Auth
     public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(
-            @RequestParam(required = false) Long lastBoardId, Long memberId,
+            @RequestParam(required = false) Long lastBoardId,
+            @Valid @MemberId Long memberId,
             @RequestBody GetBoardByTagRequest getBoardByTagRequest,
             @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses =
@@ -67,8 +75,11 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "행복기록 조회 - 날짜별")
     @GetMapping("/api/boards/date")
-    public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(Long memberId, @RequestParam(required = false) Long lastBoardId,
-                                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate, Pageable pageable) {
+    @Auth
+    public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(@Valid @MemberId Long memberId,
+                                                                @RequestParam(required = false) Long lastBoardId,
+                                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate,
+                                                                Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, lastBoardId,localDate, pageable);
         Long count = boardService.getNumOfBoardsByDate(memberId, localDate);
 
@@ -81,7 +92,8 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "행복기록 캘린더 - 작성여부")
     @GetMapping("/api/calendar")
-    public ApiResponse<List<GetCalendarResponse>> getCalendar(Long memberId, @RequestParam int year, @RequestParam int month) {
+    @Auth
+    public ApiResponse<List<GetCalendarResponse>> getCalendar(@Valid @MemberId Long memberId, @RequestParam int year, @RequestParam int month) {
         List<GetCalendarResponse> getCalendarResponseList = boardService.getCalendar(memberId, year, month);
         return ApiResponse.success(getCalendarResponseList);
     }
@@ -89,11 +101,11 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "게시물 생성")
     @PostMapping("/api/boards")
+    @Auth
     public ApiResponse<CreateBoardResponse> createBoard(
+            @Valid @MemberId Long memberId,
             @RequestPart(value = "images") List<MultipartFile> images,
             @RequestPart @Valid CreateBoardRequest createBoardRequest) throws IOException {
-
-        Long memberId = 1L; //session 관련 검증 추가해야 함!
 
         return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
     }

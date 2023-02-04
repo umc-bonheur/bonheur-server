@@ -5,6 +5,7 @@ import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.membertag.service.MemberTagService;
 import com.bonheur.domain.tag.model.Tag;
 import com.bonheur.domain.tag.model.dto.CreateTagResponse;
+import com.bonheur.domain.tag.model.dto.GetTagIdResponse;
 import com.bonheur.domain.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,12 @@ public class TagServiceImpl implements TagService{
         memberTagService.createMemberTags(memberRepository.findMemberById(memberId), tagList);
 
         return CreateTagResponse.of(tagList.stream().map(BaseEntity::getId).collect(Collectors.toList()));
+    }
+
+    // # tagName으로 tagId 조회
+    @Override
+    @Transactional
+    public GetTagIdResponse getTagIdByTagName(Long memberId, String tagName) {
+        return GetTagIdResponse.of(tagRepository.findOwnTagByTagName(memberId, tagName));
     }
 }
