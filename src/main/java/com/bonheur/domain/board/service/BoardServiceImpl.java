@@ -164,12 +164,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public GetBoardResponse getBoard(Long boardId) {
-        Board board = boardRepository.findBoardByIdWithTagAndImage(boardId);
+    public GetBoardResponse getBoard(Long memberId, Long boardId) {
+        Board board = boardRepository.findBoardByIdWithMemberAndImages(boardId);
+        /*
+          회원 검증 로직 추가 ( member.id == board.member.id )
+         */
         return GetBoardResponse.of(board.getId(), board.getContents(),
                 board.getImages().stream().map(Image::getUrl).collect(Collectors.toList()),
                 board.getBoardTags().stream().map(boardTag -> boardTag.getTag().getName()).collect(Collectors.toList()),
-                board.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY.MM.DD E요일 ").withLocale(Locale.KOREA))
+                board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd E요일 ").withLocale(Locale.KOREA))
         + board.getCreatedAt().format(DateTimeFormatter.ofPattern("ahh:mm").withLocale(Locale.ENGLISH)));
     }
 }
