@@ -30,11 +30,12 @@ public class TagController {
     }
 
     // # tagName으로 tagId 조회
-    // 회원 인증 어노테이션 추가 필요
     @ApiDocumentResponse
     @Operation(summary = "tagName으로 tagId 조회")
     @GetMapping("/api/tag/{tagName}")
-    public ApiResponse<GetTagIdResponse> getTagIdByTagName(@PathVariable(value = "tagName") String tagName, Long memberId) {
+    @Auth
+    public ApiResponse<GetTagIdResponse> getTagIdByTagName(@PathVariable(value = "tagName") String tagName,
+                                                           @Valid @MemberId Long memberId) {
         GetTagIdResponse getTagIdResponse = tagService.getTagIdByTagName(memberId, tagName);
         return ApiResponse.success(getTagIdResponse);
     }
