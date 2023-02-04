@@ -1,6 +1,8 @@
 package com.bonheur.domain.member.controller;
 
 
+import com.bonheur.config.interceptor.Auth;
+import com.bonheur.config.resolver.MemberId;
 import com.bonheur.domain.common.dto.ApiResponse;
 import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
@@ -27,68 +29,67 @@ public class MemberController {
     @ApiDocumentResponse
     @Operation(summary = "프로필 수정")
     @PatchMapping("/api/member/profiles")
+    @Auth
     public ApiResponse<UpdateMemberProfileResponse> updateProfile(
             @RequestPart MultipartFile image,
-            @RequestPart @Valid UpdateMemberProfileRequest updateMemberProfileRequest) throws IOException {
-
-        Long memberId = 1L; //session 관련 검증 추가해야 함!
-
+            @RequestPart @Valid UpdateMemberProfileRequest updateMemberProfileRequest,
+            @Valid @MemberId Long memberId) throws IOException {
         return ApiResponse.success(memberService.updateMemberProfile(memberId, updateMemberProfileRequest, image));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "프로필 조회")
     @GetMapping("/api/member/profiles")
-    public ApiResponse<GetMemberProfileResponse> getMemberProfile() {
-        Long memberId = 1L; //session 관련 검증 추가해야 함!
+    @Auth
+    public ApiResponse<GetMemberProfileResponse> getMemberProfile(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.getMemberProfile(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 활동 종합 조회")
     @GetMapping("/api/mypages")
-    public ApiResponse<FindActiveRecordResponse> findMyActiveRecord() {
-        Long memberId = 1L; // 임시 로그인한 유저 id
+    @Auth
+    public ApiResponse<FindActiveRecordResponse> findMyActiveRecord(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.findMyActiveRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 태그별 조회")
     @GetMapping("/api/mypages/tag")
-    public ApiResponse<List<FindTagRecordResponse>> findMyTagRecord() {
-        Long memberId = 1L; // 임시 로그인한 유저 id
+    @Auth
+    public ApiResponse<List<FindTagRecordResponse>> findMyTagRecord(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.findMyTagRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 시간별 조회")
     @GetMapping("/api/mypages/time")
-    public ApiResponse<List<FindTimeRecordResponse>> findMyTimeRecord() {
-        Long memberId = 1L; // 임시 로그인한 유저 id
+    @Auth
+    public ApiResponse<List<FindTimeRecordResponse>> findMyTimeRecord(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.findMyTimeRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 요일 조회")
     @GetMapping("/api/mypages/day")
-    public ApiResponse<List<FindDayRecordResponse>> findMyDayRecord() {
-        Long memberId = 1L; // 임시 로그인한 유저 id
+    @Auth
+    public ApiResponse<List<FindDayRecordResponse>> findMyDayRecord(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.findMyDayRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "마이페이지 통계 - 월별 조회")
     @GetMapping("/api/mypages/month")
-    public ApiResponse<List<FindMonthRecordResponse>> findMyMonthRecord() {
-        Long memberId = 1L; // 임시 로그인한 유저 id
+    @Auth
+    public ApiResponse<List<FindMonthRecordResponse>> findMyMonthRecord(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.findMyMonthRecord(memberId));
     }
 
     @ApiDocumentResponse
     @Operation(summary = "회원 최근 사용 태그 조회")
     @GetMapping("/api/member/tags")
-    public ApiResponse<List<GetTagUsedByMemberResponse>> getTagUsedByMember() {
-        Long memberId = 1L;
+    @Auth
+    public ApiResponse<List<GetTagUsedByMemberResponse>> getTagUsedByMember(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.getTagUsedByMember(memberId));
     }
 }
