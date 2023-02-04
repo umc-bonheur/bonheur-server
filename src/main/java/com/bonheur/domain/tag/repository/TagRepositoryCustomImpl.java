@@ -12,12 +12,15 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
 
     @Override
     public Long findOwnTagByTagName(Long memberId, String tagName) {
-        return queryFactory.select(tag.id).from(tag)
+        return queryFactory.select(tag.id).from(tag, memberTag)
                 .where(
                         // member에 해당되는 태그
                         memberTag.member.id.eq(memberId),
                         // tagName에 해당되는 태그
-                        tag.name.eq(tagName)
+                        tag.name.eq(tagName),
+                        // 매칭
+                        tag.id.eq(memberTag.tag.id)
                 ).join(memberTag).fetchOne();
     }
+    // 생각한 쿼리 : select tag.id from tag, member_tag where tag.id=tag_id and member_tag.member_id=1 and tag.name='tag1';
 }

@@ -31,7 +31,7 @@ public class TagController {
     @ApiDocumentResponse
     @Operation(summary = "tagName으로 tagId 조회")
     @GetMapping("/api/tag/{tagName}")
-    public ApiResponse<GetTagIdResponse> getTagIdByTagName(@PathVariable(value = "tagName") @RequestParam String tagName, Long memberId) {
+    public ApiResponse<GetTagIdResponse> getTagIdByTagName(@PathVariable(value = "tagName") String tagName, Long memberId) {
         GetTagIdResponse getTagIdResponse = tagService.getTagIdByTagName(memberId, tagName);
         return ApiResponse.success(getTagIdResponse);
     }
