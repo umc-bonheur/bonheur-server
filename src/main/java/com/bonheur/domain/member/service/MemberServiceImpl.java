@@ -30,9 +30,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public Long registerMember(CreateMemberRequest request) {
-        if (memberRepository.existMemberBySocialInfo(request.getSocialId(), request.getSocialType())) {
-            throw new RuntimeException("이미 가입한 유저 입니다.");
-        }
+        MemberServiceHelper.validateNotExistsUser(memberRepository,request.getSocialId(),request.getSocialType());
         Member member = memberRepository.save(request.toEntity());
         return member.getId();
     }
