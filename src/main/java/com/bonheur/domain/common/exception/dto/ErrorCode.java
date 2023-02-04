@@ -15,7 +15,6 @@ public enum ErrorCode {
     E400_INVALID_AUTH_TOKEN(BAD_REQUEST, false, "BR002", "만료되거나 유효하지 않은 소셜 인증 토큰입니다"),
     E400_INVALID_UPLOAD_FILE_EXTENSION(BAD_REQUEST, false, "BR008", "잘못된 파일 확장자입니다"),
     E400_INVALID_FILE_SIZE_TOO_LARGE(BAD_REQUEST, true, "BR009", "업로드 가능한 파일 크기를 초과했습니다"),
-    E400_INVALID_EMAIL_FORMAT(BAD_REQUEST, false, "BR012", "잘못된 이메일 포맷입니다"),
 
     E400_MISSING_PARAMETER(BAD_REQUEST, false, "BR100", "필수 파라미터가 입력되지 않았습니다"),
     E400_MISSING_AUTH_TOKEN_PARAMETER(BAD_REQUEST, false, "BR105", "인증 토큰을 입력해주세요"),
@@ -33,14 +32,13 @@ public enum ErrorCode {
      * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)
      */
     E403_FORBIDDEN(FORBIDDEN, false, "FB000", "허용하지 않는 요청입니다"),
-    E403_FORBIDDEN_WAITING_STATUS_TO_APPROVE_BOSS_ACCOUNT(FORBIDDEN, false, "FB001", "가입 신청이 승인 대기 중입니다\n가입 승인 절차 이후 이용하실 수 있습니다."),
 
 
     /**
      * 404 Not Found (존재하지 않는 리소스)
      */
     E404_NOT_EXISTS(NOT_FOUND, false, "NF000", "존재하지 않습니다"),
-    E404_NOT_EXISTS_USER(NOT_FOUND, false, "NF001", "탈퇴하거나 존재하지 않는 유저입니다"),
+    E404_NOT_EXISTS_MEMBER(NOT_FOUND, false, "NF001", "탈퇴하거나 존재하지 않는 회원입니다"),
     E404_NOT_EXISTS_FAQ(NOT_FOUND, false, "NF005", "삭제되거나 존재하지 않는 FAQ입니다"),
     E404_NOT_EXISTS_SIGNUP_REGISTRATION(NOT_FOUND, false, "NF010", "해당하는 가입 신청은 존재하지 않습니다"),
     E404_NOT_EXISTS_ADMIN(NOT_FOUND, false, "NF011", "해당하는 관리자는 존재하지 않습니다"),
@@ -63,9 +61,9 @@ public enum ErrorCode {
      */
     E409_DUPLICATE(CONFLICT, false, "CF000", "이미 존재합니다"),
     E409_DUPLICATE_NICKNAME(CONFLICT, false, "CF001", "이미 사용중인 닉네임입니다.\n다른 닉네임을 이용해주세요"),
-    E409_DUPLICATE_USER(CONFLICT, false, "CF002", "이미 회원가입하셨습니다.\n해당 계정으로 로그인 해주세요"),
+    E409_DUPLICATE_MEMBER(CONFLICT, false, "CF002", "이미 회원가입하셨습니다.\n해당 계정으로 로그인 해주세요"),
     E409_DUPLICATE_EMAIL(CONFLICT, false, "CF003", "이미 존재하는 이메일 입니다"),
-    E409_ALREADY_CONNECTED_SOCIAL(CONFLICT, false, "CF004", "이미 소셜 계정에 연결된 유저입니다"),
+    E409_ALREADY_CONNECTED_SOCIAL(CONFLICT, false, "CF004", "이미 소셜 계정에 연결된 회원입니다"),
 
 
     /**
