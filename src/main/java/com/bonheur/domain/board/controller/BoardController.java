@@ -120,10 +120,11 @@ public class BoardController {
     @Operation(summary = "게시물 상세 조회")
     // 이상 Swagger 코드
     @GetMapping("/api/boards/{boardId}")
+    @Auth
     public ApiResponse<GetBoardResponse> getBoard(
             @PathVariable Long boardId,
-            Long memberId
+            @Valid @MemberId Long memberId
     ) {
-        return ApiResponse.success(boardService.getBoard(boardId));
+        return ApiResponse.success(boardService.getBoard(memberId, boardId));
     }
 }

@@ -2,6 +2,7 @@ package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.image.model.QImage;
+import com.bonheur.domain.member.model.QMember;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberOperation;
@@ -17,6 +18,8 @@ import java.util.List;
 
 import static com.bonheur.domain.board.model.QBoard.board;
 import static com.bonheur.domain.boardtag.model.QBoardTag.boardTag;
+import static com.bonheur.domain.image.model.QImage.image;
+import static com.bonheur.domain.member.model.QMember.member;
 import static com.bonheur.domain.tag.model.QTag.tag;
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 
@@ -74,7 +77,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 .where(
                         // no-offset 페이징 처리
                         ltBoardId(lastBoardId),
-                        // memeberId
+                        // memberId
                         board.member.id.eq(memberId),
                         // createdAt
                         toYear.eq(localDate.getYear()),
@@ -136,7 +139,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return queryFactory.select(board.count())
                 .from(board)
                 .where(
-                        // memeberId
+                        // memberId
                         board.member.id.eq(memberId),
                         // createdAt
                         toYear.eq(localDate.getYear()),
@@ -146,10 +149,12 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     }
 
     @Override
-    public Board findBoardByIdWithTagAndImage(Long boardId) {
+    public Board findBoardByIdWithMemberAndImages(Long boardId) {
         return queryFactory.select(board)
                 .from(board)
-                .leftJoin(board.images,QImage.image)
+                .leftJoin(board.images, image)
+                .fetchJoin()
+                .leftJoin(board.member, member)
                 .fetchJoin()
                 .where(
                         board.id.eq(boardId)
