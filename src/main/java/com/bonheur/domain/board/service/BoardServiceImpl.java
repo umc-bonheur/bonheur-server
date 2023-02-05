@@ -39,7 +39,7 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findAllWithPaging(lastBoardId, memberId, orderType, pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
     }
@@ -86,7 +86,7 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, orderType, pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
     }
@@ -99,7 +99,7 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByCreatedAtWithPaging(lastBoardId, memberId, localDate, orderType, pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
     }
