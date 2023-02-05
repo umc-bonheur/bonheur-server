@@ -120,7 +120,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     public List<Integer> getCalendar(Long memberId, int year, int month, int lastDay) {
         NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
         LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0, 0);
-        LocalDateTime end = LocalDateTime.of(year, month, lastDay, 23, 59, 59);
+        LocalDateTime end = LocalDateTime.of(year, month, lastDay, 23, 59, 59, 999999999);
 
         return queryFactory.select(toDay).from(board)
                 .where(
