@@ -31,10 +31,10 @@ public class BoardController {
     @GetMapping("/api/boards")
     @Auth
     public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@RequestParam(required = false) Long lastBoardId,
-                                                             @Valid @MemberId Long memberId,
+                                                             @Valid @MemberId Long memberId, @RequestParam(defaultValue = "newest") String orderType,
                                                              @PageableDefault(size = 5) Pageable pageable) {
-        Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, pageable);
-        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses);
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, orderType, pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, orderType);
 
         return ApiResponse.success(getBoardsGroupsResponse);
     }
@@ -50,6 +50,7 @@ public class BoardController {
     }
 
     // # 게시글 조회 - 해시태그
+    /*
     @ApiDocumentResponse
     @Operation(summary = "행복기록 조회 - 해시태그")
     @ResponseBody
@@ -81,7 +82,7 @@ public class BoardController {
 
         GetBoardsByDateResponse getBoardsByDateResponse = GetBoardsByDateResponse.of(count, getBoardsResponses);
         return ApiResponse.success(getBoardsByDateResponse);
-    }
+    }*/
 
     // # 캘린더 화면
     @ApiDocumentResponse
