@@ -50,7 +50,6 @@ public class BoardController {
     }
 
     // # 게시글 조회 - 해시태그
-    /*
     @ApiDocumentResponse
     @Operation(summary = "행복기록 조회 - 해시태그")
     @ResponseBody
@@ -59,11 +58,11 @@ public class BoardController {
     public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(
             @RequestParam(required = false) Long lastBoardId,
             @Valid @MemberId Long memberId,
-            @RequestBody GetBoardByTagRequest getBoardByTagRequest,
+            @RequestBody GetBoardByTagRequest getBoardByTagRequest, @RequestParam(defaultValue = "newest") String orderType,
             @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses =
-                boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), pageable);
-        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses);
+                boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), orderType, pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, orderType);
 
         return ApiResponse.success(getBoardsGroupsResponse);
     }
@@ -76,13 +75,14 @@ public class BoardController {
     public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(@Valid @MemberId Long memberId,
                                                                 @RequestParam(required = false) Long lastBoardId,
                                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate,
+                                                                @RequestParam(defaultValue = "newest") String orderType,
                                                                 Pageable pageable) {
-        Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, lastBoardId,localDate, pageable);
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, lastBoardId,localDate, orderType, pageable);
         Long count = boardService.getNumOfBoardsByDate(memberId, localDate);
 
         GetBoardsByDateResponse getBoardsByDateResponse = GetBoardsByDateResponse.of(count, getBoardsResponses);
         return ApiResponse.success(getBoardsByDateResponse);
-    }*/
+    }
 
     // # 캘린더 화면
     @ApiDocumentResponse
