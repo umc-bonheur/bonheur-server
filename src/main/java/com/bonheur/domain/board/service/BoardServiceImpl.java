@@ -14,15 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
+
 import com.bonheur.domain.boardtag.model.BoardTag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,9 +35,9 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable) {
-        return boardRepository.findAllWithPaging(lastBoardId, memberId, pageable)
-                .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
+    public Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, String orderType, Pageable pageable) {
+        return boardRepository.findAllWithPaging(lastBoardId, memberId, orderType, pageable)
+                .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
@@ -49,9 +47,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     // # 날짜별 그룹화
-    public GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice) {
+    public GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice, String orderType) {
         List<GetBoardsResponse> getBoardsResponsesOfSlice = getBoardsResponseSlice.getContent();
-        return GetBoardsGroupsResponse.of(getBoardsResponsesOfSlice.stream().collect(Collectors.groupingBy(GetBoardsResponse::getCreatedAtDate)));
+        return GetBoardsGroupsResponse.of(getBoardsResponsesOfSlice.stream().
+                collect(Collectors.groupingBy(GetBoardsResponse::getCreatedAtDate)), orderType);
     }
 
     // # Tag Name을 String List로 받아오기
@@ -83,9 +82,9 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
-        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, pageable)
-                .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
+    public Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, String orderType, Pageable pageable) {
+        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, orderType, pageable)
+                .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
@@ -96,9 +95,9 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, Pageable pageable) {
-        return boardRepository.findByCreatedAtWithPaging(lastBoardId, memberId, localDate, pageable)
-                .map(board -> GetBoardsResponse.of(board.getContents(), getBoardTagsName(board.getBoardTags()),
+    public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, String orderType, Pageable pageable) {
+        return boardRepository.findByCreatedAtWithPaging(lastBoardId, memberId, localDate, orderType, pageable)
+                .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("MM월 dd일 E요일")),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
