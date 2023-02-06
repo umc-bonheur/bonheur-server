@@ -18,20 +18,12 @@ public class GetBoardsGroupsResponse {
     private String orderType; // newest : 최신, oldest : 오래된 순
 
     public static GetBoardsGroupsResponse of(Map<String, List<GetBoardsResponse>> group, String orderType) {
-        if (orderType.equals("newest")) {
-            group = group.entrySet().stream().sorted(Map.Entry.<String, List<GetBoardsResponse>>comparingByKey().reversed()).collect(Collectors.toMap(
-                    Map.Entry::getKey, Map.Entry::getValue,
-                    (e1, e2) -> e1,
-                    LinkedHashMap::new
-            ));
-        }
-        else {
-            group = group.entrySet().stream().sorted(Map.Entry.comparingByKey()).collect(Collectors.toMap(
-                    Map.Entry::getKey, Map.Entry::getValue,
-                    (e1, e2) -> e1,
-                    LinkedHashMap::new
-            ));
-        }
+        group = group.entrySet().stream().sorted(
+                orderType.equals("newest") ? Map.Entry.<String, List<GetBoardsResponse>>comparingByKey().reversed()
+                        : Map.Entry.comparingByKey()).collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new));
         return new GetBoardsGroupsResponse(group, orderType);
     }
 }
