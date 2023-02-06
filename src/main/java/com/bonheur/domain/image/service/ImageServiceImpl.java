@@ -25,11 +25,9 @@ public class ImageServiceImpl implements ImageService{
     public void uploadImages(Board board, List<MultipartFile> images) throws IOException {
         Long order = 1L;    //이미지 순서
         for(MultipartFile image : images){
-            if(!image.isEmpty()){
                 FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image);  //s3에 이미지 업로드
                 imageRepository.save(Image.newImage(fileUploadResponse.getFileUrl(),fileUploadResponse.getFilePath(), order, board));
                 order+=1;
-            }
         }
     }
 
