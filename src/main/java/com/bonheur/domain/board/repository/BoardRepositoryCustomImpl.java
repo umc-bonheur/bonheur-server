@@ -1,8 +1,7 @@
 package com.bonheur.domain.board.repository;
 
 import com.bonheur.domain.board.model.Board;
-import com.bonheur.domain.image.model.QImage;
-import com.bonheur.domain.member.model.QMember;
+import com.bonheur.util.OrderSpecifierUtil;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberOperation;
@@ -26,17 +25,20 @@ import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 @RequiredArgsConstructor
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     private final JPAQueryFactory queryFactory;
+    private final NumberOperation<Integer> toYear = numberOperation(Integer.class, Ops.DateTimeOps.YEAR, board.createdAt);
+    private final NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
+    private final NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
 
     @Override
     // # 게시글 전체 조회 (무한 스크롤, no-offset)
-    public Slice<Board> findAllWithPaging(Long lastBoardId, Long memberId, Pageable pageable) {
+    public Slice<Board> findAllWithPaging(Long lastBoardId, Long memberId, String orderType, Pageable pageable) {
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
                         // no-offset 페이징 처리
-                        ltBoardId(lastBoardId),
+                        ltBoardId(lastBoardId, orderType),
                         // memberId
                         board.member.id.eq(memberId)
-                ).orderBy(board.createdAt.desc())
+                ).orderBy(OrderSpecifierUtil.getOrderSpecifier(orderType))
                 .limit(pageable.getPageSize() + 1) // Slice 방식
                 .fetch();
 
@@ -46,11 +48,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     @Override
     // # 게시글 조회 - by Tag (무한 스크롤, no-offset)
-    public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable) {
+    public Slice<Board> findByTagWithPaging(Long lastBoardId, Long memberId, List<Long> tagIds, String orderType, Pageable pageable) {
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
                         // no-offset 페이징 처리
-                        ltBoardId(lastBoardId),
+                        ltBoardId(lastBoardId, orderType),
                         // memberId
                         board.member.id.eq(memberId),
                         // tag
@@ -59,7 +61,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                                 .leftJoin(tag).on(tag.id.eq(boardTag.tag.id))
                         )
                 )
-                .orderBy(board.createdAt.desc())
+                .orderBy(OrderSpecifierUtil.getOrderSpecifier(orderType))
                 .limit(pageable.getPageSize() + 1) // Slice 방식
                 .fetch();
 
@@ -69,14 +71,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     // # 게시글 조회 - 날짜별
     @Override
-    public Slice<Board> findByCreatedAtWithPaging(Long lastBoardId, Long memberId, LocalDate localDate, Pageable pageable) {
-        NumberOperation<Integer> toYear = numberOperation(Integer.class, Ops.DateTimeOps.YEAR, board.createdAt);
-        NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
-        NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
+    public Slice<Board> findByCreatedAtWithPaging(Long lastBoardId, Long memberId, LocalDate localDate, String orderType, Pageable pageable) {
         List<Board> results = queryFactory.selectFrom(board)
                 .where(
                         // no-offset 페이징 처리
-                        ltBoardId(lastBoardId),
+                        ltBoardId(lastBoardId, orderType),
                         // memberId
                         board.member.id.eq(memberId),
                         // createdAt
@@ -84,7 +83,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                         toMonth.eq(localDate.getMonthValue()),
                         toDay.eq(localDate.getDayOfMonth())
                 )
-                .orderBy(board.createdAt.desc())
+                .orderBy(OrderSpecifierUtil.getOrderSpecifier(orderType))
                 .limit(pageable.getPageSize() + 1) // Slice 방식
                 .fetch();
 
@@ -93,9 +92,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     }
 
     // no-offset 방식 처리 (처음 조회시 boardId가 null로 들어옴)
-    private BooleanExpression ltBoardId(Long boardId) {
+    private BooleanExpression ltBoardId(Long boardId, String orderType) {
         if (boardId == null) return null;
-        return board.id.lt(boardId);
+        if (orderType.equals("newest"))
+            return board.id.lt(boardId);
+        else return board.id.gt(boardId);
     }
 
     // 무한 스크롤 방식 처리
@@ -114,9 +115,8 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     @Override
     // # 캘린더 조회
     public List<Integer> getCalendar(Long memberId, int year, int month, int lastDay) {
-        NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
         LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0, 0);
-        LocalDateTime end = LocalDateTime.of(year, month, lastDay, 23, 59, 59);
+        LocalDateTime end = LocalDateTime.of(year, month, lastDay, 23, 59, 59, 999999999);
 
         return queryFactory.select(toDay).from(board)
                 .where(
@@ -132,10 +132,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     // # 게시글 날짜별 조회 count
     @Override
     public Long getNumOfBoardsByDate(Long memberId, LocalDate localDate) {
-        NumberOperation<Integer> toYear = numberOperation(Integer.class, Ops.DateTimeOps.YEAR, board.createdAt);
-        NumberOperation<Integer> toMonth = numberOperation(Integer.class, Ops.DateTimeOps.MONTH, board.createdAt);
-        NumberOperation<Integer> toDay = numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, board.createdAt);
-
         return queryFactory.select(board.count())
                 .from(board)
                 .where(
