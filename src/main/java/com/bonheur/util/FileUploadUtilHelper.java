@@ -13,8 +13,8 @@ import static com.bonheur.domain.common.exception.dto.ErrorCode.E400_MISSING_FIL
 public class FileUploadUtilHelper {
 
     static void validateFileExists(MultipartFile multipartFile){
-        if (multipartFile.isEmpty()) {
-            throw new NotFoundException("파일이 없습니다. 파일을 첨부해주세요.", E400_MISSING_FILE);
+        if (multipartFile.equals(null)) {
+            throw new NotFoundException("파일을 확인해주세요.", E400_MISSING_FILE);
         }
     }
 
