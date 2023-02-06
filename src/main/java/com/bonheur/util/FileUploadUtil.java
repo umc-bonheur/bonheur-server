@@ -36,6 +36,9 @@ public class FileUploadUtil {
         // 파일이 존재하는지 확인
         FileUploadUtilHelper.validateFileExists(multipartFile);
 
+        // 확장자 확인
+        FileUploadUtilHelper.validateFileExtension(category, multipartFile.getOriginalFilename());
+
         // 파일명
         String fileName = createFileName(category, multipartFile.getOriginalFilename());
 
