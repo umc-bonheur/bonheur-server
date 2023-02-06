@@ -1,9 +1,11 @@
 package com.bonheur.config.advice;
 
 import com.bonheur.domain.common.dto.ApiResponse;
+import com.bonheur.domain.common.exception.BonheurBaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -86,5 +88,15 @@ public class ControllerExceptionAdvice {
     private ApiResponse<Object> handleException(Exception exception, HttpServletRequest request) {
         log.error(exception.getMessage(), exception);
         return ApiResponse.error(E500_INTERNAL_SERVER);
+    }
+
+    /**
+     * Bonheur Custom Exception
+     */
+    @ExceptionHandler(BonheurBaseException.class)
+    private ResponseEntity<ApiResponse<Object>> handleBaseException(BonheurBaseException exception, HttpServletRequest request) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity.status(exception.getStatus())
+                .body(ApiResponse.error(exception.getErrorCode()));
     }
 }
