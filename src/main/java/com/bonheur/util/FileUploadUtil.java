@@ -8,13 +8,13 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.bonheur.domain.file.dto.FileUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class FileUploadUtil {
 
@@ -32,7 +32,9 @@ public class FileUploadUtil {
      * @return 업로드된 파일의 접근 URL
      */
     public FileUploadResponse uploadFile(String category, MultipartFile multipartFile) throws IOException {
-     
+        // 확장자 확인
+        FileUploadUtilHelper.validateFileExtension(category, multipartFile.getContentType());
+
         // 파일명
         String fileName = createFileName(category, multipartFile.getOriginalFilename());
 
