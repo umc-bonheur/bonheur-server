@@ -66,8 +66,8 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public FindActiveRecordResponse findMyActiveRecord(Long memberId) {
+        Member findMember = MemberServiceHelper.getExistMember(memberRepository, memberId);
         FindActiveRecordResponse response = memberRepository.findCountHappyAndCountTagByMemberId(memberId);
-        Member findMember = memberRepository.findById(memberId).orElse(null);
 
         return response.updateActiveDayAndRecordDay(
                 // 앱을 사용한 날
@@ -81,11 +81,15 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public List<FindTagRecordResponse> findMyTagRecord(Long memberId) { return memberRepository.findTagRecordByMemberId(memberId); }
+    public List<FindTagRecordResponse> findMyTagRecord(Long memberId) {
+        MemberServiceHelper.validateMemberExists(memberRepository, memberId);
+        return memberRepository.findTagRecordByMemberId(memberId); }
 
     @Override
     @Transactional
     public List<FindTimeRecordResponse> findMyTimeRecord(Long memberId) {
+        MemberServiceHelper.validateMemberExists(memberRepository, memberId);
+
         List<FindTimeRecordResponse> response = Arrays.asList(
                 FindTimeRecordResponse.createFindTimeRecordResponse("morning", memberRepository.findTimeRecordByMemberId(memberId, 6, 12)),
                 FindTimeRecordResponse.createFindTimeRecordResponse("afternoon", memberRepository.findTimeRecordByMemberId(memberId, 12, 18)),
@@ -109,6 +113,8 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
+        MemberServiceHelper.validateMemberExists(memberRepository, memberId);
+
         LinkedHashMap<String, FindDayRecordResponse> responseMap = Stream.of("sun", "mon", "tue", "wed", "thr", "fri", "sat")
                 .collect(Collectors.toMap(Function.identity(), day -> FindDayRecordResponse.createFindDayRecordResponse(day, 0L), (x, y) -> y, LinkedHashMap::new));
 
@@ -134,6 +140,8 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
+        MemberServiceHelper.validateMemberExists(memberRepository, memberId);
+
         LinkedHashMap<String, FindMonthRecordResponse> responseMap = Stream.of("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec")
                 .collect(Collectors.toMap(Function.identity(), month -> FindMonthRecordResponse.createFindMonthRecordResponse(month, 0L), (x, y) -> y, LinkedHashMap::new));
 
@@ -152,7 +160,6 @@ public class MemberServiceImpl implements MemberService{
                     responseMap.get(findMonth.getMonth()).updateMostRecordMonth();
                 }
             }
-
         }
 
         return responseMap.values().stream().collect(Collectors.toList());
