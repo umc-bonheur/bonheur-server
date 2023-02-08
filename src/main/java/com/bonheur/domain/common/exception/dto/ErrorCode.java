@@ -15,7 +15,7 @@ public enum ErrorCode {
     E400_INVALID_AUTH_TOKEN(BAD_REQUEST, false, "BR002", "만료되거나 유효하지 않은 소셜 인증 토큰입니다"),
     E400_INVALID_UPLOAD_FILE_EXTENSION(BAD_REQUEST, false, "BR008", "잘못된 파일 확장자입니다"),
     E400_INVALID_FILE_SIZE_TOO_LARGE(BAD_REQUEST, true, "BR009", "업로드 가능한 파일 크기를 초과했습니다"),
-
+    E400_INVALID_FILE_COUNT_TOO_MANY(BAD_REQUEST, true, "BR010", "업로드 가능한 파일 개수를 초과했습니다"),
     E400_MISSING_PARAMETER(BAD_REQUEST, false, "BR100", "필수 파라미터가 입력되지 않았습니다"),
     E400_MISSING_AUTH_TOKEN_PARAMETER(BAD_REQUEST, false, "BR105", "인증 토큰을 입력해주세요"),
     E400_MISSING_FILE(BAD_REQUEST, false, "BR106", "파일을 업로드해주세요"),
@@ -39,6 +39,8 @@ public enum ErrorCode {
      */
     E404_NOT_EXISTS(NOT_FOUND, false, "NF000", "존재하지 않습니다"),
     E404_NOT_EXISTS_MEMBER(NOT_FOUND, false, "NF001", "탈퇴하거나 존재하지 않는 회원입니다"),
+    E404_NOT_EXISTS_Board(NOT_FOUND, false, "NF002", "존재하지 않는 게시글입니다"),
+    E404_NOT_EXISTS_Tag(NOT_FOUND, false, "NF004", "존재하지 않는 태그입니다"),
     E404_NOT_EXISTS_FAQ(NOT_FOUND, false, "NF005", "삭제되거나 존재하지 않는 FAQ입니다"),
     E404_NOT_EXISTS_SIGNUP_REGISTRATION(NOT_FOUND, false, "NF010", "해당하는 가입 신청은 존재하지 않습니다"),
     E404_NOT_EXISTS_ADMIN(NOT_FOUND, false, "NF011", "해당하는 관리자는 존재하지 않습니다"),
