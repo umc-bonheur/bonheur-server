@@ -11,8 +11,8 @@ import static com.bonheur.domain.common.exception.dto.ErrorCode.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TagServiceHelper {
 
-    public static Tag getTagByMemberId(TagRepository tagRepository, Long memberId, Long tagId){
-        Tag tag = tagRepository.findOwnTagByMemberId(memberId, tagId);
+    public static Tag getExistOwnTagByTagId(TagRepository tagRepository, Long memberId, Long tagId){
+        Tag tag = tagRepository.findOwnTagByTagId(memberId, tagId);
         if(tag == null){
             throw new NotFoundException("존재하지 않는 태그입니다", E404_NOT_EXISTS_Tag);
         }

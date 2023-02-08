@@ -26,7 +26,7 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
     // 생각한 쿼리 : select tag.id from tag, member_tag where tag.id=tag_id and member_tag.member_id=1 and tag.name='tag1';
 
     @Override
-    public Tag findOwnTagByMemberId(Long memberId, Long tagId) {
+    public Tag findOwnTagByTagId(Long memberId, Long tagId) {
         return queryFactory.select(tag)
                 .from(tag)
                 .join(tag.memberTags, memberTag)

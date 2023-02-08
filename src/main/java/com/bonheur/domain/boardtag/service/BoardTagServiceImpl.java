@@ -21,7 +21,7 @@ public class BoardTagServiceImpl implements BoardTagService{
     @Transactional
     public void createBoardTags(Long memberId, Board board, List<Long> tagIds){    //게시글과 해시태그 맵핑(연결)
         for(Long tagId : tagIds) {
-            Tag tag = TagServiceHelper.getTagByMemberId(tagRepository, memberId, tagId);
+            Tag tag = TagServiceHelper.getExistOwnTagByTagId(tagRepository, memberId, tagId);
             boardTagRepository.save(BoardTag.newBoardTag(board, tag));
         }
     }
