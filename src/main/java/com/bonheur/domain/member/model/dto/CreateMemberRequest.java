@@ -1,5 +1,6 @@
 package com.bonheur.domain.member.model.dto;
 
+import com.bonheur.domain.file.dto.FileUploadResponse;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.MemberSocialType;
 import lombok.*;
@@ -33,7 +34,7 @@ public class CreateMemberRequest {
                 .build();
     }
 
-    public Member toEntity() {
-        return Member.newMember(socialId, socialType, nickname);
+    public Member toEntity(FileUploadResponse fileUploadResponse) {
+        return Member.newMember(socialId, socialType, nickname, fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());
     }
 }
