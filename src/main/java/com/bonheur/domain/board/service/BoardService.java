@@ -18,7 +18,7 @@ public interface BoardService {
 
     CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
 
-    UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
+    UpdateBoardResponse updateBoard(Long memberId, Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException;
 
     GetBoardResponse getBoard(Long memberId, Long boardId);
 
