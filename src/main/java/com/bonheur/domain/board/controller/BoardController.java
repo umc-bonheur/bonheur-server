@@ -58,7 +58,7 @@ public class BoardController {
     public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(
             @RequestParam(required = false) Long lastBoardId,
             @Valid @MemberId Long memberId,
-            @RequestBody GetBoardByTagRequest getBoardByTagRequest, @RequestParam(defaultValue = "newest") String orderType,
+            @Valid @RequestBody GetBoardByTagRequest getBoardByTagRequest, @RequestParam(defaultValue = "newest") String orderType,
             @PageableDefault(size = 5) Pageable pageable) {
         Slice<GetBoardsResponse> getBoardsResponses =
                 boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), orderType, pageable);
