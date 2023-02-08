@@ -2,6 +2,7 @@ package com.bonheur.domain.member.service;
 
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.file.dto.FileUploadResponse;
+import com.bonheur.domain.image.service.ImageServiceHelper;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.domain.member.repository.MemberRepository;
@@ -37,18 +38,18 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException {
-        Member member = memberRepository.findMemberById(memberId);
-        //닉네임 수정
+    public UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, List<MultipartFile> image) throws IOException {
+        Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
+        ImageServiceHelper.validateImageCount(image,1L);
+
         member.updateNickname(request.getNickname());
 
-        //이미지 수정
         if(member.getProfile() != null){    //기존의 프로필 이미지가 있는 경우
             fileUploadUtil.deleteFile(member.getProfile().getPath());   //프로필 이미지 s3에서 삭제
             member.updateProfile(null, null); //member 테이블에서 이미지 삭제
         }
-        if(!image.isEmpty()){   //기존의 프로필 이미지를 새로운 이미지로 변경하는 경우
-            FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image);  //프로필 이미지 s3에 업로드
+        if(!image.get(0).isEmpty()){   //기존의 프로필 이미지를 새로운 이미지로 변경하는 경우
+            FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image.get(0));  //프로필 이미지 s3에 업로드
             member.updateProfile(fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());  //프로필 이미지 변경
         }
 
@@ -58,7 +59,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public GetMemberProfileResponse getMemberProfile(Long memberId){
-        Member member = memberRepository.findMemberById(memberId);
+        Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
         return GetMemberProfileResponse.of(member.getNickname(),
                 (member.getProfile() == null) ? null : member.getProfile().getUrl());
     }
