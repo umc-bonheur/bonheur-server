@@ -13,20 +13,18 @@ import static com.bonheur.domain.common.exception.dto.ErrorCode.E409_DUPLICATE_M
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberServiceHelper {
-    static void validateNotExistsUser(MemberRepository memberRepository, String socialId, MemberSocialType socialType) {
+    public static void validateNotExistsUser(MemberRepository memberRepository, String socialId, MemberSocialType socialType) {
         if (memberRepository.existMemberBySocialInfo(socialId, socialType)) {
             throw new ConflictException(String.format("이미 가입한 회원(%s - %s) 입니다", socialId, socialType), E409_DUPLICATE_MEMBER);
         }
     }
 
-    static Member getExistMember(MemberRepository memberRepository, Long memberId) {
-        if (!memberRepository.existsById(memberId)){
-            throw new NotFoundException("해당 id를 가진 회원이 존재하지 않습니다.", E404_NOT_EXISTS_MEMBER);
-        }
-        return memberRepository.findMemberById(memberId);
+    public static Member getExistMember(MemberRepository memberRepository, Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(()->new NotFoundException("해당 id를 가진 회원이 존재하지 않습니다.", E404_NOT_EXISTS_MEMBER));
     }
 
-    static void validateMemberExists(MemberRepository memberRepository, Long memberId) {
+    public static void validateMemberExists(MemberRepository memberRepository, Long memberId) {
         if (!memberRepository.existsById(memberId)){
             throw new NotFoundException("해당 id를 가진 회원이 존재하지 않습니다.", E404_NOT_EXISTS_MEMBER);
         }

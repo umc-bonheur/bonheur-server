@@ -9,7 +9,7 @@ import java.util.List;
 public interface MemberService {
     Long registerMember(CreateMemberRequest request);
 
-    UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException;
+    UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, List<MultipartFile> image) throws IOException;
     GetMemberProfileResponse getMemberProfile(Long memberId);
 
     FindActiveRecordResponse findMyActiveRecord(Long memberId);
