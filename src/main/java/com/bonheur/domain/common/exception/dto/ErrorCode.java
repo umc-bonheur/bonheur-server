@@ -26,7 +26,7 @@ public enum ErrorCode {
      * 401 UnAuthorized (인증 실패)
      */
     E401_UNAUTHORIZED(UNAUTHORIZED, false, "UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
-
+    E401_UNAUTHORIZED_BOARD(UNAUTHORIZED, false, "UA001", "해당 회원이 만든 게시글이 아닙니다"),
 
     /**
      * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)
@@ -39,8 +39,8 @@ public enum ErrorCode {
      */
     E404_NOT_EXISTS(NOT_FOUND, false, "NF000", "존재하지 않습니다"),
     E404_NOT_EXISTS_MEMBER(NOT_FOUND, false, "NF001", "탈퇴하거나 존재하지 않는 회원입니다"),
-    E404_NOT_EXISTS_Board(NOT_FOUND, false, "NF002", "존재하지 않는 게시글입니다"),
-    E404_NOT_EXISTS_Tag(NOT_FOUND, false, "NF004", "존재하지 않는 태그입니다"),
+    E404_NOT_EXISTS_BOARD(NOT_FOUND, false, "NF002", "존재하지 않는 게시글입니다"),
+    E404_NOT_EXISTS_TAG(NOT_FOUND, false, "NF004", "존재하지 않는 태그입니다"),
     E404_NOT_EXISTS_FAQ(NOT_FOUND, false, "NF005", "삭제되거나 존재하지 않는 FAQ입니다"),
     E404_NOT_EXISTS_SIGNUP_REGISTRATION(NOT_FOUND, false, "NF010", "해당하는 가입 신청은 존재하지 않습니다"),
     E404_NOT_EXISTS_ADMIN(NOT_FOUND, false, "NF011", "해당하는 관리자는 존재하지 않습니다"),

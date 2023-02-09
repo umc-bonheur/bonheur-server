@@ -10,11 +10,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BoardService {
-    Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, Pageable pageable);
+    Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, String orderType, Pageable pageable);
 
     DeleteBoardResponse deleteBoard(Long memberId, Long boardId);
 
-    Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, Pageable pageable);
+    Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, String orderType, Pageable pageable);
 
     CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
 
@@ -22,11 +22,11 @@ public interface BoardService {
 
     GetBoardResponse getBoard(Long memberId, Long boardId);
 
-    GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice);
+    GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice, String orderType);
 
     List<GetCalendarResponse> getCalendar(Long memberId, int year, int month);
 
-    Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, Pageable pageable);
+    Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, String orderType, Pageable pageable);
 
     Long getNumOfBoardsByDate(Long memberId, LocalDate localDate);
 }
