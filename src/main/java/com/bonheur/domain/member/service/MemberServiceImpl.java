@@ -2,7 +2,6 @@ package com.bonheur.domain.member.service;
 
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.file.dto.FileUploadResponse;
-import com.bonheur.domain.image.service.ImageServiceHelper;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.domain.member.repository.MemberRepository;
