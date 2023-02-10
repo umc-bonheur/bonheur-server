@@ -38,11 +38,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public UpdateMemberProfileResponse updateMemberProfile(Long memberId, UpdateMemberProfileRequest request, MultipartFile image) throws IOException {
-        Member member = memberRepository.findMemberById(memberId);
-        //닉네임 수정
+        Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
         member.updateNickname(request.getNickname());
 
-        //이미지 수정
         if(member.getProfile() != null){    //기존의 프로필 이미지가 있는 경우
             fileUploadUtil.deleteFile(member.getProfile().getPath());   //프로필 이미지 s3에서 삭제
             member.updateProfile(null, null); //member 테이블에서 이미지 삭제
@@ -58,7 +56,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public GetMemberProfileResponse getMemberProfile(Long memberId){
-        Member member = memberRepository.findMemberById(memberId);
+        Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
         return GetMemberProfileResponse.of(member.getNickname(),
                 (member.getProfile() == null) ? null : member.getProfile().getUrl());
     }

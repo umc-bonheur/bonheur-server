@@ -1,5 +1,6 @@
 package com.bonheur.domain.tag.repository;
 
+import com.bonheur.domain.tag.model.Tag;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -23,4 +24,16 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
                 ).join(memberTag).fetchOne();
     }
     // 생각한 쿼리 : select tag.id from tag, member_tag where tag.id=tag_id and member_tag.member_id=1 and tag.name='tag1';
+
+    @Override
+    public Tag findOwnTagByTagId(Long memberId, Long tagId) {
+        return queryFactory.select(tag)
+                .from(tag)
+                .join(tag.memberTags, memberTag)
+                .where(
+                        memberTag.id.eq(memberId),
+                        tag.id.eq(tagId),
+                        tag.id.eq(memberTag.tag.id)
+                ).fetchOne();
+    }
 }
