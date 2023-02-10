@@ -20,10 +20,8 @@ public class MemberServiceHelper {
     }
 
     public static Member getExistMember(MemberRepository memberRepository, Long memberId) {
-        if (!memberRepository.existsById(memberId)){
-            throw new NotFoundException("해당 id를 가진 회원이 존재하지 않습니다.", E404_NOT_EXISTS_MEMBER);
-        }
-        return memberRepository.findMemberById(memberId);
+        return memberRepository.findById(memberId)
+                .orElseThrow(()->new NotFoundException("해당 id를 가진 회원이 존재하지 않습니다.", E404_NOT_EXISTS_MEMBER));
     }
 
     public static void validateMemberExists(MemberRepository memberRepository, Long memberId) {

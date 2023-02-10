@@ -6,8 +6,10 @@ import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.service.BoardTagService;
 import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.image.service.ImageService;
+import com.bonheur.domain.image.service.ImageServiceHelper;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
+import com.bonheur.domain.member.service.MemberServiceHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,15 +139,15 @@ public class BoardServiceImpl implements BoardService {
         return getCalendarList;
     }
 
-    //게시글 생성
     @Override
     @Transactional
     public CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException {
-        Member member = memberRepository.findMemberById(memberId);
+        Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
+        ImageServiceHelper.validateImageCount(images, 5L);
         Board board = boardRepository.save(request.toEntity(member));
 
         if (!request.getTagIds().isEmpty()) {
-            boardTagService.createBoardTags(board, request.getTagIds());   //게시글과 해시태그 연결
+            boardTagService.createBoardTags(memberId, board, request.getTagIds());   //게시글과 해시태그 연결
         }
         imageService.uploadImages(board, images);
         return CreateBoardResponse.of(board.getId());
@@ -153,10 +155,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public UpdateBoardResponse updateBoard(Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException{
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("존재하지 않은 게시글입니다."));
+    public UpdateBoardResponse updateBoard(Long memberId, Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException{
+        MemberServiceHelper.validateMemberExists(memberRepository, memberId);
+        ImageServiceHelper.validateImageCount(images, 5L);
+
+        Board board = BoardServiceHelper.getBoardByMemberId(memberId, boardRepository, boardId);
         board.update(request.getContents());    //게시글 수정
-        boardTagService.updateBoardTags(board, request.getTagIds()); //게시글 태그 수정
+        boardTagService.updateBoardTags(memberId, board, request.getTagIds()); //게시글 태그 수정
         imageService.updateImages(board, images); //이미지 수정
         return UpdateBoardResponse.of(boardId);
     }

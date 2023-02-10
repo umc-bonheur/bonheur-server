@@ -2,6 +2,7 @@ package com.bonheur.domain.tag.service;
 
 import com.bonheur.domain.common.BaseEntity;
 import com.bonheur.domain.member.repository.MemberRepository;
+import com.bonheur.domain.member.service.MemberServiceHelper;
 import com.bonheur.domain.membertag.service.MemberTagService;
 import com.bonheur.domain.tag.model.Tag;
 import com.bonheur.domain.tag.model.dto.CreateTagResponse;
@@ -31,7 +32,7 @@ public class TagServiceImpl implements TagService{
                 tagList.add(hashtag);
             }
         );
-        memberTagService.createMemberTags(memberRepository.findMemberById(memberId), tagList);
+        memberTagService.createMemberTags(MemberServiceHelper.getExistMember(memberRepository, memberId), tagList);
 
         return CreateTagResponse.of(tagList.stream().map(BaseEntity::getId).collect(Collectors.toList()));
     }

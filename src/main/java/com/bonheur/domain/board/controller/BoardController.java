@@ -109,12 +109,14 @@ public class BoardController {
     @ApiDocumentResponse
     @Operation(summary = "게시물 수정")
     @PatchMapping("/api/boards/{boardId}")
+    @Auth
     public ApiResponse<UpdateBoardResponse> updateBoard(
+            @Valid @MemberId Long memberId,
             @PathVariable("boardId") Long boardId,
             @RequestPart(value = "images") List<MultipartFile> images,
             @RequestPart @Valid UpdateBoardRequest updateBoardRequest) throws IOException {
 
-        return ApiResponse.success(boardService.updateBoard(boardId, updateBoardRequest, images));
+        return ApiResponse.success(boardService.updateBoard(memberId, boardId, updateBoardRequest, images));
     }
 
     @ApiDocumentResponse
