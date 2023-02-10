@@ -8,15 +8,29 @@ import com.bonheur.domain.common.exception.dto.ErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import static com.bonheur.domain.common.exception.dto.ErrorCode.*;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardServiceHelper {
     public static Board findBoardByMemberId(BoardRepository boardRepository, Long memberId, Long boardId) {
         Board board = boardRepository.findBoardByIdWithMemberAndImages(memberId);
         if (board == null) {
-            throw new NotFoundException(String.format("해당하는 게시물(%s)는 존재하지 않습니다.", boardId), ErrorCode.E404_NOT_EXISTS);
+            throw new NotFoundException(String.format("해당하는 게시물(%s)는 존재하지 않습니다.", boardId), E404_NOT_EXISTS_BOARD);
         }
         if (!board.getMember().getId().equals(memberId)) {
-            throw new ForbiddenException(String.format("해당 회원(%s)에게 권한이 없습니다.", memberId));
+            throw new ForbiddenException(String.format("해당 회원(%s)에게 권한이 없습니다.", memberId), E403_FORBIDDEN_BOARD);
+        }
+        return board;
+    }
+
+    public static Board getExistBoard(BoardRepository boardRepository, Long boardId){
+        return boardRepository.findById(boardId).orElseThrow(()-> new NotFoundException("존재하지 않은 게시글입니다.", E404_NOT_EXISTS_BOARD));
+    }
+
+    public static Board getBoardByMemberId(Long memberId, BoardRepository boardRepository, Long boardId){
+        Board board = getExistBoard(boardRepository, boardId);
+        if(!board.getMember().getId().equals(memberId)){
+            throw new ForbiddenException("해당 회원이 만든 게시글이 아닙니다.", E403_FORBIDDEN_BOARD);
         }
         return board;
     }
