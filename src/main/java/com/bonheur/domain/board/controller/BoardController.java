@@ -49,21 +49,20 @@ public class BoardController {
     }
 
     // # 게시글 조회 - 해시태그
-//    @ApiDocumentResponse
-//    @Operation(summary = "행복기록 조회 - 해시태그")
-//    @ResponseBody
-//    @PostMapping ("/api/boards/tag")
-//    @Auth
-//    public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(@Valid @MemberId Long memberId,
-//                                                               @RequestBody GetBoardsRequest request,
-//                                                               @RequestBody GetBoardByTagRequest tagRequest,
-//                                                               @PageableDefault(size = 5) Pageable pageable) {
-//        Slice<GetBoardsResponse> getBoardsResponses =
-//                boardService.getBoardsByTag(memberId, request, tagRequest.getTagIds(), pageable);
-//        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, request.getOrderType()));
-//
-//        return ApiResponse.success(getBoardsGroupsResponse);
-//    }
+    @ApiDocumentResponse
+    @Operation(summary = "행복기록 조회 - 해시태그")
+    @ResponseBody
+    @PostMapping ("/api/boards/tag")
+    @Auth
+    public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(@Valid @MemberId Long memberId,
+                                                               @RequestBody GetBoardByTagRequest tagRequest,
+                                                               @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses =
+                boardService.getBoardsByTag(memberId, tagRequest.getRequest(), tagRequest.getTagIds(), pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, tagRequest.getRequest().getOrderType());
+
+        return ApiResponse.success(getBoardsGroupsResponse);
+    }
 
     // # 게시글 조회 - by 날짜
     @ApiDocumentResponse

@@ -10,6 +10,8 @@ import com.bonheur.domain.image.service.ImageServiceHelper;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.member.service.MemberServiceHelper;
+import com.bonheur.domain.tag.repository.TagRepository;
+import com.bonheur.domain.tag.service.TagServiceHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final BoardTagService boardTagService;
+    private final TagRepository tagRepository;
     private final ImageService imageService;
 
     // # 게시글 전체 조회
@@ -84,18 +87,19 @@ public class BoardServiceImpl implements BoardService {
 
     // # 게시글 조회 - by 해시태그
     // 회원 정보 인증 어노테이션 추가 필요
-//    @Override
-//    @Transactional(readOnly = true)
-//    public Slice<GetBoardsResponse> getBoardsByTag(Long memberId, List<Long> tagIds, Pageable pageable) {
-//        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
-//
-//        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, orderType, pageable)
-//                .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
-//                        board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-//                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
-//                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
-//                );
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest request, List<Long> tagIds, Pageable pageable) {
+        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
+        TagServiceHelper.isExistTag(tagRepository, memberId, tagIds);
+
+        return boardRepository.findByTagWithPaging(request.getLastBoardId(), memberId, tagIds, request.getOrderType(), pageable)
+                .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
+                        board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
+                );
+    }
 
     // # 게시글 조회 - by 날짜
     // 회원 정보 인증 어노테이션 추가 필요
