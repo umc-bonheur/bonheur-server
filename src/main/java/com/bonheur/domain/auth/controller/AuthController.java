@@ -12,9 +12,12 @@ import com.bonheur.domain.common.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.io.IOException;
 
 import static com.bonheur.config.session.SessionConstant.MEMBER_ID;
 
@@ -31,9 +34,10 @@ public class AuthController {
     // 이상 Swagger 코드
     @PostMapping("/auth/social-signup")
     public ApiResponse<SocialSignUpResponse> signUp(
-            @Valid @RequestBody SocialSignUpRequest request
-    ) {
-        Long memberId = authService.signUp(request);
+            @Valid @RequestPart SocialSignUpRequest socialSignUpRequest,
+            @RequestPart(required = false) MultipartFile profileImage
+    ) throws IOException {
+        Long memberId = authService.signUp(socialSignUpRequest, profileImage);
         httpSession.setAttribute(MEMBER_ID, memberId);
 
         SocialSignUpResponse response = SocialSignUpResponse.of(httpSession.getId(), memberId);

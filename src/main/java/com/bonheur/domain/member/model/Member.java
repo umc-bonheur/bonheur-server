@@ -34,17 +34,20 @@ public class Member extends BaseEntity {
 
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Member(String socialId, MemberSocialType socialType, String nickname) {
+    private Member(String socialId, MemberSocialType socialType, String nickname, String profileUrl, String profilePath) {
         this.memberSocialInfo = MemberSocialInfo.of(socialId, socialType);
+        this.profile = MemberProfile.of(profileUrl, profilePath);
         this.nickname = nickname;
     }
 
 
-    public static Member newMember(String socialId, MemberSocialType socialType, String nickname) {
+    public static Member newMember(String socialId, MemberSocialType socialType, String nickname, String profileUrl, String profilePath) {
         return Member.builder()
                 .socialId(socialId)
                 .socialType(socialType)
                 .nickname(nickname)
+                .profileUrl(profileUrl)
+                .profilePath(profilePath)
                 .build();
     }
 
