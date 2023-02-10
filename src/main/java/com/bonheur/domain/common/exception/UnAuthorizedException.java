@@ -8,5 +8,7 @@ public class UnAuthorizedException extends BonheurBaseException {
     public UnAuthorizedException(String message) {
         super(message, ErrorCode.E401_UNAUTHORIZED);
     }
-
+    public UnAuthorizedException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
+    }
 }
