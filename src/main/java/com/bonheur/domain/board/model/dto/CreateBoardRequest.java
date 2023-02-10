@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequest {
     @NotBlank
-    @Size(max = 3000)
+    @Size(max = 3000, message="3000글자를 초과했습니다.")
     private String contents;
 
     private List<Long> tagIds;
