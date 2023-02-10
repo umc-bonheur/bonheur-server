@@ -29,9 +29,10 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public Long registerMember(CreateMemberRequest request) {
+    public Long registerMember(CreateMemberRequest request,MultipartFile profileImage) throws IOException {
         MemberServiceHelper.validateNotExistsUser(memberRepository,request.getSocialId(),request.getSocialType());
-        Member member = memberRepository.save(request.toEntity());
+        FileUploadResponse fileUploadResponse = uploadProfileImage(profileImage);
+        Member member = memberRepository.save(request.toEntity(fileUploadResponse));
         return member.getId();
     }
 
@@ -167,6 +168,13 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public List<GetTagUsedByMemberResponse> getTagUsedByMember(Long memberId) {
         return memberRepository.getTagUsedByMember(memberId).stream().map(tag -> GetTagUsedByMemberResponse.of(tag.getId(),tag.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public FileUploadResponse uploadProfileImage(MultipartFile profileImage) throws IOException {
+        if(profileImage != null)
+            return fileUploadUtil.uploadFile("image", profileImage);
+        else return new FileUploadResponse();
     }
 }
 
