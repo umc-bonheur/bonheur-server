@@ -37,11 +37,18 @@ public class BoardServiceHelper {
     }
 
     public static void isValidRequest(Long memberId, BoardRepository boardRepository, GetBoardsRequest request) {
+        if (boardRepository.getLastIdOfBoard(memberId, "oldest") == null)
+            throw new NotFoundException("작성된 게시글이 없습니다.", E404_NOT_EXISTS_WRITTEN_BOARD);
+
         if (request.getOrderType() == null) request.update("newest");
-        if (!(request.getOrderType().equals("newest") || request.getOrderType().equals("oldest"))){
+        if (!(request.getOrderType().equals("newest") || request.getOrderType().equals("oldest")))
             throw new InvalidException("게시글 정렬 순서 입력이 잘못되었습니다.", E400_INVALID_FORMAT_ORDER_TYPE);
+
+        if (request.getLastBoardId() != null) {
+            Long lastId = boardRepository.getLastIdOfBoard(memberId, "newest") + (request.getOrderType().equals("newest") ?  1 : 0);
+            Long startId = boardRepository.getLastIdOfBoard(memberId, "oldest") - (request.getOrderType().equals("oldest") ? 1 : 0);
+            if (!(startId < request.getLastBoardId() && request.getLastBoardId() < lastId))
+                throw new InvalidException("더 이상 불러올 글이 없습니다.", E400_INVALID_LAST_BOARD_ID);
         }
-        if (request.getLastBoardId()!= null && request.getLastBoardId() > boardRepository.getLastIdOfBoard(memberId))
-            throw new InvalidException("더 이상 불러올 글이 없습니다.", E400_INVALID_LAST_BOARD_ID);
     }
 }
