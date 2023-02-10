@@ -16,6 +16,9 @@ public enum ErrorCode {
     E400_INVALID_UPLOAD_FILE_EXTENSION(BAD_REQUEST, false, "BR008", "잘못된 파일 확장자입니다"),
     E400_INVALID_FILE_SIZE_TOO_LARGE(BAD_REQUEST, true, "BR009", "업로드 가능한 파일 크기를 초과했습니다"),
     E400_INVALID_FILE_COUNT_TOO_MANY(BAD_REQUEST, true, "BR010", "업로드 가능한 파일 개수를 초과했습니다"),
+    E400_INVALID_FORMAT_ORDER_TYPE(BAD_REQUEST, false, "BR011", "게시글 정렬 순서 입력이 잘못되었습니다."),
+    E400_INVALID_LAST_BOARD_ID(BAD_REQUEST, true, "BR012", "더 이상 불러올 글이 없습니다."),
+
     E400_MISSING_PARAMETER(BAD_REQUEST, false, "BR100", "필수 파라미터가 입력되지 않았습니다"),
     E400_MISSING_AUTH_TOKEN_PARAMETER(BAD_REQUEST, false, "BR105", "인증 토큰을 입력해주세요"),
     E400_MISSING_FILE(BAD_REQUEST, false, "BR106", "파일을 업로드해주세요"),
