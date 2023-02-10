@@ -46,6 +46,8 @@ public enum ErrorCode {
     E404_NOT_EXISTS_BOARD(NOT_FOUND, false, "NF002", "존재하지 않는 게시글입니다"),
     E404_NOT_EXISTS_TAG(NOT_FOUND, false, "NF004", "존재하지 않는 태그입니다"),
     E404_NOT_EXISTS_FAQ(NOT_FOUND, false, "NF005", "삭제되거나 존재하지 않는 FAQ입니다"),
+    E404_NOT_EXISTS_WRITTEN_BOARD(NOT_FOUND, false, "NF006", "작성된 게시글이 없습니다."),
+
     E404_NOT_EXISTS_SIGNUP_REGISTRATION(NOT_FOUND, false, "NF010", "해당하는 가입 신청은 존재하지 않습니다"),
     E404_NOT_EXISTS_ADMIN(NOT_FOUND, false, "NF011", "해당하는 관리자는 존재하지 않습니다"),
 

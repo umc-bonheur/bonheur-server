@@ -144,6 +144,18 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 ).fetchOne();
     }
 
+    // # 작성 id 탐색 (첫, 마지막)
+    @Override
+    public Long getLastIdOfBoard(Long memberId, String orderType) {
+        return queryFactory.select(board.id).from(board)
+                .where(
+                        // memberId
+                        board.member.id.eq(memberId)
+                ).orderBy(OrderSpecifierUtil.getOrderSpecifier(orderType))
+                .limit(1)
+                .fetchOne();
+    }
+
     @Override
     public Board findBoardByIdWithMemberAndImages(Long boardId) {
         return queryFactory.select(board)
