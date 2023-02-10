@@ -169,10 +169,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public GetBoardResponse getBoard(Long memberId, Long boardId) {
-        Board board = boardRepository.findBoardByIdWithMemberAndImages(boardId);
-        /*
-          회원 검증 로직 추가 ( member.id == board.member.id )
-         */
+        Board board = BoardServiceHelper.findBoardByMemberId(boardRepository, memberId, boardId);
         return GetBoardResponse.of(board.getId(), board.getContents(),
                 board.getImages().stream().map(Image::getUrl).collect(Collectors.toList()),
                 board.getBoardTags().stream().map(boardTag -> boardTag.getTag().getName()).collect(Collectors.toList()),

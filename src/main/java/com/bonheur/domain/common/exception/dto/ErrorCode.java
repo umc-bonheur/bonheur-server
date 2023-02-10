@@ -26,12 +26,13 @@ public enum ErrorCode {
      * 401 UnAuthorized (인증 실패)
      */
     E401_UNAUTHORIZED(UNAUTHORIZED, false, "UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
-    E401_UNAUTHORIZED_BOARD(UNAUTHORIZED, false, "UA001", "해당 회원이 만든 게시글이 아닙니다"),
+
 
     /**
      * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)
      */
     E403_FORBIDDEN(FORBIDDEN, false, "FB000", "허용하지 않는 요청입니다"),
+    E403_FORBIDDEN_BOARD(FORBIDDEN, false, "FB001", "해당 회원이 만든 게시글이 아닙니다"),
 
 
     /**
