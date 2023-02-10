@@ -31,9 +31,22 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
                 .from(tag)
                 .join(tag.memberTags, memberTag)
                 .where(
-                        memberTag.id.eq(memberId),
+                        memberTag.member.id.eq(memberId),
                         tag.id.eq(tagId),
                         tag.id.eq(memberTag.tag.id)
                 ).fetchOne();
+    }
+
+    @Override
+    public Long isExistTag(Long memberId, Long tagId) {
+        return queryFactory.select(tag.count()).from(tag, memberTag)
+                .where(
+                        // member에 해당되는 태그
+                        memberTag.member.id.eq(memberId),
+                        // tagName에 해당되는 태그
+                        tag.id.eq(tagId),
+                        // 매칭
+                        tag.id.eq(memberTag.tag.id)
+                ).join(memberTag).fetchOne();
     }
 }
