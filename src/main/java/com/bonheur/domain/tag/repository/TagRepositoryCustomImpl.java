@@ -30,8 +30,7 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
                 .join(tag.memberTags, memberTag)
                 .where(
                         memberTag.member.id.eq(memberId),
-                        tag.id.eq(tagId),
-                        tag.id.eq(memberTag.tag.id)
+                        tag.id.eq(tagId)
                 ).fetchOne();
     }
 
