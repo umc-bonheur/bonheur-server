@@ -14,7 +14,7 @@ public interface BoardService {
 
     DeleteBoardResponse deleteBoard(Long memberId, Long boardId);
 
-    Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest request, List<Long> tagIds, Pageable pageable);
+    Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest getBoardsRequest, GetBoardByTagRequest tagRequest, Pageable pageable);
 
     CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException;
 

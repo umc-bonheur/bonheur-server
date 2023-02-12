@@ -20,4 +20,8 @@ public class GetBoardsRequest {
     public void update(String orderType) {
         this.orderType = orderType;
     }
+
+    public static GetBoardsRequest of (String orderType, Long lastBoardId) {
+        return new GetBoardsRequest(orderType, lastBoardId);
+    }
 }

@@ -89,11 +89,11 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest request, List<Long> tagIds, Pageable pageable) {
-        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
-        TagServiceHelper.isExistTag(tagRepository, memberId, tagIds);
+    public Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest getBoardsRequest, GetBoardByTagRequest tagRequest, Pageable pageable) {
+        BoardServiceHelper.isValidRequest(memberId, boardRepository, getBoardsRequest);
+        TagServiceHelper.isExistTag(tagRepository, memberId, tagRequest.getTagIds());
 
-        return boardRepository.findByTagWithPaging(request.getLastBoardId(), memberId, tagIds, request.getOrderType(), pageable)
+        return boardRepository.findByTagWithPaging(getBoardsRequest.getLastBoardId(), memberId, tagRequest.getTagIds(), getBoardsRequest.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),

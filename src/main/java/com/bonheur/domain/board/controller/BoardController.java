@@ -57,9 +57,10 @@ public class BoardController {
     public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(@Valid @MemberId Long memberId,
                                                                @RequestBody GetBoardByTagRequest tagRequest,
                                                                @PageableDefault(size = 5) Pageable pageable) {
+        GetBoardsRequest getBoardsRequest = GetBoardsRequest.of(tagRequest.getOrderType(), tagRequest.getLastBoardId());
         Slice<GetBoardsResponse> getBoardsResponses =
-                boardService.getBoardsByTag(memberId, tagRequest.getRequest(), tagRequest.getTagIds(), pageable);
-        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, tagRequest.getRequest().getOrderType());
+                boardService.getBoardsByTag(memberId, getBoardsRequest, tagRequest, pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, getBoardsRequest.getOrderType());
 
         return ApiResponse.success(getBoardsGroupsResponse);
     }
