@@ -76,7 +76,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public DeleteBoardResponse deleteBoard(Long memberId, Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 글입니다."));
+        Board board = BoardServiceHelper.getExistBoard(boardRepository, boardId);
         Long writer = board.getMember().getId();
         if (writer.equals(memberId)) {
             imageService.deleteImagesIns3(board); // s3, 테이블에서 이미지 삭제
