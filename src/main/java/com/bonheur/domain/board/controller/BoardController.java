@@ -25,16 +25,15 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
 
-    // # 게시글 전체 조회 (페이징 일단 5개로 정의)
     @ApiDocumentResponse
     @Operation(summary = "행복기록 전체 조회")
     @GetMapping("/api/boards")
     @Auth
-    public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@RequestParam(required = false) Long lastBoardId,
-                                                             @Valid @MemberId Long memberId, @RequestParam(defaultValue = "newest") String orderType,
+    public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@Valid @MemberId Long memberId,
+                                                             @RequestBody GetBoardsRequest request,
                                                              @PageableDefault(size = 5) Pageable pageable) {
-        Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(lastBoardId, memberId, orderType, pageable);
-        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, orderType);
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(memberId, request, pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, request.getOrderType());
 
         return ApiResponse.success(getBoardsGroupsResponse);
     }
@@ -55,14 +54,13 @@ public class BoardController {
     @ResponseBody
     @PostMapping ("/api/boards/tag")
     @Auth
-    public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(
-            @RequestParam(required = false) Long lastBoardId,
-            @Valid @MemberId Long memberId,
-            @Valid @RequestBody GetBoardByTagRequest getBoardByTagRequest, @RequestParam(defaultValue = "newest") String orderType,
-            @PageableDefault(size = 5) Pageable pageable) {
+    public ApiResponse<GetBoardsGroupsResponse> getBoardsByTag(@Valid @MemberId Long memberId,
+                                                               @RequestBody GetBoardByTagRequest tagRequest,
+                                                               @PageableDefault(size = 5) Pageable pageable) {
+        GetBoardsRequest getBoardsRequest = GetBoardsRequest.of(tagRequest.getOrderType(), tagRequest.getLastBoardId());
         Slice<GetBoardsResponse> getBoardsResponses =
-                boardService.getBoardsByTag(lastBoardId, memberId, getBoardByTagRequest.getTagIds(), orderType, pageable);
-        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, orderType);
+                boardService.getBoardsByTag(memberId, getBoardsRequest, tagRequest, pageable);
+        GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, getBoardsRequest.getOrderType());
 
         return ApiResponse.success(getBoardsGroupsResponse);
     }

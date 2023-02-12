@@ -14,4 +14,5 @@ public interface BoardRepositoryCustom {
     List<Integer> getCalendar(Long memberId, int year, int month, int lastDay);
     Slice<Board> findByCreatedAtWithPaging(Long lastBoardId, Long memberId, LocalDate localDate, String orderType, Pageable pageable);
     Long getNumOfBoardsByDate(Long memberId, LocalDate localDate);
+    Long getLastIdOfBoard(Long memberId, String orderType);
 }

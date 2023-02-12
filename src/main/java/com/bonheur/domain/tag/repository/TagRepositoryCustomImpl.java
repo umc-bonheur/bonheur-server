@@ -18,10 +18,8 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
                         // member에 해당되는 태그
                         memberTag.member.id.eq(memberId),
                         // tagName에 해당되는 태그
-                        tag.name.eq(tagName),
-                        // 매칭
-                        tag.id.eq(memberTag.tag.id)
-                ).join(memberTag).fetchOne();
+                        tag.name.eq(tagName)
+                ).join(tag.memberTags, memberTag).fetchOne();
     }
     // 생각한 쿼리 : select tag.id from tag, member_tag where tag.id=tag_id and member_tag.member_id=1 and tag.name='tag1';
 
@@ -34,5 +32,16 @@ public class TagRepositoryCustomImpl implements TagRepositoryCustom {
                         memberTag.member.id.eq(memberId),
                         tag.id.eq(tagId)
                 ).fetchOne();
+    }
+
+    @Override
+    public Long isExistTag(Long memberId, Long tagId) {
+        return queryFactory.select(tag.count()).from(tag, memberTag)
+                .where(
+                        // member에 해당되는 태그
+                        memberTag.member.id.eq(memberId),
+                        // tagName에 해당되는 태그
+                        tag.id.eq(tagId)
+                ).join(tag.memberTags, memberTag).fetchOne();
     }
 }

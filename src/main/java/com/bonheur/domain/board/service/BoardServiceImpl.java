@@ -10,6 +10,8 @@ import com.bonheur.domain.image.service.ImageServiceHelper;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.member.service.MemberServiceHelper;
+import com.bonheur.domain.tag.repository.TagRepository;
+import com.bonheur.domain.tag.service.TagServiceHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,14 +33,17 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final BoardTagService boardTagService;
+    private final TagRepository tagRepository;
     private final ImageService imageService;
 
     // # 게시글 전체 조회
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getAllBoards(Long lastBoardId, Long memberId, String orderType, Pageable pageable) {
-        return boardRepository.findAllWithPaging(lastBoardId, memberId, orderType, pageable)
+    public Slice<GetBoardsResponse> getAllBoards(Long memberId, GetBoardsRequest request, Pageable pageable) {
+        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
+
+        return boardRepository.findAllWithPaging(request.getLastBoardId(), memberId, request.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
@@ -52,7 +57,7 @@ public class BoardServiceImpl implements BoardService {
     public GetBoardsGroupsResponse getBoardsGroups(Slice<GetBoardsResponse> getBoardsResponseSlice, String orderType) {
         List<GetBoardsResponse> getBoardsResponsesOfSlice = getBoardsResponseSlice.getContent();
         return GetBoardsGroupsResponse.of(getBoardsResponsesOfSlice.stream().
-                collect(Collectors.groupingBy(GetBoardsResponse::getCreatedAtDate)), orderType);
+                collect(Collectors.groupingBy(GetBoardsResponse::getCreatedAtDate)), orderType, getBoardsResponseSlice.isLast());
     }
 
     // # Tag Name을 String List로 받아오기
@@ -84,8 +89,11 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getBoardsByTag(Long lastBoardId, Long memberId, List<Long> tagIds, String orderType, Pageable pageable) {
-        return boardRepository.findByTagWithPaging(lastBoardId, memberId, tagIds, orderType, pageable)
+    public Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest getBoardsRequest, GetBoardByTagRequest tagRequest, Pageable pageable) {
+        BoardServiceHelper.isValidRequest(memberId, boardRepository, getBoardsRequest);
+        TagServiceHelper.isExistTag(tagRepository, memberId, tagRequest.getTagIds());
+
+        return boardRepository.findByTagWithPaging(getBoardsRequest.getLastBoardId(), memberId, tagRequest.getTagIds(), getBoardsRequest.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
