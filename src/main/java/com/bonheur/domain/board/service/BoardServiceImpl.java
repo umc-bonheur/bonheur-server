@@ -4,6 +4,7 @@ import com.bonheur.domain.board.model.Board;
 import com.bonheur.domain.board.model.dto.*;
 import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.boardtag.service.BoardTagService;
+import com.bonheur.domain.common.exception.NotFoundException;
 import com.bonheur.domain.image.model.Image;
 import com.bonheur.domain.image.service.ImageService;
 import com.bonheur.domain.image.service.ImageServiceHelper;
@@ -26,6 +27,8 @@ import org.springframework.data.domain.Slice;
 
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
+
+import static com.bonheur.domain.common.exception.dto.ErrorCode.E404_NOT_EXISTS_WRITTEN_BOARD;
 
 @Service
 @RequiredArgsConstructor
@@ -105,8 +108,11 @@ public class BoardServiceImpl implements BoardService {
     // 회원 정보 인증 어노테이션 추가 필요
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, String orderType, Pageable pageable) {
-        return boardRepository.findByCreatedAtWithPaging(lastBoardId, memberId, localDate, orderType, pageable)
+    public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, GetBoardsRequest request, String localDate, Pageable pageable) {
+        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
+        LocalDate date = BoardServiceHelper.isValidDateFormat(localDate);
+
+        return boardRepository.findByCreatedAtWithPaging(request.getLastBoardId(), memberId, date, request.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
                         board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
@@ -117,8 +123,12 @@ public class BoardServiceImpl implements BoardService {
     // # 게시글 조회 - by 날짜 count
     @Override
     @Transactional(readOnly = true)
-    public Long getNumOfBoardsByDate(Long memberId, LocalDate localDate) {
-        return boardRepository.getNumOfBoardsByDate(memberId, localDate);
+    public Long getNumOfBoardsByDate(Long memberId, String localDate) {
+        LocalDate date = BoardServiceHelper.isValidDateFormat(localDate);
+        Long numOfBoardsByDate = boardRepository.getNumOfBoardsByDate(memberId, date);
+        if (numOfBoardsByDate == 0)
+            throw new NotFoundException("작성된 게시글이 없습니다.", E404_NOT_EXISTS_WRITTEN_BOARD);
+        return numOfBoardsByDate;
     }
 
     // # 캘린더 조회
@@ -128,9 +138,7 @@ public class BoardServiceImpl implements BoardService {
     public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month) {
 
         // 해당 달의 마지막 날 계산
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month-1, 1);
-        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int lastDay = BoardServiceHelper.getLastDay(year, month);
 
         List<GetCalendarResponse> getCalendarList = new ArrayList<>();
         int idx = 0;

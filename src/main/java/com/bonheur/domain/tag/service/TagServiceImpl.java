@@ -41,6 +41,6 @@ public class TagServiceImpl implements TagService{
     @Override
     @Transactional
     public GetTagIdResponse getTagIdByTagName(Long memberId, String tagName) {
-        return GetTagIdResponse.of(tagRepository.findOwnTagByTagName(memberId, tagName));
+        return GetTagIdResponse.of(TagServiceHelper.getTagIdByTagName(tagRepository, memberId, tagName));
     }
 }
