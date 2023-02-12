@@ -138,9 +138,7 @@ public class BoardServiceImpl implements BoardService {
     public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month) {
 
         // 해당 달의 마지막 날 계산
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month-1, 1);
-        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int lastDay = BoardServiceHelper.getLastDay(year, month);
 
         List<GetCalendarResponse> getCalendarList = new ArrayList<>();
         int idx = 0;

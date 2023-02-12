@@ -74,13 +74,22 @@ public class BoardServiceHelper {
         int month = Integer.parseInt(localDate.substring(5, 7));
         int day = Integer.parseInt(localDate.substring(8, 10));
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month-1, 1);
-        int monthLastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        if (year < 2022 || month < 1 || month > 12 || day < 1 || day > monthLastDay)
+        int monthLastDay = getLastDay(year, month);
+        if (day < 1 || day > monthLastDay)
             throw new InvalidException("잘못된 날짜 형식이 입력되었습니다", E400_INVALID_FORMAT_DATE);
 
         // 3. 반환
         return LocalDate.of(year, month, day);
+    }
+
+    public static int getLastDay(int year, int month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month-1, 1);
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        if (year < 2022 || year > 2100 || month < 1 || month > 12)
+            throw new InvalidException("잘못된 날짜 형식이 입력되었습니다", E400_INVALID_FORMAT_DATE);
+
+        return lastDay;
     }
 }
