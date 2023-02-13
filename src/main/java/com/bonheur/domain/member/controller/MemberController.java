@@ -31,7 +31,7 @@ public class MemberController {
     @PatchMapping("/api/member/profiles")
     @Auth
     public ApiResponse<UpdateMemberProfileResponse> updateProfile(
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             @RequestPart @Valid UpdateMemberProfileRequest updateMemberProfileRequest,
             @Valid @MemberId Long memberId) throws IOException {
         return ApiResponse.success(memberService.updateMemberProfile(memberId, updateMemberProfileRequest, image));
