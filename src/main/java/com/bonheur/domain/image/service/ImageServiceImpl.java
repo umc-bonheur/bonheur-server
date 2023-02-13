@@ -40,7 +40,9 @@ public class ImageServiceImpl implements ImageService{
         if(!oldImages.isEmpty()) {
             imageRepository.deleteAllInBatch(oldImages);          //기존의 이미지 삭제
         }
-        uploadImages(board, images);            //새로운 이미지 업로드
+        if(images != null){
+            uploadImages(board, images);            //새로운 이미지 업로드
+        }
     }
 
     // # image s3, 테이블에서 삭제
