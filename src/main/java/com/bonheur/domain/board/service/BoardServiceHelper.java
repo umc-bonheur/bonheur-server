@@ -36,7 +36,7 @@ public class BoardServiceHelper {
         return board;
     }
 
-    public static void isValidRequest(Long memberId, BoardRepository boardRepository, GetBoardsRequest request) {
+    public static void isValidBoardRequest(Long memberId, BoardRepository boardRepository, GetBoardsRequest request) {
         if (boardRepository.getLastIdOfBoard(memberId, "oldest") == null)
             throw new NotFoundException("작성된 게시글이 없습니다.", E404_NOT_EXISTS_WRITTEN_BOARD);
 

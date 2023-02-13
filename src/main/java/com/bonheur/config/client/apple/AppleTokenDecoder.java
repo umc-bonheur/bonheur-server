@@ -18,10 +18,10 @@ import static com.bonheur.domain.common.exception.dto.ErrorCode.E400_INVALID_AUT
 public class AppleTokenDecoder {
 
     @Value("${apple.client_id}")
-    private String issuer;
+    private String clientId;
 
     @Value("${apple.issuer}")
-    private String clientId;
+    private String issuer;
     private final ObjectMapper objectMapper;
 
     public String getSocialIdFromToken(String token) {
