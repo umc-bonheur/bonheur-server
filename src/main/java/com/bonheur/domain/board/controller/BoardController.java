@@ -11,13 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -71,14 +69,13 @@ public class BoardController {
     @GetMapping("/api/boards/date")
     @Auth
     public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(@Valid @MemberId Long memberId,
-                                                                @RequestParam(required = false) Long lastBoardId,
-                                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate,
-                                                                @RequestParam(defaultValue = "newest") String orderType,
-                                                                Pageable pageable) {
-        Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, lastBoardId,localDate, orderType, pageable);
-        Long count = boardService.getNumOfBoardsByDate(memberId, localDate);
+                                                                @RequestBody GetBoardsRequest request,
+                                                                @RequestParam String localDate,
+                                                                @PageableDefault(size = 5) Pageable pageable) {
+        Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, request, localDate, pageable);
+        Long numOfBoardsByDate = boardService.getNumOfBoardsByDate(memberId, localDate);
 
-        GetBoardsByDateResponse getBoardsByDateResponse = GetBoardsByDateResponse.of(count, getBoardsResponses);
+        GetBoardsByDateResponse getBoardsByDateResponse = GetBoardsByDateResponse.of(numOfBoardsByDate, getBoardsResponses);
         return ApiResponse.success(getBoardsByDateResponse);
     }
 

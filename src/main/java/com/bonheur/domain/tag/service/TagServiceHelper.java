@@ -27,4 +27,11 @@ public class TagServiceHelper {
                 throw new NotFoundException("존재하지 않는 태그입니다.", E404_NOT_EXISTS_TAG);
         }
     }
+
+    public static Long getTagIdByTagName(TagRepository tagRepository, Long memberId, String tagName) {
+        Long tagId = tagRepository.findOwnTagByTagName(memberId, tagName);
+        if (tagId == null)
+            throw new NotFoundException("존재하지 않는 태그입니다.", E404_NOT_EXISTS_TAG);
+        return tagId;
+    }
 }

@@ -26,7 +26,7 @@ public interface BoardService {
 
     List<GetCalendarResponse> getCalendar(Long memberId, int year, int month);
 
-    Slice<GetBoardsResponse> getBoardsByDate(Long memberId, Long lastBoardId, LocalDate localDate, String orderType, Pageable pageable);
+    Slice<GetBoardsResponse> getBoardsByDate(Long memberId, GetBoardsRequest request, String localDate, Pageable pageable);
 
-    Long getNumOfBoardsByDate(Long memberId, LocalDate localDate);
+    Long getNumOfBoardsByDate(Long memberId, String localDate);
 }
