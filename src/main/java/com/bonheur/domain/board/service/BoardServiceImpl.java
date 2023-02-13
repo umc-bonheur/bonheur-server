@@ -13,6 +13,7 @@ import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.member.service.MemberServiceHelper;
 import com.bonheur.domain.tag.repository.TagRepository;
 import com.bonheur.domain.tag.service.TagServiceHelper;
+import com.bonheur.util.DateUtilHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +45,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Slice<GetBoardsResponse> getAllBoards(Long memberId, GetBoardsRequest request, Pageable pageable) {
-        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
+        BoardServiceHelper.isValidBoardRequest(memberId, boardRepository, request);
 
         return boardRepository.findAllWithPaging(request.getLastBoardId(), memberId, request.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
@@ -93,7 +94,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Slice<GetBoardsResponse> getBoardsByTag(Long memberId, GetBoardsRequest getBoardsRequest, GetBoardByTagRequest tagRequest, Pageable pageable) {
-        BoardServiceHelper.isValidRequest(memberId, boardRepository, getBoardsRequest);
+        BoardServiceHelper.isValidBoardRequest(memberId, boardRepository, getBoardsRequest);
         TagServiceHelper.isExistTag(tagRepository, memberId, tagRequest.getTagIds());
 
         return boardRepository.findByTagWithPaging(getBoardsRequest.getLastBoardId(), memberId, tagRequest.getTagIds(), getBoardsRequest.getOrderType(), pageable)
@@ -109,8 +110,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Slice<GetBoardsResponse> getBoardsByDate(Long memberId, GetBoardsRequest request, String localDate, Pageable pageable) {
-        BoardServiceHelper.isValidRequest(memberId, boardRepository, request);
-        LocalDate date = BoardServiceHelper.isValidDateFormat(localDate);
+        BoardServiceHelper.isValidBoardRequest(memberId, boardRepository, request);
+        LocalDate date = DateUtilHelper.isValidDateFormat(localDate);
 
         return boardRepository.findByCreatedAtWithPaging(request.getLastBoardId(), memberId, date, request.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
@@ -124,7 +125,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Long getNumOfBoardsByDate(Long memberId, String localDate) {
-        LocalDate date = BoardServiceHelper.isValidDateFormat(localDate);
+        LocalDate date = DateUtilHelper.isValidDateFormat(localDate);
         Long numOfBoardsByDate = boardRepository.getNumOfBoardsByDate(memberId, date);
         if (numOfBoardsByDate == 0)
             throw new NotFoundException("작성된 게시글이 없습니다.", E404_NOT_EXISTS_WRITTEN_BOARD);
@@ -138,7 +139,7 @@ public class BoardServiceImpl implements BoardService {
     public List<GetCalendarResponse> getCalendar(Long memberId, int year, int month) {
 
         // 해당 달의 마지막 날 계산
-        int lastDay = BoardServiceHelper.getLastDay(year, month);
+        int lastDay = DateUtilHelper.getLastDay(year, month);
 
         List<GetCalendarResponse> getCalendarList = new ArrayList<>();
         int idx = 0;
