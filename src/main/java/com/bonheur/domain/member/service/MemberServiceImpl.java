@@ -7,6 +7,7 @@ import com.bonheur.domain.member.model.dto.*;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,9 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final FileUploadUtil fileUploadUtil;
+
+    @Value("${member.default-profile}")
+    private String defaultProfileURL;
 
     @Override
     @Transactional
@@ -59,7 +63,7 @@ public class MemberServiceImpl implements MemberService{
     public GetMemberProfileResponse getMemberProfile(Long memberId){
         Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
         return GetMemberProfileResponse.of(member.getNickname(),
-                (member.getProfile() == null) ? null : member.getProfile().getUrl());
+                (member.getProfile() == null) ? defaultProfileURL : member.getProfile().getUrl());
     }
 
     @Override
