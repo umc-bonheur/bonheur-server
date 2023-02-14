@@ -1,4 +1,4 @@
-# 보네르 백엔드
+# Bonheur Back-end
 
 [![CI/CD using Github Actions & AWS CodeDeploy & S3](https://github.com/umc-bonheur/bonheur-server/actions/workflows/github-actions.yml/badge.svg)](https://github.com/umc-bonheur/bonheur-server/actions/workflows/github-actions.yml)
 ![img.png](docs/bonheur.png)
