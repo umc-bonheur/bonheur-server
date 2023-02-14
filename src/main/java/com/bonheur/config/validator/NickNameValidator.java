@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * 닉네임 규칙
  * 한글만 허용한다.
- * 2자 이상, 7자 이하
+ * 1자 이상, 7자 이하
  */
 public class NickNameValidator implements ConstraintValidator<NickName, String> {
     @Override
