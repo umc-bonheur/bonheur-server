@@ -21,7 +21,7 @@ public class SocialSignUpRequest {
 
     @NickName
     @NotBlank
-    @Length(min = 2,max = 7)
+    @Length(min = 1, max = 7)
     private String nickname;
 
     @NotNull
