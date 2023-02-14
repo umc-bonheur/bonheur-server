@@ -4,6 +4,7 @@ import com.bonheur.domain.board.repository.BoardRepository;
 import com.bonheur.domain.file.dto.FileUploadResponse;
 import com.bonheur.domain.member.model.Member;
 import com.bonheur.domain.member.model.dto.*;
+import com.bonheur.domain.member.model.property.MemberProperties;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final FileUploadUtil fileUploadUtil;
+    private final MemberProperties memberProperties;
 
     @Override
     @Transactional
@@ -42,14 +44,12 @@ public class MemberServiceImpl implements MemberService{
         Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
         member.updateNickname(request.getNickname());
 
-        if(member.getProfile() != null){    //기존의 프로필 이미지가 있는 경우
-            fileUploadUtil.deleteFile(member.getProfile().getPath());   //프로필 이미지 s3에서 삭제
-            member.updateProfile(null, null); //member 테이블에서 이미지 삭제
+        if(member.getProfile() != null){
+            fileUploadUtil.deleteFile(member.getProfile().getPath());
+            member.updateProfile(null, null);
         }
-        if(!image.isEmpty()){   //기존의 프로필 이미지를 새로운 이미지로 변경하는 경우
-            FileUploadResponse fileUploadResponse = fileUploadUtil.uploadFile("image", image);  //프로필 이미지 s3에 업로드
-            member.updateProfile(fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());  //프로필 이미지 변경
-        }
+        FileUploadResponse fileUploadResponse = uploadProfileImage(image);
+        member.updateProfile(fileUploadResponse.getFileUrl(), fileUploadResponse.getFilePath());
 
         return UpdateMemberProfileResponse.of(memberId);
     }
@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService{
     public GetMemberProfileResponse getMemberProfile(Long memberId){
         Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
         return GetMemberProfileResponse.of(member.getNickname(),
-                (member.getProfile() == null) ? null : member.getProfile().getUrl());
+                (member.getProfile() == null) ? memberProperties.getDefaultProfileURL() : member.getProfile().getUrl());
     }
 
     @Override

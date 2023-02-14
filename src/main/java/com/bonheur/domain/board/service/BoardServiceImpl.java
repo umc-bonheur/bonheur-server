@@ -160,13 +160,15 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public CreateBoardResponse createBoard(Long memberId, CreateBoardRequest request, List<MultipartFile> images) throws IOException {
         Member member = MemberServiceHelper.getExistMember(memberRepository, memberId);
-        ImageServiceHelper.validateImageCount(images, 5L);
         Board board = boardRepository.save(request.toEntity(member));
 
         if (!request.getTagIds().isEmpty()) {
             boardTagService.createBoardTags(memberId, board, request.getTagIds());   //게시글과 해시태그 연결
         }
-        imageService.uploadImages(board, images);
+        if(images != null)  {
+            ImageServiceHelper.validateImageCount(images, 5L);
+            imageService.uploadImages(board, images);
+        }
         return CreateBoardResponse.of(board.getId());
     }
 
@@ -174,12 +176,16 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public UpdateBoardResponse updateBoard(Long memberId, Long boardId, UpdateBoardRequest request, List<MultipartFile> images) throws IOException{
         MemberServiceHelper.validateMemberExists(memberRepository, memberId);
-        ImageServiceHelper.validateImageCount(images, 5L);
 
         Board board = BoardServiceHelper.getBoardByMemberId(memberId, boardRepository, boardId);
         board.update(request.getContents());    //게시글 수정
         boardTagService.updateBoardTags(memberId, board, request.getTagIds()); //게시글 태그 수정
+
+        if(images != null)  {
+            ImageServiceHelper.validateImageCount(images, 5L);
+        }
         imageService.updateImages(board, images); //이미지 수정
+
         return UpdateBoardResponse.of(boardId);
     }
 

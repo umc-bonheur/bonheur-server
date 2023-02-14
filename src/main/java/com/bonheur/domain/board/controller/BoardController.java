@@ -95,7 +95,7 @@ public class BoardController {
     @Auth
     public ApiResponse<CreateBoardResponse> createBoard(
             @Valid @MemberId Long memberId,
-            @RequestPart(value = "images") List<MultipartFile> images,
+            @RequestPart(required = false, value = "images") List<MultipartFile> images,
             @RequestPart @Valid CreateBoardRequest createBoardRequest) throws IOException {
 
         return ApiResponse.success(boardService.createBoard(memberId, createBoardRequest, images));
@@ -108,7 +108,7 @@ public class BoardController {
     public ApiResponse<UpdateBoardResponse> updateBoard(
             @Valid @MemberId Long memberId,
             @PathVariable("boardId") Long boardId,
-            @RequestPart(value = "images") List<MultipartFile> images,
+            @RequestPart(required = false, value = "images") List<MultipartFile> images,
             @RequestPart @Valid UpdateBoardRequest updateBoardRequest) throws IOException {
 
         return ApiResponse.success(boardService.updateBoard(memberId, boardId, updateBoardRequest, images));
