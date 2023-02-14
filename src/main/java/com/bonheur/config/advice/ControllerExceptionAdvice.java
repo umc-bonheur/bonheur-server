@@ -4,8 +4,10 @@ import com.bonheur.domain.common.dto.ApiResponse;
 import com.bonheur.domain.common.exception.BonheurBaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -18,11 +20,26 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import javax.servlet.http.HttpServletRequest;
 
 import static com.bonheur.domain.common.exception.dto.ErrorCode.*;
+import static java.util.stream.Collectors.joining;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class ControllerExceptionAdvice {
+
+    /**
+     * 400 BadRequest
+     * Dto Validation & Binding
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BindException.class)
+    private ApiResponse<Object> handleBadRequest(BindException e) {
+        String errorMessage = e.getBindingResult().getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(joining("\n"));
+        log.error("BindException: {}", errorMessage);
+        return ApiResponse.error(E400_INVALID, errorMessage);
+    }
 
     /**
      * 400 BadRequest

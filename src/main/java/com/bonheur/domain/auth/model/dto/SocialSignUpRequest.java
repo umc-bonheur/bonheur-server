@@ -1,11 +1,13 @@
 package com.bonheur.domain.auth.model.dto;
 
+import com.bonheur.config.validator.NickName;
 import com.bonheur.domain.member.model.MemberSocialType;
 import com.bonheur.domain.member.model.dto.CreateMemberRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +19,9 @@ public class SocialSignUpRequest {
     @NotBlank
     private String token;
 
-    // 닉네임 Validation 추가 필요
+    @NickName
+    @NotBlank
+    @Length(min = 2,max = 7)
     private String nickname;
 
     @NotNull
