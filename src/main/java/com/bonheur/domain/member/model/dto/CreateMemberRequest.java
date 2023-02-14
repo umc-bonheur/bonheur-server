@@ -18,8 +18,7 @@ public class CreateMemberRequest {
     @NotNull
     private MemberSocialType socialType;
 
-    // 닉네임 조건 체크 어노테이션 이후 추가
-    @Length(max = 7)
+    @Length(min = 2, max = 7)
     @NickName
     private String nickname;
 
