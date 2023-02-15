@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService{
     public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
         MemberServiceHelper.validateMemberExists(memberRepository, memberId);
 
-        LinkedHashMap<String, FindDayRecordResponse> responseMap = Stream.of("일", "월", "화", "수", "목", "금", "토")
+        LinkedHashMap<String, FindDayRecordResponse> responseMap = Stream.of("일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일")
                 .collect(Collectors.toMap(Function.identity(), day -> FindDayRecordResponse.createFindDayRecordResponse(day, 0L), (x, y) -> y, LinkedHashMap::new));
 
         List<FindDayRecordResponse> findDayRecordResponseList = memberRepository.findDayRecordByMemberId(memberId);
@@ -141,7 +141,7 @@ public class MemberServiceImpl implements MemberService{
     public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
         MemberServiceHelper.validateMemberExists(memberRepository, memberId);
 
-        LinkedHashMap<String, FindMonthRecordResponse> responseMap = Stream.of("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+        LinkedHashMap<String, FindMonthRecordResponse> responseMap = Stream.of("1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월")
                 .collect(Collectors.toMap(Function.identity(), month -> FindMonthRecordResponse.createFindMonthRecordResponse(month, 0L), (x, y) -> y, LinkedHashMap::new));
 
         // 월별 기록 조회
