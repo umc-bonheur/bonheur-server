@@ -115,13 +115,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
         return queryFactory
                 .select(fields(FindDayRecordResponse.class,
-                                        toDay.when(1).then("sun")
-                                                .when(2).then("mon")
-                                                .when(3).then("tue")
-                                                .when(4).then("wed")
-                                                .when(5).then("thr")
-                                                .when(6).then("fri")
-                                                .when(7).then("sat")
+                                        toDay.when(1).then("일")
+                                                .when(2).then("월")
+                                                .when(3).then("화")
+                                                .when(4).then("수")
+                                                .when(5).then("목")
+                                                .when(6).then("금")
+                                                .when(7).then("토")
                                                 .otherwise("기타").max().as("dayOfWeek"),
                                         toDay.count().as("countDay")
                         ))
@@ -138,18 +138,18 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
         return queryFactory
                 .select(fields(FindMonthRecordResponse.class,
-                        toMonth.when(1).then("jan")
-                                .when(2).then("feb")
-                                .when(3).then("mar")
-                                .when(4).then("apr")
-                                .when(5).then("may")
-                                .when(6).then("jun")
-                                .when(7).then("jul")
-                                .when(8).then("aug")
-                                .when(9).then("sept")
-                                .when(10).then("oct")
-                                .when(11).then("nov")
-                                .when(12).then("dec")
+                        toMonth.when(1).then("01")
+                                .when(2).then("02")
+                                .when(3).then("03")
+                                .when(4).then("04")
+                                .when(5).then("05")
+                                .when(6).then("06")
+                                .when(7).then("07")
+                                .when(8).then("08")
+                                .when(9).then("09")
+                                .when(10).then("10")
+                                .when(11).then("11")
+                                .when(12).then("12")
                                 .otherwise("기타").max().as("month"),
                         toMonth.count().as("countMonth")
                 ))
