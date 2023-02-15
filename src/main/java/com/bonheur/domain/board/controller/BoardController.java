@@ -28,8 +28,10 @@ public class BoardController {
     @GetMapping("/api/boards")
     @Auth
     public ApiResponse<GetBoardsGroupsResponse> getAllBoards(@Valid @MemberId Long memberId,
-                                                             @RequestBody GetBoardsRequest request,
+                                                             @RequestParam(required = false) String orderType,
+                                                             @RequestParam(required = false) Long lastBoardId,
                                                              @PageableDefault(size = 5) Pageable pageable) {
+        GetBoardsRequest request = GetBoardsRequest.of(orderType, lastBoardId);
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getAllBoards(memberId, request, pageable);
         GetBoardsGroupsResponse getBoardsGroupsResponse = boardService.getBoardsGroups(getBoardsResponses, request.getOrderType());
 
@@ -69,9 +71,11 @@ public class BoardController {
     @GetMapping("/api/boards/date")
     @Auth
     public ApiResponse<GetBoardsByDateResponse> getBoardsByDate(@Valid @MemberId Long memberId,
-                                                                @RequestBody GetBoardsRequest request,
+                                                                @RequestParam(required = false) String orderType,
+                                                                @RequestParam(required = false) Long lastBoardId,
                                                                 @RequestParam String localDate,
                                                                 @PageableDefault(size = 5) Pageable pageable) {
+        GetBoardsRequest request = GetBoardsRequest.of(orderType, lastBoardId);
         Slice<GetBoardsResponse> getBoardsResponses = boardService.getBoardsByDate(memberId, request, localDate, pageable);
         Long numOfBoardsByDate = boardService.getNumOfBoardsByDate(memberId, localDate);
 
