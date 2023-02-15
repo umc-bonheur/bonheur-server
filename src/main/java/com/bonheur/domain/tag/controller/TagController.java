@@ -32,7 +32,7 @@ public class TagController {
     // # tagName으로 tagId 조회
     @ApiDocumentResponse
     @Operation(summary = "tagName으로 tagId 조회")
-    @GetMapping("/api/tag/{tagName}")
+    @GetMapping("/api/tags/{tagName}")
     @Auth
     public ApiResponse<GetTagIdResponse> getTagIdByTagName(@PathVariable(value = "tagName") String tagName,
                                                            @Valid @MemberId Long memberId) {
