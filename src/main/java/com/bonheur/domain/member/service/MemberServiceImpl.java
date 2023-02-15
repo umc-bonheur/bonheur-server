@@ -90,11 +90,11 @@ public class MemberServiceImpl implements MemberService{
         MemberServiceHelper.validateMemberExists(memberRepository, memberId);
 
         List<FindTimeRecordResponse> response = Arrays.asList(
-                FindTimeRecordResponse.createFindTimeRecordResponse("morning", memberRepository.findTimeRecordByMemberId(memberId, 6, 12)),
-                FindTimeRecordResponse.createFindTimeRecordResponse("afternoon", memberRepository.findTimeRecordByMemberId(memberId, 12, 18)),
-                FindTimeRecordResponse.createFindTimeRecordResponse("evening", memberRepository.findTimeRecordByMemberId(memberId, 18, 20)),
-                FindTimeRecordResponse.createFindTimeRecordResponse("night", memberRepository.findNightTimeRecordByMemberId(memberId)),
-                FindTimeRecordResponse.createFindTimeRecordResponse("dawn", memberRepository.findTimeRecordByMemberId(memberId, 1, 6)));
+                FindTimeRecordResponse.createFindTimeRecordResponse("아침", memberRepository.findTimeRecordByMemberId(memberId, 6, 12)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("오후", memberRepository.findTimeRecordByMemberId(memberId, 12, 18)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("저녁", memberRepository.findTimeRecordByMemberId(memberId, 18, 20)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("밤", memberRepository.findNightTimeRecordByMemberId(memberId)),
+                FindTimeRecordResponse.createFindTimeRecordResponse("새벽", memberRepository.findTimeRecordByMemberId(memberId, 1, 6)));
 
         // 가장 많이 기록된 횟수 구하기
         Long maxCount = response.stream().map(x -> x.getCountTime()).max(Long::compare).get();
@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService{
     public List<FindDayRecordResponse> findMyDayRecord(Long memberId) {
         MemberServiceHelper.validateMemberExists(memberRepository, memberId);
 
-        LinkedHashMap<String, FindDayRecordResponse> responseMap = Stream.of("sun", "mon", "tue", "wed", "thr", "fri", "sat")
+        LinkedHashMap<String, FindDayRecordResponse> responseMap = Stream.of("일", "월", "화", "수", "목", "금", "토")
                 .collect(Collectors.toMap(Function.identity(), day -> FindDayRecordResponse.createFindDayRecordResponse(day, 0L), (x, y) -> y, LinkedHashMap::new));
 
         List<FindDayRecordResponse> findDayRecordResponseList = memberRepository.findDayRecordByMemberId(memberId);
@@ -141,7 +141,7 @@ public class MemberServiceImpl implements MemberService{
     public List<FindMonthRecordResponse> findMyMonthRecord(Long memberId) {
         MemberServiceHelper.validateMemberExists(memberRepository, memberId);
 
-        LinkedHashMap<String, FindMonthRecordResponse> responseMap = Stream.of("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec")
+        LinkedHashMap<String, FindMonthRecordResponse> responseMap = Stream.of("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
                 .collect(Collectors.toMap(Function.identity(), month -> FindMonthRecordResponse.createFindMonthRecordResponse(month, 0L), (x, y) -> y, LinkedHashMap::new));
 
         // 월별 기록 조회
