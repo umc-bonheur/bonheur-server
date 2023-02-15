@@ -1,4 +1,4 @@
-package com.bonheur.domain.member.model.dto;
+package com.bonheur.domain.tag.model.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

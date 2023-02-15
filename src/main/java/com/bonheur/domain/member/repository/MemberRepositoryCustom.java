@@ -18,7 +18,4 @@ public interface MemberRepositoryCustom {
     Long findNightTimeRecordByMemberId(Long memberId);
     List<FindDayRecordResponse> findDayRecordByMemberId(Long memberId);
     List<FindMonthRecordResponse> findMonthRecordByMemberId(Long memberId);
-
-
-    List<Tag> getTagUsedByMember(Long memberId);
 }

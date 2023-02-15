@@ -1,6 +1,7 @@
 package com.bonheur.domain.tag.service;
 
 import com.bonheur.domain.common.BaseEntity;
+import com.bonheur.domain.tag.model.dto.GetTagUsedByMemberResponse;
 import com.bonheur.domain.member.repository.MemberRepository;
 import com.bonheur.domain.member.service.MemberServiceHelper;
 import com.bonheur.domain.membertag.service.MemberTagService;
@@ -42,5 +43,11 @@ public class TagServiceImpl implements TagService{
     @Transactional
     public GetTagIdResponse getTagIdByTagName(Long memberId, String tagName) {
         return GetTagIdResponse.of(TagServiceHelper.getTagIdByTagName(tagRepository, memberId, tagName));
+    }
+
+    @Override
+    @Transactional
+    public List<GetTagUsedByMemberResponse> getTagUsedByMember(Long memberId) {
+        return tagRepository.getTagUsedByMember(memberId).stream().map(tag -> GetTagUsedByMemberResponse.of(tag.getId(),tag.getName())).collect(Collectors.toList());
     }
 }
