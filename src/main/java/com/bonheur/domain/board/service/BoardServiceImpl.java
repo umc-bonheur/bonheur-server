@@ -116,8 +116,8 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByCreatedAtWithPaging(request.getLastBoardId(), memberId, date, request.getOrderType(), pageable)
                 .map(board -> GetBoardsResponse.of(board.getId(), board.getContents(), getBoardTagsName(board.getBoardTags()),
                         board.getImages().isEmpty() ? null : board.getImages().get(0).getUrl(),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일")),
-                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("a hh:mm").withLocale(Locale.forLanguageTag("en"))))
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.E요일").withLocale(Locale.forLanguageTag("ko"))),
+                        board.getCreatedAt().format(DateTimeFormatter.ofPattern("ahh:mm").withLocale(Locale.forLanguageTag("en"))))
                 );
     }
 
