@@ -165,12 +165,6 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    @Transactional
-    public List<GetTagUsedByMemberResponse> getTagUsedByMember(Long memberId) {
-        return memberRepository.getTagUsedByMember(memberId).stream().map(tag -> GetTagUsedByMemberResponse.of(tag.getId(),tag.getName())).collect(Collectors.toList());
-    }
-
-    @Override
     public FileUploadResponse uploadProfileImage(MultipartFile profileImage) throws IOException {
         if(profileImage != null)
             return fileUploadUtil.uploadFile("image", profileImage);

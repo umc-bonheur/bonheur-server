@@ -84,12 +84,4 @@ public class MemberController {
     public ApiResponse<List<FindMonthRecordResponse>> findMyMonthRecord(@Valid @MemberId Long memberId) {
         return ApiResponse.success(memberService.findMyMonthRecord(memberId));
     }
-
-    @ApiDocumentResponse
-    @Operation(summary = "회원 최근 사용 태그 조회")
-    @GetMapping("/api/member/tags")
-    @Auth
-    public ApiResponse<List<GetTagUsedByMemberResponse>> getTagUsedByMember(@Valid @MemberId Long memberId) {
-        return ApiResponse.success(memberService.getTagUsedByMember(memberId));
-    }
 }

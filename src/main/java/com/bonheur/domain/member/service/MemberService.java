@@ -24,6 +24,4 @@ public interface MemberService {
 
     List<FindDayRecordResponse> findMyDayRecord(Long memberId);
     List<FindMonthRecordResponse> findMyMonthRecord(Long memberId);
-
-    List<GetTagUsedByMemberResponse> getTagUsedByMember(Long memberId);
 }

@@ -4,6 +4,7 @@ import com.bonheur.config.interceptor.Auth;
 import com.bonheur.config.resolver.MemberId;
 import com.bonheur.config.swagger.dto.ApiDocumentResponse;
 import com.bonheur.domain.common.dto.ApiResponse;
+import com.bonheur.domain.tag.model.dto.GetTagUsedByMemberResponse;
 import com.bonheur.domain.tag.model.dto.CreateTagRequest;
 import com.bonheur.domain.tag.model.dto.CreateTagResponse;
 import com.bonheur.domain.tag.model.dto.GetTagIdResponse;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,5 +40,13 @@ public class TagController {
                                                            @Valid @MemberId Long memberId) {
         GetTagIdResponse getTagIdResponse = tagService.getTagIdByTagName(memberId, tagName);
         return ApiResponse.success(getTagIdResponse);
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "회원 최근 사용 태그 조회")
+    @GetMapping("/api/tags")
+    @Auth
+    public ApiResponse<List<GetTagUsedByMemberResponse>> getTagUsedByMember(@Valid @MemberId Long memberId) {
+        return ApiResponse.success(tagService.getTagUsedByMember(memberId));
     }
 }

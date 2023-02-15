@@ -159,21 +159,5 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .distinct()
                 .fetch();
     }
-
-    @Override
-    public List<Tag> getTagUsedByMember(Long memberId) {
-        return queryFactory.select(tag)
-                .from(tag)
-                .leftJoin(tag.memberTags,memberTag).fetchJoin()
-                .leftJoin(memberTag.member).fetchJoin()
-                .where(
-                        memberTag.member.id.eq(memberId)
-                )
-                .distinct()
-                .orderBy(memberTag.updatedAt.desc())
-                .offset(0)
-                .limit(5)
-                .fetch();
-    }
 }
 
