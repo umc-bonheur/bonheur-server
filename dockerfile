@@ -1,16 +1,24 @@
-FROM openjdk:11-jre-slim
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
-COPY settings.gradle .
-COPY src src
+# Use the official OpenJDK 11 image as the base image
+FROM openjdk:11-jre-slim AS builder
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the gradle files and build the project
+COPY gradlew gradlew.bat settings.gradle ./
+RUN ls -al
+COPY gradle/ ./gradle/
 RUN chmod +x ./gradlew
+RUN ./gradlew build --no-daemon
+RUN ls -al
 
+# Copy the application JAR file to the runtime image
 FROM openjdk:11-jre-slim
-COPY --from=builder build/libs/*.jar app.jar
+WORKDIR /app
+RUN pwd
+RUN ls -al
+COPY --from=builder ./app/build/libs/bonheur-0.0.1-SNAPSHOT.jar app.jar
 
-ARG ENVIRONMENT
-ENV SPRING_PROFILES_ACTIVE=local
-
+# Run the application
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+CMD ["java", "-jar", "app.jar"]
