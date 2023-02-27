@@ -7,8 +7,8 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=local
-      - REDIS_HOST=redis
-      - MYSQL_HOST=mysql
+      - REDIS_HOST=bonheur-redis
+      - MYSQL_HOST=bonheur-mysql
       - MYSQL_DATABASE=bonheur_local
       - MYSQL_USER=bonheur
       - MYSQL_PASSWORD=bo123
