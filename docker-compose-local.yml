@@ -1,35 +1,19 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=local
-      - REDIS_HOST=bonheur-redis
-      - MYSQL_HOST=bonheur-mysql
-      - MYSQL_DATABASE=bonheur_local
-      - MYSQL_USER=bonheur
-      - MYSQL_PASSWORD=bo123
-    depends_on:
-      - redis
-      - mysql
   mysql:
     container_name: bonheur-mysql
     image: mysql:5.7
     ports:
-      - "3300:3300"
+      - "3308:3306"
     volumes:
       - mysql-volume:/bitnami/mysql
     restart: unless-stopped
     environment:
-      - MARIADB_REPLICATION_MODE=master
-      - MARIADB_REPLICATION_USER=repl_user
       - MYSQL_USER=bonheur
+      - MYSQL_PASSWORD=bo123
       - MYSQL_DATABASE=bonheur_local
       - MYSQL_ROOT_PASSWORD=bo123
-      - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - bonheur-network
   redis:
@@ -41,6 +25,19 @@ services:
     restart: unless-stopped
     volumes:
       - redis-volume:/data
+    networks:
+      - bonheur-network
+  web:
+    container_name: bonheur-server
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3308/bonheur_local?autoReconnect=true&useSSL=false
+    depends_on:
+      - redis
+      - mysql
     networks:
       - bonheur-network
 
