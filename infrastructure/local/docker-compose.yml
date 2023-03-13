@@ -9,8 +9,8 @@ services:
       - "8081:81"
     environment:
       H2_OPTIONS: -ifNotExists
-#    volumes:
-#      - ./h2/:/opt/h2-data
+    volumes:
+      - rds-volume:/data
     restart: always
   redis:
     image: redis:6.0
