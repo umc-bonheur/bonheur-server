@@ -10,7 +10,7 @@ services:
     environment:
       H2_OPTIONS: -ifNotExists
     volumes:
-      - ./h2/:/opt/h2-data
+      - rds-volume:/data
     restart: always
   redis:
     image: redis:6.0
