@@ -18,7 +18,7 @@
 - **Build Tool** - Gradle
 - **Infra** - AWS EC2, AWS RDS, AWS S3
 - **DB** - MySQL(RDS), Redis(ElastiCache)
-- **CI/CD** - Github Actions
+- **CI/CD** - Github Actions, AWS CodeDeploy
 - **API Sheet** - Swagger
 
 ### 인프라 아키텍처
