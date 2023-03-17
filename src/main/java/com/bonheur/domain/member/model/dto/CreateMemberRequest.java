@@ -18,7 +18,6 @@ public class CreateMemberRequest {
     @NotNull
     private MemberSocialType socialType;
 
-    @Length(min = 1, max = 7)
     @NickName
     private String nickname;
 
