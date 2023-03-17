@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 public class UpdateMemberProfileRequest {
 
     @NickName
-    @Length(min = 1, max = 7)
     @NotBlank
     private String nickname;
 

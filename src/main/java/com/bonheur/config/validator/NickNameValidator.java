@@ -15,7 +15,7 @@ public class NickNameValidator implements ConstraintValidator<NickName, String> 
         if(value == null || value.isBlank())
             return false;
 
-        Pattern pattern = Pattern.compile("^[가-힣]*$");
+        Pattern pattern = Pattern.compile("^[ㄱ-ㅎㅏ-ㅣ가-힣\\s]{1,7}$");
         return pattern.matcher(value).find();
     }
 }
